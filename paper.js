@@ -15,21 +15,27 @@ const engrave = o => {
   return o;
 };
 
-//const point = (x, y) => new paper.Point(x, y);
+const point = (...args) => new paper.Point(...args);
 const drawRect = (...args) => new paper.Path.Rectangle(...args);
 
 const inches = n => n * dpi;
 const mm = n => (n * dpi) / 25.4;
 
+const caseHeight = mm(109);
+
 const rect = new paper.Rectangle({
-  width: inches(3),
-  height: inches(3)
+  width: mm(66),
+  height: caseHeight
 });
 const r = drawRect(rect, mm(3));
 cut(r);
 
-const cir = new paper.Path.Circle([inches(1.5), inches(1.5)], mm(3));
-engrave(cir);
+const holeAt = center => new paper.Path.Circle({ center, radius: mm(1.5) });
+
+const holes = new paper.Group(
+  [[mm(3), mm(3)], [mm(3), caseHeight - mm(3)]].map(xy => holeAt(xy))
+);
+cut(holes);
 
 const svg = paper.project.exportSVG({ asString: true });
 
