@@ -2,18 +2,21 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-paper.setup(new paper.Size(300, 600));
+const dpi = 96;
 
-const point = (x, y) => new paper.Point(x, y);
+paper.setup(new paper.Size(999, 999));
 
-var rect = new paper.Path.Rectangle({
-  from: point(0, 0),
-  to: point(96, 96),
+//const point = (x, y) => new paper.Point(x, y);
+const rect = o => new paper.Path.Rectangle(o);
+const inches = n => n * dpi;
+
+rect({
+  width: inches(3),
+  height: inches(3),
   strokeColor: "black"
 });
 
-var svg = paper.project.exportSVG({ asString: true });
-//console.log(svg);
+const svg = paper.project.exportSVG({ asString: true });
 
 fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
   if (err) throw err;
