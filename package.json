@@ -4,7 +4,7 @@
   "description": "- generate shapes programmatically - less manual work in prepping files for cutting - parametric (i.e. for material thickness)",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier index.js --write",
+    "prettier": "prettier *.js --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "John Teske",
@@ -13,6 +13,7 @@
     "d3": "^5.12.0",
     "js-clipper": "^1.0.1",
     "jsdom": "^15.1.1",
+    "paper-jsdom": "^0.12.3",
     "prettier": "^1.18.2"
   }
 }
