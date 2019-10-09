@@ -2,24 +2,11 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-const dpi = 96;
+const draw = require("./draw");
+const { cut, guide } = require("./stroke");
+const { inches, mm } = require("./units");
 
 paper.setup(new paper.Size(9999, 9999));
-
-const guide = o => {
-  o.strokeColor = "#00ffff";
-  return o;
-};
-
-const cut = o => {
-  o.strokeColor = "#000000";
-  return o;
-};
-
-const drawRect = (...args) => new paper.Path.Rectangle(...args);
-
-const inches = n => n * dpi;
-const mm = n => (n * dpi) / 25.4;
 
 //////
 
@@ -36,7 +23,7 @@ const rect = new paper.Rectangle({
   width: plateWidth,
   height: plateHeight
 });
-cut(drawRect(rect, mm(3)));
+cut(draw.rect(rect, mm(3)));
 const radius = inches(3 / 8) * 0.5;
 const holeAt = center => new paper.Path.Circle({ center, radius });
 
@@ -48,7 +35,7 @@ const holes = new paper.Group(
 cut(holes);
 
 const makeSlot = () =>
-  drawRect({
+  draw.rect({
     width: T,
     height: inches(2)
   });
@@ -61,9 +48,13 @@ const makeSlot = () =>
 
 //////
 
-const svg = paper.project.exportSVG({ asString: true });
+function writeToFile(paper) {
+  const svg = paper.project.exportSVG({ asString: true });
 
-fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
-  if (err) throw err;
-  console.log("Saved!");
-});
+  fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
+    if (err) throw err;
+    console.log("Saved!");
+  });
+}
+
+writeToFile(paper);
