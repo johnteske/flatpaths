@@ -13,7 +13,7 @@ paper.setup(new paper.Size(9999, 9999));
 const T = inches(1 / 8);
 
 const plateWidth = inches(5);
-const plateHeight = inches(4);
+const plateHeight = inches(2);
 const [cx, cy] = [plateWidth, plateHeight].map(v => v * 0.5);
 
 guide(new paper.Path.Line([0, cy], [plateWidth, cy]));
@@ -24,7 +24,7 @@ const rect = new paper.Rectangle({
   height: plateHeight
 });
 cut(draw.rect(rect, mm(3)));
-const radius = inches(3 / 8) * 0.5;
+const radius = inches(3 / 16) * 0.5;
 const holeAt = center => new paper.Path.Circle({ center, radius });
 
 const mountingC2C = inches(3.5);
@@ -34,19 +34,22 @@ const holes = new paper.Group(
 );
 cut(holes);
 
-const makeSlot = () =>
-  draw.rect({
-    width: T,
-    height: inches(2)
-  });
-[[cx - inches(1.75 / 2), cy], [cx + inches(1.75 / 2), cy]].forEach(([x, y]) => {
-  const slot = makeSlot();
-  slot.position.x = x;
-  slot.position.y = y;
-  cut(slot);
-});
+const mountFromCenter2 = mountingC2C / 4;
+const holes2 = new paper.Group(
+  [[cx - mountFromCenter2, cy], [cx + mountFromCenter2, cy]].map(xy => holeAt(xy))
+);
+cut(holes2);
 
-//////
+const mountAt = center => new paper.Path.Circle({ center, radius: radius * 3 });
+const mounts = [[cx - mountFromCenter2, inches(3)], [cx + mountFromCenter2, inches(3)]]
+const holes3 = new paper.Group(
+  mounts.map(xy => mountAt(xy))
+);
+mounts.map(xy => holes3.addChild(holeAt(xy)))
+cut(holes3);
+
+
+/////
 
 function writeToFile(paper) {
   const svg = paper.project.exportSVG({ asString: true });
