@@ -4,10 +4,9 @@
   "description": "- generate shapes programmatically - less manual work in prepping files for cutting - parametric (i.e. for material thickness)",
   "main": "index.js",
   "scripts": {
-    "build": "node palm-slices.js",
-    "watch": "chokidar \"*.js\" -c \"npm run build\"",
-    "prettier": "prettier *.js --write",
-    "lint": "eslint *.js",
+    "watch": "chokidar \"*.js\" -c \"node generate.js\"",
+    "format": "npm run lint -- --fix; prettier \"**/*.js\" --write",
+    "lint": "eslint \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "John Teske",

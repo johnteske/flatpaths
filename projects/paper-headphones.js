@@ -10,7 +10,7 @@ paper.setup(new paper.Size(9999, 9999));
 
 //////
 
-const T = inches(1 / 8);
+// const T = inches(1 / 8);
 
 const plateWidth = inches(5);
 const plateHeight = inches(2);

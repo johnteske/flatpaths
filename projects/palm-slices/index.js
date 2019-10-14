@@ -1,10 +1,11 @@
 const paper = require("paper-jsdom");
-const path = require("path");
-const fs = require("fs");
 
-const draw = require("../draw");
-const { cut } = require("../stroke");
-const { inches, mm } = require("../units");
+const path = require("../../path");
+const { cut } = require("../../stroke");
+const { inches, mm } = require("../../units");
+
+const palm = require("./palm");
+const cards = require("./cards");
 
 const T = inches(1 / 8); // thickness of main body material
 // const T2 = // thickness of faceplate material
@@ -16,31 +17,13 @@ const pin = { d: mm(3) };
 pin.r = pin.d / 2;
 pin.h = T + pin.d + T; // total pin height, incl. padding
 
-const palm = {
-  w: mm(51),
-  h: mm(96.5),
-  d1: mm(7.5), // body
-  d2: mm(8.1), // body at camera
-  camera: {
-    w: mm(11),
-    h: mm(19),
-    offset: mm(5) // offset both x and y from edge
-  }
-};
-
-const cards = {
-  w: mm(54),
-  h: mm(86),
-  T: mm(1.75) // thickness both cards, stacked = 1.65 mm, with wiggle
-};
-
 const palmPocket = new paper.Rectangle({
   width: palm.d1,
   height: palm.h,
   x: T,
   y: pin.h
 });
-cut(draw.rect({ ...palmPocket, radius: cornerRadius }));
+cut(path.rect({ ...palmPocket, radius: cornerRadius }));
 
 //const palmCameraCutout = new paper.Rectangle({
 //  width: T,
@@ -48,13 +31,13 @@ cut(draw.rect({ ...palmPocket, radius: cornerRadius }));
 //});
 //palmCameraCutout.x = palmPocket.topRight.x;
 //palmCameraCutout.y = palmPocket.topRight.y + palm.camera.offset;
-//cut(draw.rect(palmCameraCutout, 0));
+//cut(path.rect(palmCameraCutout, 0));
 
 const rect = new paper.Rectangle({
   width: T + palm.d1 + T + cards.T,
   height: pin.h + palmPocket.height + pin.h
 });
-const rect2 = draw.rect({ ...rect, radius: cornerRadius, parent: primitives });
+const rect2 = path.rect({ ...rect, radius: cornerRadius, parent: primitives });
 
 const cardPocket = new paper.Rectangle({
   width: cards.T,
@@ -62,7 +45,7 @@ const cardPocket = new paper.Rectangle({
   x: rect.width - cards.T,
   y: (rect.height - cards.h) / 2
 });
-const cardPocket2 = draw.rect({ ...cardPocket, radius: 0, parent: primitives });
+const cardPocket2 = path.rect({ ...cardPocket, radius: 0, parent: primitives });
 
 const outerWithPocket = rect2.subtract(cardPocket2);
 outerWithPocket.parent = paper.project.activeLayer;
