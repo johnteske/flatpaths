@@ -7,15 +7,14 @@
     "build": "node palm-slices.js",
     "watch": "chokidar \"*.js\" -c \"npm run build\"",
     "prettier": "prettier *.js --write",
+    "lint": "eslint *.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "John Teske",
   "license": "MIT",
   "dependencies": {
     "chokidar-cli": "^2.0.0",
-    "d3": "^5.12.0",
-    "js-clipper": "^1.0.1",
-    "jsdom": "^15.1.1",
+    "eslint": "^6.5.1",
     "paper-jsdom": "^0.12.3",
     "prettier": "^1.18.2"
   }

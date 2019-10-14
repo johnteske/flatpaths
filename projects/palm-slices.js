@@ -2,14 +2,9 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-const p2 = require("./p2");
-const draw = require("./draw");
-const { cut } = require("./stroke");
-const { inches, mm } = require("./units");
-
-paper.setup(new paper.Size(999, 999));
-
-//////
+const draw = require("../draw");
+const { cut } = require("../stroke");
+const { inches, mm } = require("../units");
 
 const T = inches(1 / 8); // thickness of main body material
 // const T2 = // thickness of faceplate material
@@ -80,5 +75,3 @@ const holes = new paper.Group(
   )
 );
 cut(holes);
-
-p2.writeToFile(paper);

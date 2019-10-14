@@ -36,18 +36,20 @@ cut(holes);
 
 const mountFromCenter2 = mountingC2C / 4;
 const holes2 = new paper.Group(
-  [[cx - mountFromCenter2, cy], [cx + mountFromCenter2, cy]].map(xy => holeAt(xy))
+  [[cx - mountFromCenter2, cy], [cx + mountFromCenter2, cy]].map(xy =>
+    holeAt(xy)
+  )
 );
 cut(holes2);
 
 const mountAt = center => new paper.Path.Circle({ center, radius: radius * 3 });
-const mounts = [[cx - mountFromCenter2, inches(3)], [cx + mountFromCenter2, inches(3)]]
-const holes3 = new paper.Group(
-  mounts.map(xy => mountAt(xy))
-);
-mounts.map(xy => holes3.addChild(holeAt(xy)))
+const mounts = [
+  [cx - mountFromCenter2, inches(3)],
+  [cx + mountFromCenter2, inches(3)]
+];
+const holes3 = new paper.Group(mounts.map(xy => mountAt(xy)));
+mounts.map(xy => holes3.addChild(holeAt(xy)));
 cut(holes3);
-
 
 /////
 
