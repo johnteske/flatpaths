@@ -7,11 +7,13 @@ const { inches, mm } = require("../../units");
 const palm = require("./palm");
 const cards = require("./cards");
 
+const group = (...args) => new paper.Group(...args);
+
 const T = inches(1 / 8); // thickness of main body material
 // const T2 = // thickness of faceplate material
 const cornerRadius = mm(3);
 
-const primitives = new paper.Group({ insert: false });
+const primitives = group({ insert: false });
 
 const pin = { d: mm(3) };
 pin.r = pin.d / 2;
@@ -23,7 +25,8 @@ const palmPocket = new paper.Rectangle({
   x: T,
   y: pin.h
 });
-cut(path.rect({ ...palmPocket, radius: cornerRadius }));
+const cutPalmPocket = () =>
+  cut(path.rect({ ...palmPocket, radius: cornerRadius }));
 
 //const palmCameraCutout = new paper.Rectangle({
 //  width: T,
@@ -47,14 +50,25 @@ const cardPocket = new paper.Rectangle({
 });
 const cardPocket2 = path.rect({ ...cardPocket, radius: 0, parent: primitives });
 
-const outerWithPocket = rect2.subtract(cardPocket2);
-outerWithPocket.parent = paper.project.activeLayer;
-cut(outerWithPocket);
+const outerWithPocket = () => {
+  const owp = rect2.subtract(cardPocket2);
+  owp.parent = paper.project.activeLayer;
+  return cut(owp);
+};
 
 const holeAt = center => new paper.Path.Circle({ center, radius: pin.r });
-const holes = new paper.Group(
-  [[rect.width / 2, T + pin.r], [rect.width / 2, rect.height - T - pin.r]].map(
-    xy => holeAt(xy)
-  )
-);
-cut(holes);
+const holes = () =>
+  cut(
+    group(
+      [
+        [rect.width / 2, T + pin.r],
+        [rect.width / 2, rect.height - T - pin.r]
+      ].map(xy => holeAt(xy))
+    )
+  );
+
+// left edge
+group([outerWithPocket(), holes()]);
+
+// middle
+group([outerWithPocket(), cutPalmPocket(), holes()]).translate([200, 0]);
