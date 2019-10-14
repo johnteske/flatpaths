@@ -45,7 +45,7 @@ const palmPocket = new paper.Rectangle({
   x: T,
   y: pin.h
 });
-cut(draw.rect({ ...palmPocket, radius: cornerRadius}));
+cut(draw.rect({ ...palmPocket, radius: cornerRadius }));
 
 //const palmCameraCutout = new paper.Rectangle({
 //  width: T,
@@ -67,7 +67,7 @@ const cardPocket = new paper.Rectangle({
   x: rect.width - cards.T,
   y: (rect.height - cards.h) / 2
 });
-const cardPocket2 = draw.rect({ ...cardPocket, radius: 0, parent: primitives});
+const cardPocket2 = draw.rect({ ...cardPocket, radius: 0, parent: primitives });
 
 const outerWithPocket = rect2.subtract(cardPocket2);
 outerWithPocket.parent = paper.project.activeLayer;
@@ -81,4 +81,4 @@ const holes = new paper.Group(
 );
 cut(holes);
 
-p2.writeToFile(paper)
+p2.writeToFile(paper);
