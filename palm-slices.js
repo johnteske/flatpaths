@@ -2,11 +2,12 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
+const p2 = require("./p2");
 const draw = require("./draw");
 const { cut } = require("./stroke");
 const { inches, mm } = require("./units");
 
-paper.setup(new paper.Size(9999, 9999));
+paper.setup(new paper.Size(999, 999));
 
 //////
 
@@ -64,7 +65,7 @@ const cardPocket = new paper.Rectangle({
   width: cards.T,
   height: cards.h,
   x: rect.width - cards.T,
-  y: pin.h
+  y: (rect.height - cards.h) / 2
 });
 const cardPocket2 = draw.rect({ ...cardPocket, radius: 0, parent: primitives});
 
@@ -80,15 +81,4 @@ const holes = new paper.Group(
 );
 cut(holes);
 
-/////
-
-function writeToFile(paper) {
-  const svg = paper.project.exportSVG({ asString: true });
-
-  fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
-    if (err) throw err;
-    console.log("Saved!");
-  });
-}
-
-writeToFile(paper);
+p2.writeToFile(paper)
