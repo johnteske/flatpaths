@@ -72,16 +72,15 @@ const outerWithPocketAndFace = outerWithPocket().subtract(
   cutPalmPocket().unite(cutPalmFace())
 );
 
-const holeAt = center => new paper.Path.Circle({ center, radius: pin.r });
-const holes = guide(
+const guideHoles = guide(
   group(
     [
       [rect.width / 2, T + pin.r],
       [rect.width / 2, rect.height - T - pin.r]
-    ].map(xy => holeAt(xy))
+    ].map(xy => new paper.Path.Circle({ center: xy, radius: pin.r }))
   )
 );
-const cutHoles = () => cut(holes.clone());
+const cutHoles = () => cut(guideHoles.clone());
 // left edge
 group([outer(), cutHoles()]).translate([100, 0]);
 
@@ -94,36 +93,38 @@ group([outerWithPocketAndFace.clone(), cutHoles()]).translate([300, 0]);
 // phone middle (charge port access)
 // TODO this will also remove the bottom face hooks
 group([
-  outerWithPocketAndFace.clone().subtract(
-    cut(
-      path.rect(
-        new paper.Rectangle({
-          x: 0,
-          y: rect.height,
-          width: T + palm.d1,
-          height: -rect.height / 2
-        })
+  outerWithPocketAndFace
+    .clone()
+    .subtract(
+      cut(
+        path.rect(
+          new paper.Rectangle({
+            x: 0,
+            y: rect.height,
+            width: T + palm.d1,
+            height: -rect.height / 2
+          })
+        )
       )
     )
-  ).subtract(
-    cut(
-      path.rect(
-        new paper.Rectangle({
-          x: 0,
-          y: rect.height,
-          width: rect.width,
-          height: -pin.h
-        })
+    .subtract(
+      cut(
+        path.rect(
+          new paper.Rectangle({
+            x: 0,
+            y: rect.height,
+            width: rect.width,
+            height: -pin.h
+          })
+        )
       )
-    )
-   ),
+    ),
 
-  cutHoles()
+  cutHoles().children[0]
 ]).translate([400, 0]);
 
 // with camera
 group([
-  outerWithPocketAndFace.clone(),
-  cut(cameraCutoutGuide.clone()),
+  outerWithPocketAndFace.clone().subtract(cut(cameraCutoutGuide.clone())),
   cutHoles()
 ]).translate([500, 0]);
