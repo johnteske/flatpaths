@@ -1,10 +1,10 @@
 const paper = require("paper-jsdom");
-const path = require("path");
+const _path = require("path");
 const fs = require("fs");
 
-const draw = require("./draw");
-const { cut, guide } = require("./stroke");
-const { inches, mm } = require("./units");
+const path = require("../path");
+const { cut, guide } = require("../stroke");
+const { inches, mm } = require("../units");
 
 paper.setup(new paper.Size(9999, 9999));
 
@@ -23,11 +23,11 @@ const rect = new paper.Rectangle({
   width: plateWidth,
   height: plateHeight
 });
-cut(draw.rect(rect, mm(3)));
+cut(path.rect(rect, mm(3)));
 const radius = inches(3 / 16) * 0.5;
 const holeAt = center => new paper.Path.Circle({ center, radius });
 
-const mountingC2C = inches(3.5);
+const mountingC2C = inches(3.75);
 const mountFromCenter = mountingC2C / 2;
 const holes = new paper.Group(
   [[cx - mountFromCenter, cy], [cx + mountFromCenter, cy]].map(xy => holeAt(xy))
@@ -56,7 +56,7 @@ cut(holes3);
 function writeToFile(paper) {
   const svg = paper.project.exportSVG({ asString: true });
 
-  fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
+  fs.writeFile(_path.resolve("./out.svg"), svg, function(err) {
     if (err) throw err;
     console.log("Saved!");
   });
