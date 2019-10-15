@@ -54,13 +54,34 @@ const cardPocket = new paper.Rectangle({
   x: rect.width - cards.T,
   y: pin.h // (rect.height - cards.h) / 2
 });
-const cardPocket2 = path.rect({ ...cardPocket, radius: 0 });
+const cardPocket2 = guide(path.rect({ ...cardPocket, radius: 0 }));
 
 const outer = () => {
   const o = rect2.clone();
   //o.parent = paper.project.activeLayer;
   return cut(o);
 };
+
+const button = (() => {
+  const padding = mm(0.5);
+  const halfWidth = palm.button.w / 2 + padding;
+  const points = [
+    [-halfWidth, palm.button.h + padding],
+    [-halfWidth, -padding],
+    [halfWidth, -padding],
+    [halfWidth, palm.button.h + padding]
+  ];
+  const cutout = new paper.Path(points);
+  const stressRelief = points.map(
+    xy => new paper.Path.Circle({ center: xy, radius: mm(0.5) })
+  ); // 0.2mm is kerf?
+  return guide(group([cutout, ...stressRelief])).translate([
+    palmPocket.x + palmPocket.width / 2,
+    palmPocket.y + palm.button.y
+  ]);
+})();
+
+const cutButton = () => cut(button.clone());
 
 const outerWithPocket = () => {
   const owp = rect2.clone().subtract(cardPocket2);
@@ -81,8 +102,12 @@ const guideHoles = guide(
   )
 );
 const cutHoles = () => cut(guideHoles.clone());
-// left edge
-group([outer(), cutHoles()]).translate([100, 0]);
+
+// edge
+group([outer(), palmPocketGuide.clone(), cutButton(), cutHoles()]).translate([
+  100,
+  0
+]);
 
 // left inner
 group([outerWithPocket(), cutPalmPocket(), cutHoles()]).translate([200, 0]);
@@ -91,7 +116,6 @@ group([outerWithPocket(), cutPalmPocket(), cutHoles()]).translate([200, 0]);
 group([outerWithPocketAndFace.clone(), cutHoles()]).translate([300, 0]);
 
 // phone middle (charge port access)
-// TODO this will also remove the bottom face hooks
 group([
   outerWithPocketAndFace
     .clone()
