@@ -63,7 +63,7 @@ const outer = () => {
 };
 
 const button = (() => {
-  const padding = mm(0.5);
+  const padding = (palm.d1 - palm.button.w) / 2;
   const halfWidth = palm.button.w / 2 + padding;
   const points = [
     [-halfWidth, palm.button.h + padding],
@@ -73,7 +73,7 @@ const button = (() => {
   ];
   const cutout = new paper.Path(points);
   const stressRelief = points.map(
-    xy => new paper.Path.Circle({ center: xy, radius: mm(0.5) })
+    xy => new paper.Path.Circle({ center: xy, radius: mm(0.75) })
   ); // 0.2mm is kerf?
   return guide(group([cutout, ...stressRelief])).translate([
     palmPocket.x + palmPocket.width / 2,
@@ -104,18 +104,22 @@ const guideHoles = guide(
 const cutHoles = () => cut(guideHoles.clone());
 
 // edge
+// 2 slices
 group([outer(), palmPocketGuide.clone(), cutButton(), cutHoles()]).translate([
   100,
   0
 ]);
 
-// left inner
+// inner edge
+// 2 slices
 group([outerWithPocket(), cutPalmPocket(), cutHoles()]).translate([200, 0]);
 
 // phone face
+// 5
 group([outerWithPocketAndFace.clone(), cutHoles()]).translate([300, 0]);
 
 // phone middle (charge port access)
+// 6 slices
 group([
   outerWithPocketAndFace
     .clone()
@@ -148,6 +152,8 @@ group([
 ]).translate([400, 0]);
 
 // with camera
+// 5 slices
+// TODO one needs space for charge port
 group([
   outerWithPocketAndFace.clone().subtract(cut(cameraCutoutGuide.clone())),
   cutHoles()
