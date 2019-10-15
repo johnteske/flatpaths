@@ -11,7 +11,7 @@ const group = (...args) => new paper.Group(...args);
 
 const T = inches(1 / 8); // thickness of main body material
 // const T2 = // thickness of faceplate material
-const cornerRadius = 0; // mm(3);
+const cornerRadius = T;
 
 const pin = { d: mm(3) };
 pin.r = pin.d / 2;
@@ -33,7 +33,27 @@ const palmFace = new paper.Rectangle({
   height: palm.face.h,
   y: palmPocket.y + palm.face.y // TODO
 });
-const cutPalmFace = () => cut(path.rect({ ...palmFace }));
+// add material for radius
+palmFace.height += cornerRadius * 2;
+palmFace.y -= cornerRadius;
+const palmFaceGuide = guide(
+  path
+    .rect({ ...palmFace })
+    .subtract(
+      new paper.Path.Circle({
+        center: [T / 2, palmFace.y],
+        radius: palmFace.width / 2
+      })
+    )
+    .subtract(
+      new paper.Path.Circle({
+        center: [T / 2, palmFace.y + palmFace.height],
+        radius: T / 2
+      })
+    )
+);
+const cutPalmFace = () => cut(palmFaceGuide.clone());
+
 const palmCameraCutout = new paper.Rectangle({
   width: T,
   height: palm.camera.h,
