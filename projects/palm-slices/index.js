@@ -10,7 +10,7 @@ const cards = require("./cards");
 const group = (...args) => new paper.Group(...args);
 
 const T = inches(1 / 8); // thickness of main body material
-// const T2 = // thickness of faceplate material
+const T2 = inches(1 / 8); // thickness of faceplate material
 const cornerRadius = T;
 
 const pin = { d: mm(3) };
@@ -68,11 +68,21 @@ const rect = new paper.Rectangle({
 });
 const rect2 = path.rect({ ...rect, radius: cornerRadius });
 
+const facePlateTab = path.rect({
+  ...new paper.Rectangle({
+    x: rect.width,
+    y: pin.h,
+    width: T2,
+    height: (rect.height - pin.h - pin.h - cards.h) / 2
+  })
+});
+guide(facePlateTab);
+
 const cardPocket = new paper.Rectangle({
   width: cards.T,
   height: cards.h,
   x: rect.width - cards.T,
-  y: pin.h // (rect.height - cards.h) / 2
+  y: (rect.height - cards.h) / 2
 });
 const cardPocket2 = guide(path.rect({ ...cardPocket, radius: 0 }));
 
@@ -104,8 +114,16 @@ const button = (() => {
 const cutButton = () => cut(button.clone());
 
 const outerWithPocket = () => {
-  const owp = rect2.clone().subtract(cardPocket2);
-  //owp.parent = paper.project.activeLayer;
+  const owp = rect2
+    .clone()
+    .unite(facePlateTab.clone())
+    .unite(
+      facePlateTab
+        .clone()
+        .translate([0, cardPocket.height + facePlateTab.height])
+    )
+    .subtract(cardPocket2);
+  //cutowp.parent = paper.project.activeLayer;
   return cut(owp);
 };
 
