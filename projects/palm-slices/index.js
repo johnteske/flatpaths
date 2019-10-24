@@ -16,7 +16,8 @@ const cornerRadius = T;
 
 const pin = { d: mm(3) };
 pin.r = pin.d / 2;
-pin.h = T + pin.d + T; // total pin height, incl. padding
+pin.h = T + T + T; // total pin height, incl. padding
+//pin.h = T + pin.d + T; // total pin height, incl. padding
 
 const palmPocket = new paper.Rectangle({
   width: palm.d1,
@@ -137,11 +138,26 @@ const guideHolePoints = [
 const guideHoles = guide(
   group(
     guideHolePoints.map(
-      xy => new paper.Path.Circle({ center: xy, radius: pin.r })
+      ([x, y]) =>
+        new paper.Path.Rectangle({
+          x: x - T,
+          y: y - T / 2,
+          width: T * 2,
+          height: T
+        })
+      // xy => new paper.Path.Circle({ center: xy, radius: pin.r })
     )
   )
 );
 const cutHoles = () => cut(guideHoles.clone());
+
+const materialPin = new paper.Path.Rectangle({
+  x: 0,
+  y: rect.height + T,
+  width: 20 * T,
+  height: T * 2
+});
+cut(materialPin);
 
 const sliceLabel = guide(
   new paper.Path(
