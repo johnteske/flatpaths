@@ -4,7 +4,7 @@ const cut = o => {
 };
 
 const engrave = o => {
-  o.strokeColor = "#ffff00";
+  o.strokeColor = "#ff00ff";
   return o;
 };
 

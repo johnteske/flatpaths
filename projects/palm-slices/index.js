@@ -1,8 +1,9 @@
 const paper = require("paper-jsdom");
 
 const path = require("../../path");
-const { cut, guide } = require("../../stroke");
+const { cut, engrave, guide } = require("../../stroke");
 const { inches, mm } = require("../../units");
+const score = engrave;
 
 const palm = require("./palm");
 const cards = require("./cards");
@@ -88,7 +89,6 @@ const cardPocket2 = guide(path.rect({ ...cardPocket, radius: 0 }));
 
 const outer = () => {
   const o = rect2.clone();
-  //o.parent = paper.project.activeLayer;
   return cut(o);
 };
 
@@ -123,7 +123,6 @@ const outerWithPocket = () => {
         .translate([0, cardPocket.height + facePlateTab.height])
     )
     .subtract(cardPocket2);
-  //cutowp.parent = paper.project.activeLayer;
   return cut(owp);
 };
 
@@ -131,34 +130,68 @@ const outerWithPocketAndFace = outerWithPocket().subtract(
   cutPalmPocket().unite(cutPalmFace())
 );
 
+const guideHolePoints = [
+  [rect.width / 2, T + pin.r],
+  [rect.width / 2, rect.height - T - pin.r]
+];
 const guideHoles = guide(
   group(
-    [
-      [rect.width / 2, T + pin.r],
-      [rect.width / 2, rect.height - T - pin.r]
-    ].map(xy => new paper.Path.Circle({ center: xy, radius: pin.r }))
+    guideHolePoints.map(
+      xy => new paper.Path.Circle({ center: xy, radius: pin.r })
+    )
   )
 );
 const cutHoles = () => cut(guideHoles.clone());
 
+const sliceLabel = guide(
+  new paper.Path(
+    [0, T / 2 + pin.r].map(yOff => {
+      const [x, y] = guideHolePoints[0];
+      return [x, y - yOff];
+    })
+  )
+);
+
+const scoreSliceLabel = n => {
+  const g = group();
+  const spread = 360 / n;
+  for (let i = 0; i < n; i++) {
+    g.addChild(sliceLabel.clone().rotate(i * spread, guideHolePoints[0]));
+  }
+  return score(g);
+};
+
 // edge
 // 2 slices
-group([outer(), palmPocketGuide.clone(), cutButton(), cutHoles()]).translate([
-  100,
-  0
-]);
+group([
+  scoreSliceLabel(1),
+  outer(),
+  palmPocketGuide.clone(),
+  cutButton(),
+  cutHoles()
+]).translate([100, 0]);
 
 // inner edge
 // 2 slices
-group([outerWithPocket(), cutPalmPocket(), cutHoles()]).translate([200, 0]);
+group([
+  scoreSliceLabel(2),
+  outerWithPocket(),
+  cutPalmPocket(),
+  cutHoles()
+]).translate([200, 0]);
 
 // phone face
 // 5
-group([outerWithPocketAndFace.clone(), cutHoles()]).translate([300, 0]);
+group([
+  scoreSliceLabel(3),
+  outerWithPocketAndFace.clone(),
+  cutHoles()
+]).translate([300, 0]);
 
 // phone middle (charge port access)
 // 6 slices
 group([
+  scoreSliceLabel(4),
   outerWithPocketAndFace
     .clone()
     .subtract(
@@ -193,6 +226,7 @@ group([
 // 5 slices
 // TODO one needs space for charge port
 group([
+  scoreSliceLabel(5),
   outerWithPocketAndFace.clone().subtract(cut(cameraCutoutGuide.clone())),
   cutHoles()
 ]).translate([500, 0]);
