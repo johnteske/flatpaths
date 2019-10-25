@@ -160,6 +160,14 @@ const materialPin = new paper.Path.Rectangle({
 cut(materialPin);
 cut(materialPin.clone().translate([0, T * 3]));
 
+// TODO add holes for mounting
+const facePlate = new paper.Path.Rectangle({
+  y: rect.height + (T * 7),
+  height: rect.height,
+  width: T * 20
+});
+cut(facePlate);
+
 const sliceLabel = guide(
   new paper.Path(
     [0, T / 2 + pin.r].map(yOff => {
