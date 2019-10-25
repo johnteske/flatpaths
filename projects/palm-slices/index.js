@@ -158,6 +158,7 @@ const materialPin = new paper.Path.Rectangle({
   height: T * 2
 });
 cut(materialPin);
+cut(materialPin.clone().translate([0, T * 3]));
 
 const sliceLabel = guide(
   new paper.Path(
