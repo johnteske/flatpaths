@@ -13,17 +13,15 @@ const group = (...args) => new paper.Group(...args);
 const T = inches(1 / 8); // thickness of main body material
 const T2 = inches(1 / 8); // thickness of faceplate material
 const cornerRadius = T;
+const softCornerRadius = mm(0.5); // just enough to soften
 
-const pin = { d: mm(3) };
-pin.r = pin.d / 2;
-pin.h = T + T + T; // total pin height, incl. padding
-//pin.h = T + pin.d + T; // total pin height, incl. padding
+const pin = require("./pin")(T);
 
 const palmPocket = new paper.Rectangle({
   width: palm.d1,
   height: palm.h,
   x: T,
-  y: pin.h
+  y: pin.box.height
 });
 const palmPocketGuide = guide(
   path.rect({ ...palmPocket, radius: cornerRadius })
@@ -66,16 +64,16 @@ const cameraCutoutGuide = guide(path.rect(palmCameraCutout, 0));
 
 const rect = new paper.Rectangle({
   width: T + palm.d1 + T + cards.T,
-  height: pin.h + palmPocket.height + pin.h
+  height: pin.box.height + palmPocket.height + pin.box.height
 });
 const rect2 = path.rect({ ...rect, radius: cornerRadius });
 
 const facePlateTab = path.rect({
   ...new paper.Rectangle({
     x: rect.width,
-    y: pin.h,
+    y: pin.box.height,
     width: T2,
-    height: (rect.height - pin.h - pin.h - cards.h) / 2
+    height: (rect.height - (pin.box.height * 2) - cards.h) / 2
   })
 });
 guide(facePlateTab);
@@ -132,18 +130,18 @@ const outerWithPocketAndFace = outerWithPocket().subtract(
 );
 
 const guideHolePoints = [
-  [rect.width / 2, T + pin.r],
-  [rect.width / 2, rect.height - T - pin.r]
+  [rect.width / 2 - (pin.width / 2), T],
+  [rect.width / 2 - (pin.width / 2), rect.height - T - pin.height]
 ];
 const guideHoles = guide(
   group(
     guideHolePoints.map(
       ([x, y]) =>
         new paper.Path.Rectangle({
-          x: x - T,
-          y: y - T / 2,
-          width: T * 2,
-          height: T
+          x: x,
+          y: y,
+          width: pin.width,
+          height: pin.height
         })
       // xy => new paper.Path.Circle({ center: xy, radius: pin.r })
     )
@@ -155,7 +153,8 @@ const materialPin = new paper.Path.Rectangle({
   x: 0,
   y: rect.height + T,
   width: 20 * T,
-  height: T * 2
+  height: T * 2,
+  radius: softCornerRadius
 });
 cut(materialPin);
 cut(materialPin.clone().translate([0, T * 3]));
@@ -164,13 +163,14 @@ cut(materialPin.clone().translate([0, T * 3]));
 const facePlate = new paper.Path.Rectangle({
   y: rect.height + (T * 7),
   height: rect.height,
-  width: T * 20
+  width: T * 20,
+  radius: softCornerRadius
 });
 cut(facePlate);
 
 const sliceLabel = guide(
   new paper.Path(
-    [0, T / 2 + pin.r].map(yOff => {
+    [0, T / 2 + pin.height].map(yOff => {
       const [x, y] = guideHolePoints[0];
       return [x, y - yOff];
     })
@@ -238,7 +238,7 @@ group([
             x: 0,
             y: rect.height,
             width: rect.width,
-            height: -pin.h
+            height: -pin.height
           })
         )
       )
