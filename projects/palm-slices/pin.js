@@ -5,11 +5,15 @@ const pin = T => {
     // d: mm(3)
     width: 2 * T,
     height: T,
-    box: {}
-  }
+    margin: {
+      top: T,
+      bottom: T
+    },
+    outer: {}
+  };
   // pin.r = pin.d / 2;
-  _pin.box.height = T + _pin.height + T; // add vertical padding
+  _pin.outer.height = _pin.margin.top + _pin.height + _pin.margin.bottom;
   return _pin;
 };
 
-module.exports = pin
+module.exports = pin;

@@ -21,7 +21,7 @@ const palmPocket = new paper.Rectangle({
   width: palm.d1,
   height: palm.h,
   x: T,
-  y: pin.box.height
+  y: pin.outer.height
 });
 const palmPocketGuide = guide(
   path.rect({ ...palmPocket, radius: cornerRadius })
@@ -64,16 +64,16 @@ const cameraCutoutGuide = guide(path.rect(palmCameraCutout, 0));
 
 const rect = new paper.Rectangle({
   width: T + palm.d1 + T + cards.T,
-  height: pin.box.height + palmPocket.height + pin.box.height
+  height: pin.outer.height + palmPocket.height + pin.outer.height
 });
 const rect2 = path.rect({ ...rect, radius: cornerRadius });
 
 const facePlateTab = path.rect({
   ...new paper.Rectangle({
     x: rect.width,
-    y: pin.box.height,
+    y: pin.outer.height,
     width: T2,
-    height: (rect.height - (pin.box.height * 2) - cards.h) / 2
+    height: (rect.height - pin.outer.height * 2 - cards.h) / 2
   })
 });
 guide(facePlateTab);
@@ -130,8 +130,8 @@ const outerWithPocketAndFace = outerWithPocket().subtract(
 );
 
 const guideHolePoints = [
-  [rect.width / 2 - (pin.width / 2), T],
-  [rect.width / 2 - (pin.width / 2), rect.height - T - pin.height]
+  [rect.width / 2 - pin.width / 2, T],
+  [rect.width / 2 - pin.width / 2, rect.height - T - pin.height]
 ];
 const guideHoles = guide(
   group(
@@ -161,7 +161,7 @@ cut(materialPin.clone().translate([0, T * 3]));
 
 // TODO add holes for mounting
 const facePlate = new paper.Path.Rectangle({
-  y: rect.height + (T * 7),
+  y: rect.height + T * 7,
   height: rect.height,
   width: T * 20,
   radius: softCornerRadius
