@@ -115,12 +115,12 @@ const cutButton = () => cut(button.clone());
 const outerWithPocket = () => {
   const owp = rect2
     .clone()
-    .unite(facePlateTab.clone())
-    .unite(
-      facePlateTab
-        .clone()
-        .translate([0, cardPocket.height + facePlateTab.height])
-    )
+//    .unite(facePlateTab.clone())
+//    .unite(
+//      facePlateTab
+//        .clone()
+//        .translate([0, cardPocket.height + facePlateTab.height])
+//    )
     .subtract(cardPocket2);
   return cut(owp);
 };
@@ -160,13 +160,13 @@ cut(materialPin);
 cut(materialPin.clone().translate([0, T * 3]));
 
 // TODO add holes for mounting
-const facePlate = new paper.Path.Rectangle({
-  y: rect.height + T * 7,
-  height: rect.height,
-  width: T * 20,
-  radius: softCornerRadius
-});
-cut(facePlate);
+//const facePlate = new paper.Path.Rectangle({
+//  y: rect.height + T * 7,
+//  height: rect.height,
+//  width: T * 20,
+//  radius: softCornerRadius
+//});
+//cut(facePlate);
 
 const sliceLabel = guide(
   new paper.Path(
@@ -178,32 +178,34 @@ const sliceLabel = guide(
 );
 
 const scoreSliceLabel = n => {
-  const g = group();
-  const spread = 360 / n;
-  for (let i = 0; i < n; i++) {
-    g.addChild(sliceLabel.clone().rotate(i * spread, guideHolePoints[0]));
-  }
-  return score(g);
+  return null
+//  const g = group();
+//  const spread = 360 / n;
+//  for (let i = 0; i < n; i++) {
+//    g.addChild(sliceLabel.clone().rotate(i * spread, guideHolePoints[0]));
+//  }
+//  return score(g);
 };
 
 // edge
 // 2 slices
 group([
   scoreSliceLabel(1),
-  outer(),
-  palmPocketGuide.clone(),
+  outer().subtract(cut(palmFaceGuide.clone())
+),
+  //palmPocketGuide.clone(),
   cutButton(),
   cutHoles()
 ]).translate([100, 0]);
 
-// inner edge
-// 2 slices
-group([
-  scoreSliceLabel(2),
-  outerWithPocket(),
-  cutPalmPocket(),
-  cutHoles()
-]).translate([200, 0]);
+//// inner edge
+//// 2 slices
+//group([
+//  scoreSliceLabel(2),
+//  outerWithPocket(),
+//  cutPalmPocket(),
+//  cutHoles()
+//]).translate([200, 0]);
 
 // phone face
 // 5
