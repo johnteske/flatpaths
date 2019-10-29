@@ -115,12 +115,12 @@ const cutButton = () => cut(button.clone());
 const outerWithPocket = () => {
   const owp = rect2
     .clone()
-//    .unite(facePlateTab.clone())
-//    .unite(
-//      facePlateTab
-//        .clone()
-//        .translate([0, cardPocket.height + facePlateTab.height])
-//    )
+    .unite(facePlateTab.clone())
+    .unite(
+      facePlateTab
+        .clone()
+        .translate([0, cardPocket.height + facePlateTab.height])
+    )
     .subtract(cardPocket2);
   return cut(owp);
 };
@@ -149,15 +149,69 @@ const guideHoles = guide(
 );
 const cutHoles = () => cut(guideHoles.clone());
 
-const materialPin = new paper.Path.Rectangle({
-  x: 0,
-  y: rect.height + T,
-  width: 20 * T,
-  height: T * 2,
-  radius: softCornerRadius
-});
-cut(materialPin);
-cut(materialPin.clone().translate([0, T * 3]));
+const LAYERS = 20;
+
+const materialPin = (() => {
+  const headBase = path.rect({ x: 0, y: 0, width: T, height: T * 3 });
+  const headSubtract = new paper.CompoundPath({
+    children: [
+      path.rect({ x: 0, y: 0, width: T / 2, height: T / 2 }),
+      path.rect({ x: 0, y: T * 2.5, width: T / 2, height: T / 2 })
+    ]
+  });
+  const headAdd = new paper.CompoundPath({
+    children: [
+      new paper.Path.Circle({ x: T / 2, y: T / 2, radius: T / 2 }),
+      new paper.Path.Circle({
+        x: T / 2,
+        y: headBase.height - T / 2,
+        radius: T / 2
+      })
+    ]
+  });
+
+  guide(
+    group(headBase.clone(), headSubtract.clone(), headAdd.clone()).translate([
+      T,
+      rect.height + T
+    ])
+  );
+  const head = headBase.subtract(headSubtract).unite(headAdd);
+  guide(head.clone().translate([T * 3, rect.height + T]));
+
+  return width => {
+    return cut(
+      head
+        .clone()
+        .unite(
+          path.rect({
+            x: T,
+            y: T / 2,
+            width,
+            height: T * 2
+          })
+        )
+        .unite(
+          head
+            .clone()
+            .scale(-1, 0.8325)
+            .translate([T + width, 0])
+        )
+        .subtract(
+          path.rect({
+            x: T + width + T,
+            y: T * 1.25,
+            width: T * -5,
+            height: T / 2
+            //radius: softCornerRadius
+          })
+        )
+    );
+  };
+})();
+
+cut(materialPin(LAYERS * T).translate([0, rect.height + T * 9]));
+cut(materialPin(5 * T).translate([0, rect.height + T * 5]));
 
 // TODO add holes for mounting
 //const facePlate = new paper.Path.Rectangle({
@@ -178,21 +232,20 @@ const sliceLabel = guide(
 );
 
 const scoreSliceLabel = n => {
-  return null
-//  const g = group();
-//  const spread = 360 / n;
-//  for (let i = 0; i < n; i++) {
-//    g.addChild(sliceLabel.clone().rotate(i * spread, guideHolePoints[0]));
-//  }
-//  return score(g);
+  return null;
+  //  const g = group();
+  //  const spread = 360 / n;
+  //  for (let i = 0; i < n; i++) {
+  //    g.addChild(sliceLabel.clone().rotate(i * spread, guideHolePoints[0]));
+  //  }
+  //  return score(g);
 };
 
 // edge
 // 2 slices
 group([
   scoreSliceLabel(1),
-  outer().subtract(cut(palmFaceGuide.clone())
-),
+  outer().subtract(cut(palmFaceGuide.clone())),
   //palmPocketGuide.clone(),
   cutButton(),
   cutHoles()
