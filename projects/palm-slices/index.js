@@ -128,12 +128,11 @@ const outerWithPocket = () => {
   return cut(owp);
 };
 
-// TODO should this rounded corner be the full T?
 const outerWithPocketAndFace = withRoundedCorner(
   outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace())),
 
-  [T / 2, palmFace.y + palmFace.height + T / 2],
-  T / 2
+  [T, palmFace.y + palmFace.height + T],
+  T
 );
 
 const guideHolePoints = [
