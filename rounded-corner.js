@@ -5,7 +5,9 @@ const { guide } = require("./stroke");
 const withRoundedCorner = (center, radius, corner) => {
   const translateMap = {
     nw: [center[0] - radius, center[1] - radius],
-    sw: [center[0] - radius, center[1]]
+    ne: [center[0], center[1] - radius],
+    sw: [center[0] - radius, center[1]],
+    se: [center[0], center[1]],
   };
 
   const cutout = path
