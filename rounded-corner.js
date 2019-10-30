@@ -2,7 +2,7 @@ const paper = require("paper-jsdom");
 const path = require("./path");
 const { guide } = require("./stroke");
 
-const withRoundedCorner = (target, center, radius, corner) => {
+const withRoundedCorner = (center, radius, corner) => {
   const translateMap = {
     nw: [center[0] - radius, center[1] - radius],
     sw: [center[0] - radius, center[1]]
@@ -19,7 +19,7 @@ const withRoundedCorner = (target, center, radius, corner) => {
   guide(rounded.clone());
   const roundedCorner = rounded.intersect(cutout);
 
-  return target.subtract(cutout).unite(roundedCorner);
+  return target => target.subtract(cutout).unite(roundedCorner);
 };
 
 module.exports = withRoundedCorner;

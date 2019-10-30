@@ -6,6 +6,8 @@ const { cut, engrave, guide } = require("../../stroke");
 const { inches, mm } = require("../../units");
 const score = engrave;
 
+const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
+
 const palm = require("./palm");
 const cards = require("./cards");
 
@@ -37,6 +39,12 @@ const palmFace = new paper.Rectangle({
 
 const palmFaceGuide = guide(path.rect({ ...palmFace }));
 const cutPalmFace = () => cut(palmFaceGuide.clone());
+
+const palmFaceWithRoundedCorners = target =>
+  pipe(
+    withRoundedCorner([T, palmFace.y + palmFace.height + T], T, "nw"),
+    withRoundedCorner([T, palmFace.y - T], T, "sw")
+  )(target);
 
 const palmCameraCutout = new paper.Rectangle({
   width: T,
@@ -109,17 +117,8 @@ const outerWithPocket = () => {
   return cut(owp);
 };
 
-const outerWithPocketAndFace = withRoundedCorner(
-  withRoundedCorner(
-    outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace())),
-
-    [T, palmFace.y + palmFace.height + T],
-    T,
-    "nw"
-  ),
-  [T, palmFace.y],
-  T,
-  "sw"
+const outerWithPocketAndFace = palmFaceWithRoundedCorners(
+  outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace()))
 );
 
 const guideHolePoints = [
@@ -246,7 +245,7 @@ const scoreSliceLabel = n => {
 // 2 slices
 group([
   scoreSliceLabel(1),
-  outer().subtract(cut(palmFaceGuide.clone())),
+  palmFaceWithRoundedCorners(outer().subtract(cut(palmFaceGuide.clone()))),
   //palmPocketGuide.clone(),
   cutButton(),
   cutHoles()
