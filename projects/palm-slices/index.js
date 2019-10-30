@@ -43,10 +43,7 @@ const cutPalmFace = () => cut(palmFaceGuide.clone());
 const palmFaceWithRoundedCorners = target =>
   pipe(
     withRoundedCorner([T, palmFace.y + palmFace.height + T], T, "nw"),
-    withRoundedCorner([T - softCornerRadius, palmFace.y + palmFace.height + softCornerRadius], softCornerRadius, "ne"),
-  
-  withRoundedCorner([T, palmFace.y - T], T, "sw"),
-    withRoundedCorner([T - softCornerRadius, palmFace.y - softCornerRadius], softCornerRadius, "se"),
+    withRoundedCorner([T, palmFace.y - T], T, "sw"),
   )(target);
 
 const palmCameraCutout = new paper.Rectangle({
