@@ -35,26 +35,7 @@ const palmFace = new paper.Rectangle({
   y: palmPocket.y + palm.face.y // TODO
 });
 
-// add material for radius
-//palmFace.height += cornerRadius * 2;
-//palmFace.y -= cornerRadius;
-const palmFaceGuide = guide(
-  //withRoundedCorner(
-  path.rect({ ...palmFace }).subtract(
-    new paper.Path.Circle({
-      center: [T / 4, palmFace.y],
-      radius: palmFace.width / 4
-    })
-  )
-  //    .subtract(
-  //      new paper.Path.Circle({
-  //        center: [T / 4, palmFace.y + palmFace.height],
-  //        radius: T / 4
-  //      })
-  //),
-  //  [T / 4, palmFace.y + palmFace.height],
-  //  T / 4
-);
+const palmFaceGuide = guide(path.rect({ ...palmFace }));
 const cutPalmFace = () => cut(palmFaceGuide.clone());
 
 const palmCameraCutout = new paper.Rectangle({
@@ -129,10 +110,16 @@ const outerWithPocket = () => {
 };
 
 const outerWithPocketAndFace = withRoundedCorner(
-  outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace())),
+  withRoundedCorner(
+    outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace())),
 
-  [T, palmFace.y + palmFace.height + T],
-  T
+    [T, palmFace.y + palmFace.height + T],
+    T,
+    "nw"
+  ),
+  [T, palmFace.y],
+  T,
+  "sw"
 );
 
 const guideHolePoints = [

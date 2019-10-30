@@ -1,9 +1,11 @@
 const paper = require("paper-jsdom");
 const path = require("./path");
+const { guide } = require("./stroke");
 
-const withRoundedCorner = (target, center, radius, corners) => {
+const withRoundedCorner = (target, center, radius, corner) => {
   const translateMap = {
-    nw: [center[0] - radius, center[1] - radius]
+    nw: [center[0] - radius, center[1] - radius],
+    sw: [center[0] - radius, center[1]]
   };
 
   const cutout = path
@@ -11,9 +13,10 @@ const withRoundedCorner = (target, center, radius, corners) => {
       width: radius,
       height: radius
     })
-    .translate(translateMap["nw"]);
-
+    .translate(translateMap[corner]);
+  guide(cutout.clone());
   const rounded = new paper.Path.Circle({ center, radius });
+  guide(rounded.clone());
   const roundedCorner = rounded.intersect(cutout);
 
   return target.subtract(cutout).unite(roundedCorner);
