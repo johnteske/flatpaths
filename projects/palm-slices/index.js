@@ -170,42 +170,50 @@ const materialPin = (() => {
     ]
   });
 
-  guide(
-    group(headBase.clone(), headSubtract.clone(), headAdd.clone()).translate([
-      T,
-      rect.height + T
-    ])
-  );
+  const guideWidth = 5 * T;
+
   const head = headBase.subtract(headSubtract).unite(headAdd);
-  guide(head.clone().translate([T * 3, rect.height + T]));
+
+  const body = width =>
+    path.rect({
+      x: T,
+      y: T / 2,
+      width,
+      height: T * 2
+    });
+
+  const clip = x =>
+    head
+      .clone()
+      .translate([x, 0])
+      .scale(-1, 0.8325);
+
+  const clipSubtract = (() => {
+    const sub = path.rect({
+      y: T * 1.25,
+      width: T * -5,
+      height: T / 2
+    });
+
+    return width => sub.clone().translate([T + width + T, 0]);
+  })();
+
+  guide(
+    group(
+      head.clone(),
+      body(guideWidth).clone(),
+      clip(T + guideWidth).clone(),
+      clipSubtract(guideWidth)
+    ).translate([0, rect.height + T])
+  );
 
   return width => {
     return cut(
       head
         .clone()
-        .unite(
-          path.rect({
-            x: T,
-            y: T / 2,
-            width,
-            height: T * 2
-          })
-        )
-        .unite(
-          head
-            .clone()
-            .scale(-1, 0.8325)
-            .translate([T + width, 0])
-        )
-        .subtract(
-          path.rect({
-            x: T + width + T,
-            y: T * 1.25,
-            width: T * -5,
-            height: T / 2
-            //radius: softCornerRadius
-          })
-        )
+        .unite(body(width).clone())
+        .unite(clip(T + width).clone())
+        .subtract(clipSubtract(width))
     );
   };
 })();
