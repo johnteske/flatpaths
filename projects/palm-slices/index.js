@@ -1,6 +1,7 @@
 const paper = require("paper-jsdom");
 
 const path = require("../../path");
+const withRoundedCorner = require("../../rounded-corner");
 const { cut, engrave, guide } = require("../../stroke");
 const { inches, mm } = require("../../units");
 const score = engrave;
@@ -33,24 +34,26 @@ const palmFace = new paper.Rectangle({
   height: palm.face.h,
   y: palmPocket.y + palm.face.y // TODO
 });
+
 // add material for radius
-palmFace.height += cornerRadius * 2;
-palmFace.y -= cornerRadius;
+//palmFace.height += cornerRadius * 2;
+//palmFace.y -= cornerRadius;
 const palmFaceGuide = guide(
-  path
-    .rect({ ...palmFace })
-    .subtract(
-      new paper.Path.Circle({
-        center: [T / 2, palmFace.y],
-        radius: palmFace.width / 2
-      })
-    )
-    .subtract(
-      new paper.Path.Circle({
-        center: [T / 2, palmFace.y + palmFace.height],
-        radius: T / 2
-      })
-    )
+  //withRoundedCorner(
+  path.rect({ ...palmFace }).subtract(
+    new paper.Path.Circle({
+      center: [T / 4, palmFace.y],
+      radius: palmFace.width / 4
+    })
+  )
+  //    .subtract(
+  //      new paper.Path.Circle({
+  //        center: [T / 4, palmFace.y + palmFace.height],
+  //        radius: T / 4
+  //      })
+  //),
+  //  [T / 4, palmFace.y + palmFace.height],
+  //  T / 4
 );
 const cutPalmFace = () => cut(palmFaceGuide.clone());
 
@@ -72,7 +75,7 @@ const facePlateTab = path.rect({
   ...new paper.Rectangle({
     x: rect.width,
     y: pin.outer.height,
-    width: T2,
+    width: T2, // + T,
     height: (rect.height - pin.outer.height * 2 - cards.h) / 2
   })
 });
@@ -125,8 +128,12 @@ const outerWithPocket = () => {
   return cut(owp);
 };
 
-const outerWithPocketAndFace = outerWithPocket().subtract(
-  cutPalmPocket().unite(cutPalmFace())
+// TODO should this rounded corner be the full T?
+const outerWithPocketAndFace = withRoundedCorner(
+  outerWithPocket().subtract(cutPalmPocket().unite(cutPalmFace())),
+
+  [T / 2, palmFace.y + palmFace.height + T / 2],
+  T / 2
 );
 
 const guideHolePoints = [
