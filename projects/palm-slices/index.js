@@ -43,7 +43,7 @@ const cutPalmFace = () => cut(palmFaceGuide.clone());
 const palmFaceWithRoundedCorners = target =>
   pipe(
     withRoundedCorner([T, palmFace.y + palmFace.height + T], T, "nw"),
-    withRoundedCorner([T, palmFace.y - T], T, "sw"),
+    withRoundedCorner([T, palmFace.y - T], T, "sw")
   )(target);
 
 const palmCameraCutout = new paper.Rectangle({
@@ -69,6 +69,14 @@ const facePlateTab = path.rect({
   })
 });
 guide(facePlateTab);
+const withFacePlateTabs = target =>
+  target
+    .unite(facePlateTab.clone())
+    .unite(
+      facePlateTab
+        .clone()
+        .translate([0, cardPocket.height + facePlateTab.height])
+    );
 
 const cardPocket = new paper.Rectangle({
   width: cards.T,
@@ -105,15 +113,7 @@ const button = (() => {
 const cutButton = () => cut(button.clone());
 
 const outerWithPocket = () => {
-  const owp = rect2
-    .clone()
-    .unite(facePlateTab.clone())
-    .unite(
-      facePlateTab
-        .clone()
-        .translate([0, cardPocket.height + facePlateTab.height])
-    )
-    .subtract(cardPocket2);
+  const owp = rect2.clone().subtract(cardPocket2);
   return cut(owp);
 };
 
@@ -251,14 +251,13 @@ group([
   cutHoles()
 ]).translate([100, 0]);
 
-//// inner edge
-//// 2 slices
-//group([
-//  scoreSliceLabel(2),
-//  outerWithPocket(),
-//  cutPalmPocket(),
-//  cutHoles()
-//]).translate([200, 0]);
+// inner edge
+// 2 slices
+group([
+  scoreSliceLabel(2),
+  withFacePlateTabs(outerWithPocketAndFace.clone()),
+  cutHoles()
+]).translate([200, 0]);
 
 // phone face
 // 5
