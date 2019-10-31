@@ -60,24 +60,34 @@ const rect = new paper.Rectangle({
 });
 const rect2 = path.rect({ ...rect, radius: cornerRadius });
 
-const facePlateTab = path
-  .rect({
-    x: rect.width,
-    width: T2 + T,
-    height: T // (rect.height - pin.outer.height * 2 - cards.h) / 2
-  })
-  .unite(
+const fpOut = path.rect({
+  x: rect.width,
+  width: T2, // + T,
+  height: T
+});
+
+const facePlateTab = pipe(
+  withRoundedCorner([rect.width + T / 2, T / 2], T / 2, "ne"),
+  withRoundedCorner([rect.width + T / 2, T * 1.5], T / 2, "se")
+)(
+  fpOut.unite(
     path.rect({
-      x: rect.width + T2,
+      x: rect.width, // + T2,
       width: T,
       height: T * 2
     })
-  );
+  )
+);
 guide(facePlateTab);
 const withFacePlateTabs = target =>
   target
-    .unite(facePlateTab.clone().translate([0, 2 * T]))
-    .unite(facePlateTab.clone().translate([0, rect.height - T - T - T - T]));
+    // temporary solution without faceplate
+    .unite(facePlateTab.clone().translate([0, (rect.height - cards.h) / 2 - T]))
+    .unite(
+      facePlateTab
+        .clone()
+        .translate([0, (rect.height - cards.h) / 2 + cards.h - T])
+    );
 
 const cardPocket = new paper.Rectangle({
   width: cards.T,
@@ -101,15 +111,33 @@ const button = (() => {
     [halfWidth, -padding],
     [halfWidth, palm.button.h + padding]
   ];
-  const cutout = new paper.Path(points);
-  const stressRelief = points.map(
-    xy => new paper.Path.Circle({ center: xy, radius: mm(0.75) })
-  ); // 0.2mm is kerf?
-  return guide(group([cutout, ...stressRelief])).translate([
-    palmPocket.x + palmPocket.width / 2,
+//  const cutout = new paper.Path(points);
+  const cutout = path.rect({
+    width: T,
+height: palm.button.h
+})
+//  guide(path.rect({
+//    height: palm.button.h,
+//    width: palm.button.w
+//  })).translate([palmPocket.x + palmPocket.width / 2, palmPocket.y + palm.button.y])
+  return guide(group([cutout])).translate([
+    palmPocket.x + (palmPocket.width - T) / 2,
     palmPocket.y + palm.button.y
   ]);
 })();
+
+const buttonProxyInside = path.rect({ 
+  y: palm.button.h * -0.25,
+  width: T * 0.75,
+  height: palm.button.h * 1.5
+})
+const buttonProxyOutside = path.rect({
+  x: buttonProxyInside.width,
+  width: T * 1.5,
+  height: palm.button.h
+});
+const buttonProxy = buttonProxyInside.unite(buttonProxyOutside)
+cut(buttonProxy).translate([300, rect.height + T * 2])
 
 const cutButton = () => cut(button.clone());
 
@@ -211,13 +239,16 @@ const materialPin = (() => {
   };
 })();
 
-cut(materialPin(LAYERS * T).translate([0, rect.height + T * 9]));
-cut(materialPin(5 * T).translate([0, rect.height + T * 5]));
+//cut(materialPin(5 * T).translate([0, rect.height + T * 5]));
+cut(materialPin(6 * T).translate([0, rect.height + T * 9]));
+cut(materialPin(7 * T).translate([0, rect.height + T * 13]));
+cut(materialPin(LAYERS * T).translate([0, rect.height + T * 17]));
+cut(materialPin((LAYERS - 1) * T).translate([0, rect.height + T * 21]));
 
 const facePlate = (() => {
   const plate = path.rect({
     height: rect.height - 2 * T,
-    width: T * LAYERS,
+    width: T * 3, // LAYERS, // for testing
     radius: softCornerRadius
   });
 
@@ -226,32 +257,45 @@ const facePlate = (() => {
     height: 2 * T
   });
 
+  const cutoutPlacement = {
+    x1: T,
+    x2: plate.width - 2 * T,
+    y1: 1 * T,
+    y2: plate.height - 3 * T
+  };
+
   return plate
-    .subtract(cutout.clone().translate([T, 2 * T]))
-    .subtract(cutout.clone().translate([plate.width - T - T, 2 * T]))
-    .subtract(cutout.clone().translate([T, plate.height - 4 * T]))
     .subtract(
-      cutout.clone().translate([plate.width - T - T, plate.height - 4 * T])
+      cutout.clone().translate([cutoutPlacement.x1, cutoutPlacement.y1])
+    )
+    .subtract(
+      cutout.clone().translate([cutoutPlacement.x2, cutoutPlacement.y1])
+    )
+    .subtract(
+      cutout.clone().translate([cutoutPlacement.x1, cutoutPlacement.y2])
+    )
+    .subtract(
+      cutout.clone().translate([cutoutPlacement.x2, cutoutPlacement.y2])
     );
 })();
-cut(facePlate.clone().translate([300, rect.height + T]));
+//cut(facePlate.clone().translate([300, rect.height + T]));
 
-const sliceLabel = guide(new paper.Path([0, 0], [0, T / 2]));
+const sliceLabel = guide(new paper.Path([0, 0], [T, 0]));
 
 const scoreSliceLabel = n => {
-  return null;
-  const g = group();
-  const point = [T / 1.5, T * 1.5];
-  const spread = 360 / n;
-  for (let i = 0; i < n; i++) {
-    g.addChild(
-      sliceLabel
-        .clone()
-        .translate(point)
-        .rotate(i * spread, point)
-    );
-  }
-  return score(g);
+//  const g = group();
+//  const point = [T, T * 1.5];
+//  const spread = 360 / n;
+//  for (let i = 0; i < n; i++) {
+//    g.addChild(
+//      sliceLabel
+//        .clone()
+//        .translate(point)
+//        .rotate(i * spread, point)
+//    );
+//  }
+//  return score(g);
+return score(new paper.Path([T, T * 1.5], [rect.width - T, T * 1.5]))
 };
 
 // edge
@@ -262,7 +306,7 @@ group([
   //palmPocketGuide.clone(),
   cutButton(),
   cutHoles()
-]).translate([100, 0]);
+]).translate([100, 0]).scale(-1, 1);
 
 // inner edge
 // 2 slices

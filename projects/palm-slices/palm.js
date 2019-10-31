@@ -11,7 +11,7 @@ const palm = {
     offset: mm(5) // offset both x and y from edge
   },
   button: {
-    y: mm(18.5),
+    y: mm(19),
     h: mm(9.75),
     w: mm(2.25)
   }
