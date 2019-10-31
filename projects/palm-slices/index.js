@@ -111,33 +111,33 @@ const button = (() => {
     [halfWidth, -padding],
     [halfWidth, palm.button.h + padding]
   ];
-//  const cutout = new paper.Path(points);
+  //  const cutout = new paper.Path(points);
   const cutout = path.rect({
     width: T,
-height: palm.button.h
-})
-//  guide(path.rect({
-//    height: palm.button.h,
-//    width: palm.button.w
-//  })).translate([palmPocket.x + palmPocket.width / 2, palmPocket.y + palm.button.y])
+    height: palm.button.h
+  });
+  //  guide(path.rect({
+  //    height: palm.button.h,
+  //    width: palm.button.w
+  //  })).translate([palmPocket.x + palmPocket.width / 2, palmPocket.y + palm.button.y])
   return guide(group([cutout])).translate([
     palmPocket.x + (palmPocket.width - T) / 2,
     palmPocket.y + palm.button.y
   ]);
 })();
 
-const buttonProxyInside = path.rect({ 
+const buttonProxyInside = path.rect({
   y: palm.button.h * -0.25,
   width: T * 0.75,
   height: palm.button.h * 1.5
-})
+});
 const buttonProxyOutside = path.rect({
   x: buttonProxyInside.width,
   width: T * 1.5,
   height: palm.button.h
 });
-const buttonProxy = buttonProxyInside.unite(buttonProxyOutside)
-cut(buttonProxy).translate([300, rect.height + T * 2])
+const buttonProxy = buttonProxyInside.unite(buttonProxyOutside);
+cut(buttonProxy).translate([300, rect.height + T * 2]);
 
 const cutButton = () => cut(button.clone());
 
@@ -169,8 +169,6 @@ const guideHoles = guide(
   )
 );
 const cutHoles = () => cut(guideHoles.clone());
-
-const LAYERS = 20;
 
 const materialPin = (() => {
   const headBase = path.rect({ x: 0, y: 0, width: T, height: T * 3 });
@@ -239,16 +237,13 @@ const materialPin = (() => {
   };
 })();
 
-//cut(materialPin(5 * T).translate([0, rect.height + T * 5]));
 cut(materialPin(6 * T).translate([0, rect.height + T * 9]));
-cut(materialPin(7 * T).translate([0, rect.height + T * 13]));
-cut(materialPin(LAYERS * T).translate([0, rect.height + T * 17]));
-cut(materialPin((LAYERS - 1) * T).translate([0, rect.height + T * 21]));
+cut(materialPin(T + cards.w + T).translate([0, rect.height + T * 17]));
 
 const facePlate = (() => {
   const plate = path.rect({
     height: rect.height - 2 * T,
-    width: T * 3, // LAYERS, // for testing
+    width: T + cards.w + T,
     radius: softCornerRadius
   });
 
@@ -278,24 +273,24 @@ const facePlate = (() => {
       cutout.clone().translate([cutoutPlacement.x2, cutoutPlacement.y2])
     );
 })();
-//cut(facePlate.clone().translate([300, rect.height + T]));
+cut(facePlate.clone().translate([300, rect.height + T]));
 
 const sliceLabel = guide(new paper.Path([0, 0], [T, 0]));
 
 const scoreSliceLabel = n => {
-//  const g = group();
-//  const point = [T, T * 1.5];
-//  const spread = 360 / n;
-//  for (let i = 0; i < n; i++) {
-//    g.addChild(
-//      sliceLabel
-//        .clone()
-//        .translate(point)
-//        .rotate(i * spread, point)
-//    );
-//  }
-//  return score(g);
-return score(new paper.Path([T, T * 1.5], [rect.width - T, T * 1.5]))
+  //  const g = group();
+  //  const point = [T, T * 1.5];
+  //  const spread = 360 / n;
+  //  for (let i = 0; i < n; i++) {
+  //    g.addChild(
+  //      sliceLabel
+  //        .clone()
+  //        .translate(point)
+  //        .rotate(i * spread, point)
+  //    );
+  //  }
+  //  return score(g);
+  return score(new paper.Path([T, T * 1.5], [rect.width - T, T * 1.5]));
 };
 
 // edge
@@ -306,7 +301,7 @@ group([
   //palmPocketGuide.clone(),
   cutButton(),
   cutHoles()
-]).translate([100, 0]).scale(-1, 1);
+]).translate([100, 0]);
 
 // inner edge
 // 2 slices
@@ -317,52 +312,17 @@ group([
 ]).translate([200, 0]);
 
 // phone face
-// 5
+// 4 slices
 group([
   scoreSliceLabel(3),
   outerWithPocketAndFace.clone(),
   cutHoles()
 ]).translate([300, 0]);
 
-// phone middle (charge port access)
-// 6 slices
-group([
-  scoreSliceLabel(4),
-  outerWithPocketAndFace
-    .clone()
-    .subtract(
-      cut(
-        path.rect(
-          new paper.Rectangle({
-            x: 0,
-            y: rect.height,
-            width: T + palm.d1,
-            height: -rect.height / 2
-          })
-        )
-      )
-    )
-    .subtract(
-      cut(
-        path.rect(
-          new paper.Rectangle({
-            x: 0,
-            y: rect.height,
-            width: rect.width,
-            height: -pin.outer.height
-          })
-        )
-      )
-    ),
-
-  cutHoles().children[0]
-]).translate([400, 0]);
-
 // with camera
-// 5 slices
-// TODO one needs space for charge port
+// 4 slices
 group([
   scoreSliceLabel(5),
   outerWithPocketAndFace.clone().subtract(cut(cameraCutoutGuide.clone())),
   cutHoles()
-]).translate([500, 0]);
+]).translate([400, 0]);
