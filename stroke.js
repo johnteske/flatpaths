@@ -3,7 +3,7 @@ const cut = o => {
   return o;
 };
 
-const engrave = o => {
+const score = o => {
   o.strokeColor = "#ff00ff";
   return o;
 };
@@ -15,6 +15,6 @@ const guide = o => {
 
 module.exports = {
   cut,
-  engrave,
+  score,
   guide
 };
