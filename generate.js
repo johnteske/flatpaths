@@ -4,7 +4,7 @@ const fs = require("fs");
 
 paper.setup(new paper.Size(999, 999));
 
-require("./projects/palm-slices");
+require("./projects/palm-sandwich");
 
 const svg = paper.project.exportSVG({ asString: true });
 
