@@ -49,6 +49,11 @@ const palmFrame = () => outerFrame().subtract(path.rect({
   x: (cardOuter.width - palm.w) / 2,
   y: outerWidth,
   radius: mm(9)
+})).subtract(path.rect({
+  x: cardOuter.width - outerWidth,
+  y: outerWidth + palm.button.y, // from palm.y
+  width: outerWidth,
+  height: palm.button.h
 }))
 
 const guides = [cardCutout().translate([outerWidth, outerWidth])];
