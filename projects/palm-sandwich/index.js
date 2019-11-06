@@ -5,12 +5,12 @@ const paper = require("paper-jsdom");
 const path = require(`${root}/path`);
 //const withRoundedCorner = require("../../rounded-corner");
 const { cut, guide } = require(`${root}/stroke`);
-const { inches } = require(`${root}/units`);
+const { inches, mm } = require(`${root}/units`);
 
 const group = (...args) => new paper.Group(...args);
 //const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
 
-//const palm = require(`${root}/objects/palm`);
+const palm = require(`${root}/objects/palm`);
 const cards = require(`${root}/objects/cards`);
 
 const cardCutout = require("./cardCutout");
@@ -21,19 +21,20 @@ const outerWidth = T * 2;
 
 const cardOuter = new paper.Rectangle({
   width: outerWidth + cards.w + outerWidth,
-  height: outerWidth + cards.h + outerWidth
+  height: outerWidth + palm.h + outerWidth
 });
 
-// TODO split in halves to save material
-const cardOuterPath = path
+const outerFrame = () => path
   .rect({
     ...cardOuter,
-
     radius: T
   })
+
+ // TODO split in halves to save material
+const cardOuterPath = outerFrame()
   .subtract(cardCutout().translate([outerWidth, outerWidth]));
 
-const pins = group(
+const pins = () => group(
   [
     [outerWidth / 2, outerWidth / 2],
     [cardOuter.width - outerWidth / 2, outerWidth / 2],
@@ -42,10 +43,18 @@ const pins = group(
   ].map(point => pin().translate(point))
 );
 
-const guides = [cardCutout().translate([outerWidth, outerWidth]), pins.clone()];
-guides.forEach((g, i) => guide(g).translate([i * cards.w, cards.h + 66]));
+const palmFrame = () => outerFrame().subtract(path.rect({
+  width: palm.w,
+  height: palm.h,
+  x: (cardOuter.width - palm.w) / 2,
+  y: outerWidth,
+  radius: mm(9)
+}))
 
-const cuts = [group(cardOuterPath, pins.clone())];
-cuts.forEach((g, i) => cut(g).translate([i * cards.w, 0]));
+const guides = [cardCutout().translate([outerWidth, outerWidth])];
+guides.forEach((g, i) => guide(g).translate([i * cards.w, cardOuter.height + T]));
+
+const cuts = [group(cardOuterPath, pins()), palmFrame()];
+cuts.forEach((g, i) => cut(g).translate([i * (cardOuter.width + T), 0]));
 
 //const group = (...args) => new paper.Group(...args);
