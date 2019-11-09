@@ -3,24 +3,19 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
-const magSafe = {
+const { backGeometry } = require("./mac-tray");
+
+const magSafeGeometry = {
   width: mm(6.5),
   height: mm(10.5),
-  radius: mm(3.25)
+  radius: mm(3.25),
+  x: backGeometry.x
 };
+magSafeGeometry.y = backGeometry.height - magSafeGeometry.height - mm(2);
 
-const magSafeSupport = path.rect({
-  width: mm(6.5),
-  //width: magSafe.width,
-  height: mm(50)
-});
-
-magSafe.y = magSafeSupport.height - magSafe.height - mm(2);
-
-const magSafeCutout = path.rect(magSafe);
+const magSafeCutout = path.rect(magSafeGeometry);
 
 module.exports = {
-  magSafe,
-  magSafeSupport: () => magSafeSupport.clone(),
+  magSafeGeometry,
   magSafeCutout: () => magSafeCutout.clone()
 };
