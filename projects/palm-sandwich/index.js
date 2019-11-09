@@ -31,7 +31,7 @@ const outerFrame = () => path
   })
 
  // TODO split in halves to save material
-const cardOuterPath = outerFrame()
+const cardOuterPath = () => outerFrame()
   .subtract(cardCutout().translate([outerWidth, outerWidth]));
 
 const pins = () => group(
@@ -43,23 +43,32 @@ const pins = () => group(
   ].map(point => pin().translate(point))
 );
 
+const palmButton1 = path.rect({
+  x: cardOuter.width - outerWidth,
+  y: outerWidth + palm.button.y, // from palm.y
+  width: outerWidth / 2,
+  height: palm.button.h
+}) 
+const palmButton2 = path.rect({
+  x: cardOuter.width - outerWidth + (outerWidth / 2),
+  y: outerWidth + palm.button.y + (palmButton1.height / 2), // from palm.y
+  width: outerWidth / 2,
+  height: palm.button.h / 2
+}) 
+const palmButton = palmButton1.unite(palmButton2);
+
 const palmFrame = () => outerFrame().subtract(path.rect({
   width: palm.w,
   height: palm.h,
   x: (cardOuter.width - palm.w) / 2,
   y: outerWidth,
   radius: mm(9)
-})).subtract(path.rect({
-  x: cardOuter.width - outerWidth,
-  y: outerWidth + palm.button.y, // from palm.y
-  width: outerWidth,
-  height: palm.button.h
-}))
+})).subtract(palmButton)
 
-const guides = [cardCutout().translate([outerWidth, outerWidth])];
-guides.forEach((g, i) => guide(g).translate([i * cards.w, cardOuter.height + T]));
+const guides = [cardCutout().translate([outerWidth, outerWidth]), group(cardOuterPath(), palmButton.clone())];
+guides.forEach((g, i) => guide(g).translate([i * (cardOuter.width + T), cardOuter.height + T]));
 
-const cuts = [group(cardOuterPath, pins()), palmFrame()];
+const cuts = [group(cardOuterPath(), pins()), palmFrame()];
 cuts.forEach((g, i) => cut(g).translate([i * (cardOuter.width + T), 0]));
 
 //const group = (...args) => new paper.Group(...args);
