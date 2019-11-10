@@ -3,10 +3,13 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
+const { T } = require("./material");
+
 const tray = {
-  width: mm(50),
-  height: mm(15)
-  // depth: // use for supporting struts };
+  width: mm(275), // leave room for hand
+  //width: mm(349.3), // real measurement
+  height: mm(15.5),
+  depth: mm(240.7) + mm(1.3) // use for supporting struts, with wiggle room
 };
 
 const backGeometry = {
@@ -25,7 +28,23 @@ const bottomGeometry = {
   y: backGeometry.height
 };
 
-const bottom = path.rect(bottomGeometry);
+const slotGeometry = {
+  width: T,
+  height: bottomGeometry.height / 2
+};
+slotGeometry.y = bottomGeometry.height + bottomGeometry.y - slotGeometry.height;
+const slot = path.rect(slotGeometry);
+
+const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
+const subtract = cutout => target => target.subtract(cutout);
+const withSlots = pipe(
+  subtract(slot.clone().translate([T * 2, 0])),
+  subtract(slot.clone().translate([tray.width / 3, 0])),
+  subtract(slot.clone().translate([(tray.width / 3) * 2, 0])),
+  subtract(slot.clone().translate([tray.width - T * 2, 0]))
+);
+
+const bottom = withSlots(path.rect(bottomGeometry));
 
 const sideGeometry = {
   width: bottomGeometry.width,
@@ -33,7 +52,7 @@ const sideGeometry = {
   y: backGeometry.height - tray.height
 };
 
-const side = path.rect(sideGeometry);
+const side = withSlots(path.rect(sideGeometry));
 
 module.exports = {
   tray,

@@ -35,4 +35,4 @@ const cuts = [
 ];
 cuts.forEach((g, i) => cut(g).translate([mm(90), i * mm(90)]));
 
-paper.view.viewSize = [666, 2000];
+paper.view.viewSize = [2000, 2000];
