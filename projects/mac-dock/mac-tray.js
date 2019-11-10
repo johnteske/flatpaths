@@ -28,6 +28,7 @@ const bottomGeometry = {
   y: backGeometry.height
 };
 
+// TODO this belongs on its own
 const slotGeometry = {
   width: T,
   height: bottomGeometry.height / 2
@@ -35,6 +36,7 @@ const slotGeometry = {
 slotGeometry.y = bottomGeometry.height + bottomGeometry.y - slotGeometry.height;
 const slot = path.rect(slotGeometry);
 
+// TODO helper functions belong on own
 const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
 const subtract = cutout => target => target.subtract(cutout);
 const withSlots = pipe(
