@@ -3,7 +3,7 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
-const { back: backGeometry, cableCenter } = require("./tray");
+const { back: backGeometry, cableCenter } = require("../constructs/tray");
 
 const magSafeGeometry = {
   width: mm(6.5),

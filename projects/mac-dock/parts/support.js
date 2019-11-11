@@ -5,9 +5,9 @@ const { pipe } = require(`${root}/fn`);
 const { subtract } = require(`${root}/boolean`);
 const { mm } = require(`${root}/units`);
 
-const { T } = require("./material");
-const { tray, bottom: bottomGeometry } = require("./tray");
-const { slotGeometry, slot } = require("./slot");
+const { T } = require("../material");
+const { tray, bottom: bottomGeometry } = require("../constructs/tray");
+const { slotGeometry, slot } = require("../constructs/slot");
 
 const supportGeometry = {
   width: T * 2 + tray.depth + T * 2,

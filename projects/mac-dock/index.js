@@ -7,11 +7,12 @@ const { mm } = require(`${root}/units`);
 
 const group = (...args) => new paper.Group(...args);
 
-const { back, bottom, side } = require("./mac-tray");
-const { magSafeCutout } = require("./mag-safe");
-const { multiportCutout } = require("./av-multiport");
-const { support } = require("./support");
 const { T } = require("./material");
+
+const { magSafeCutout } = require("./objects/mag-safe");
+const { multiportCutout } = require("./objects/multiport");
+const { back, bottom, side } = require("./parts/tray");
+const { support } = require("./parts/support");
 
 const guides = [
   group(magSafeCutout(), back(), bottom()),
@@ -19,7 +20,7 @@ const guides = [
   group(back(), side())
   //group(back(), bottom()), // TODO needs cutouts for cables to pass through
 ];
-//guides.forEach((g, i) => guide(g).translate([0, i * mm(90)]));
+guides.forEach((g, i) => guide(g).translate([0, i * mm(90)]));
 
 const cuts = [
   back()

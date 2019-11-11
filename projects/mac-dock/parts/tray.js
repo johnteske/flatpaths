@@ -4,9 +4,13 @@ const path = require(`${root}/path`);
 const { pipe } = require(`${root}/fn`);
 const { subtract } = require(`${root}/boolean`);
 
-const { T } = require("./material");
-const { slotGeometry, slot } = require("./slot");
-const { tray, back: backGeometry, bottom: bottomGeometry } = require("./tray");
+const { T } = require("../material");
+const { slotGeometry, slot } = require("../constructs/slot");
+const {
+  tray,
+  back: backGeometry,
+  bottom: bottomGeometry
+} = require("../constructs/tray");
 
 const back = path.rect(backGeometry);
 
