@@ -6,13 +6,8 @@ const { subtract } = require(`${root}/boolean`);
 const { mm } = require(`${root}/units`);
 
 const { T } = require("../material");
-const { tray, bottom: bottomGeometry } = require("../constructs/tray");
+const { supportGeometry } = require("../constructs/tray2/support");
 const { slotGeometry, slot } = require("../constructs/slot");
-
-const supportGeometry = {
-  width: T * 2 + tray.depth + T * 2,
-  height: bottomGeometry.height
-};
 
 const x1 = mm(33) - slotGeometry.width / 2; // magSafe, center material
 const x2 = mm(86) - slotGeometry.width / 2; // multiport, center material
@@ -33,6 +28,5 @@ const withSlots = pipe(...slots.map(s => subtract(s)));
 const support = withSlots(path.rect(supportGeometry));
 
 module.exports = {
-  supportGeometry,
   support: () => support.clone()
 };

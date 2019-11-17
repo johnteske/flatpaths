@@ -7,7 +7,7 @@ const { mm } = require(`${root}/units`);
 
 const group = (...args) => new paper.Group(...args);
 
-const { T } = require("./material");
+// const { T } = require("./material");
 
 const { magSafeCutout } = require("./objects/mag-safe");
 const { multiportCutout } = require("./objects/multiport");
@@ -30,7 +30,7 @@ const cuts = [
     .unite(bottom())
     .subtract(multiportCutout()),
   back().unite(side()),
-  support().translate([T * -2, 0])
+  support()
 ];
 cuts.forEach((g, i) => cut(g).translate([mm(90), i * mm(90)]));
 
