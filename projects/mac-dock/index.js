@@ -11,8 +11,10 @@ const group = (...args) => new paper.Group(...args);
 
 const { magSafeCutout } = require("./objects/mag-safe");
 const { multiportCutout } = require("./objects/multiport");
-const { back, bottom, side } = require("./parts/tray");
+const { back, bottom, side: sideOld } = require("./parts/tray");
+
 const { support } = require("./parts/support");
+const { side } = require("./parts/side");
 
 const guides = [
   group(magSafeCutout(), back(), bottom()),
@@ -29,8 +31,9 @@ const cuts = [
   back()
     .unite(bottom())
     .subtract(multiportCutout()),
-  back().unite(side()),
-  support()
+  back().unite(sideOld()),
+  support(),
+  side()
 ];
 cuts.forEach((g, i) => cut(g).translate([mm(90), i * mm(90)]));
 

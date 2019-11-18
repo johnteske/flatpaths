@@ -13,7 +13,16 @@ const slotGeometry = {
 
 const slot = path.rect(slotGeometry);
 
+// const slots = slotPoints.map(point => slot.clone().translate(point));
+
+// const withSlots = pipe(...slots.map(s => subtract(s)));
+
+const withSlots = (points, target) => {
+  return target;
+};
+
 module.exports = {
   slotGeometry,
-  slot
+  slot,
+  withSlots
 };
