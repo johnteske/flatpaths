@@ -2,8 +2,9 @@
 - less manual work in prepping files for cutting
 - ability to change dimensions dynamically (i.e. for material thickness)
 
-Boolean operations with js-clipper and d3:
-http://bl.ocks.org/nitaku/8751669
+## Joinery ideas
+- http://www.cutlasercut.com/blog/panel-joinery-techniques-adapted-for-cnc-routing-and-laser-cutting-via-make-magazine
 
-d3 and jsdom example:
-https://gist.github.com/kunnix/148eadcfde3e978a1ad1d3ec9e2a7265
+## Ideas to track layers
+- https://en.m.wikipedia.org/wiki/Counting_rods
+- custom SVG glyphs to print `git` hash
