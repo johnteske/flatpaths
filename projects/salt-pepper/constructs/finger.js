@@ -8,7 +8,7 @@ const path = require(`${root}/path`);
 const { T } = require(`../material`);
 
 const fingerGeometry = {
-  width: inches(0.25),
+  width: inches(2.5) / 7,
   height: T
 };
 

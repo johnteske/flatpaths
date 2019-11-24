@@ -1,8 +1,9 @@
 const root = require("app-root-path");
 
 const { pipe } = require(`${root}/fn`);
-const { inches, mm } = require(`${root}/units`);
+const { inches } = require(`${root}/units`);
 
+const { T } = require("../material");
 const { bottomGeometry, bottom } = require("../constructs/panels");
 const {
   fingerGeometry,
@@ -12,9 +13,9 @@ const {
 } = require("../constructs/finger");
 
 const makeLengthFingers = () => {
-  const lengthFingers1 = makeFingers(5);
-  const lengthFingers2 = makeFingers(5).map(
-    f => f.translate([inches(2.5) + mm(3) + inches(0.25), 0]) // TODO 5 in + T
+  const lengthFingers1 = makeFingers(4);
+  const lengthFingers2 = makeFingers(4).map(f =>
+    f.translate([inches(2.5) + T, 0])
   );
 
   return [].concat(lengthFingers1, lengthFingers2);
@@ -28,16 +29,16 @@ const bottomFingers = makeLengthFingers().map(f =>
   f.translate([0, bottomGeometry.height])
 );
 
-const leftFingers = makeFingers(5).map(f => f.rotate(90, [0, 0]));
+const leftFingers = makeFingers(4).map(f => f.rotate(90, [0, 0]));
 
-const rightFingers = makeFingers(5).map(f =>
+const rightFingers = makeFingers(4).map(f =>
   f
     .rotate(90, [0, 0])
     .translate([bottomGeometry.width + fingerGeometry.height, 0])
 );
 
 const centerSlots = makeFingers(5).map(f =>
-  f.rotate(90, [0, 0]).translate([inches(2.5), 0])
+  f.rotate(90, [0, 0]).translate([inches(2.5) + fingerGeometry.height, 0])
 );
 
 // TODO needs support in the middle
