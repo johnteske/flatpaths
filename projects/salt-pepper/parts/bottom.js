@@ -7,7 +7,8 @@ const { bottomGeometry, bottom } = require("../constructs/panels");
 const {
   fingerGeometry,
   makeFingers,
-  withFingers
+  withFingers,
+  withSlots
 } = require("../constructs/finger");
 
 const makeLengthFingers = () => {
@@ -35,12 +36,17 @@ const rightFingers = makeFingers(5).map(f =>
     .translate([bottomGeometry.width + fingerGeometry.height, 0])
 );
 
-// TODO needs support in the middle, also needs slots down center
+const centerSlots = makeFingers(5).map(f =>
+  f.rotate(90, [0, 0]).translate([inches(2.5), 0])
+);
+
+// TODO needs support in the middle
 const bottomPart = pipe(
   withFingers(topFingers),
   withFingers(rightFingers),
   withFingers(bottomFingers),
-  withFingers(leftFingers)
+  withFingers(leftFingers),
+  withSlots(centerSlots)
 )(bottom());
 
 module.exports = bottomPart;
