@@ -1,7 +1,7 @@
 const root = require("app-root-path");
 
 const { pipe } = require(`${root}/fn`);
-const { unite } = require(`${root}/boolean`);
+const { subtract, unite } = require(`${root}/boolean`);
 const { inches } = require(`${root}/units`);
 const path = require(`${root}/path`);
 
@@ -24,10 +24,12 @@ const makeFingers = n => {
 };
 
 const withFingers = fingers => pipe(...fingers.map(s => unite(s)));
+const withSlots = fingers => pipe(...fingers.map(s => subtract(s)));
 
 module.exports = {
   fingerGeometry,
   finger,
   makeFingers,
-  withFingers
+  withFingers,
+  withSlots
 };
