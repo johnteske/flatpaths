@@ -5,8 +5,16 @@ const { mm } = require(`${root}/units`);
 
 const d = mm(3);
 
-const pin = path.circle({ radius: d / 2 });
+const pinGeometry = {
+  d,
+  r: d / 2
+};
 
-module.exports = () => {
-  return pin.clone();
+const pin = path.circle({ radius: pinGeometry.r });
+
+module.exports = {
+  pinGeometry,
+  pin: () => {
+    return pin.clone();
+  }
 };
