@@ -14,10 +14,10 @@ const palm = require(`${root}/objects/palm`);
 const cards = require(`${root}/objects/cards`);
 
 const cardCutout = require("./cardCutout");
-const pin = require("./pin");
+const { pinGeometry, pin } = require("./pin");
 
 const T = inches(1 / 8); // thickness of main body material
-const outerWidth = T * 2;
+const outerWidth = Math.max(T * 2, pinGeometry.d + T);
 
 const cardOuter = new paper.Rectangle({
   width: outerWidth + cards.w + outerWidth,
