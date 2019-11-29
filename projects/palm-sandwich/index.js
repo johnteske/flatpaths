@@ -17,7 +17,7 @@ const cardCutout = require("./cardCutout");
 const { pinGeometry, pin } = require("./pin");
 
 const T = inches(1 / 8); // thickness of main body material
-const outerWidth = Math.max(T * 2, pinGeometry.d + T);
+const outerWidth = Math.max(Math.max(T * 2, pinGeometry.d + T), pinGeometry.head.d);
 
 const cardOuter = new paper.Rectangle({
   width: outerWidth + cards.w + outerWidth,
