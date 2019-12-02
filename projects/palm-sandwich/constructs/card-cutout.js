@@ -8,7 +8,8 @@ const cards = require(`${root}/objects/cards`);
 const cardCutout = path.rect({
   width: cards.w,
   height: cards.h,
-  radius: mm(3)
+  radius: mm(3),
+  className: "card-cutout"
 });
 
 module.exports = () => {
