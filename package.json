@@ -4,7 +4,7 @@
   "description": "- generate shapes programmatically - less manual work in prepping files for cutting - parametric (i.e. for material thickness)",
   "main": "index.js",
   "scripts": {
-    "watch": "chokidar \"{.,projects/**}/*.js\" -c \"node generate.js && google-chrome-stable out.svg\"",
+    "watch": "chokidar \"{.,projects/**}/*.js\" -c \"node generate.js\"",
     "format": "npm run lint -- --fix; prettier \"**/*.js\" --write",
     "lint": "eslint \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
