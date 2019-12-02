@@ -7,15 +7,7 @@ const palm = require(`${root}/objects/palm`);
 const T = require("../material");
 
 const { width: frameWidth } = require("./frame");
-
-//const pins = () => group(
-//  [
-//    [frameWidth / 2, frameWidth / 2],
-//    [cardOuter.width - frameWidth / 2, frameWidth / 2],
-//    [frameWidth / 2, cardOuter.height - frameWidth / 2],
-//    [cardOuter.width - frameWidth / 2, cardOuter.height - frameWidth / 2]
-//  ].map(point => pin().translate(point))
-//);
+const { pin } = require("./pin");
 
 const cardOuterGeometry = {
   width: frameWidth + cards.w + frameWidth,
@@ -25,7 +17,19 @@ const cardOuterGeometry = {
 
 const cardOuter = path.rect(cardOuterGeometry);
 
+const pins = () =>
+  [
+    [frameWidth / 2, frameWidth / 2],
+    [cardOuterGeometry.width - frameWidth / 2, frameWidth / 2],
+    [frameWidth / 2, cardOuterGeometry.height - frameWidth / 2],
+    [
+      cardOuterGeometry.width - frameWidth / 2,
+      cardOuterGeometry.height - frameWidth / 2
+    ]
+  ].map(point => pin().translate(point));
+
 module.exports = {
   cardOuterGeometry,
-  cardOuter: () => cardOuter.clone()
+  cardOuter: () => cardOuter.clone(),
+  pins
 };

@@ -1,26 +1,13 @@
 const root = require("app-root-path");
 
-//const paper = require("paper-jsdom");
-
-//const withRoundedCorner = require("../../rounded-corner");
 const { cut, guide } = require(`${root}/stroke`);
 
-//const group = (...args) => new paper.Group(...args);
-//const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
-
-const { cardOuter } = require("./constructs/card-outer");
+//const { cardOuter } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
 
-const T = require("./material");
+const cardOuterPart = require("./parts/card-outer");
 
-//const pins = () => group(
-//  [
-//    [outerWidth / 2, outerWidth / 2],
-//    [cardOuter.width - outerWidth / 2, outerWidth / 2],
-//    [outerWidth / 2, cardOuter.height - outerWidth / 2],
-//    [cardOuter.width - outerWidth / 2, cardOuter.height - outerWidth / 2]
-//  ].map(point => pin().translate(point))
-//);
+const T = require("./material");
 
 //const palmButton1 = path.rect({
 //  x: cardOuter.width - outerWidth,
@@ -55,7 +42,7 @@ const guides = [
 guides.forEach((g, i) => guide(g).translate([i * (100 + T), 200 + T]));
 
 const cuts = [
-  cardOuter()
+  cardOuterPart()
   //group(cardOuterPath(), pins())
   //, palmFrameouter
 ];
