@@ -70,10 +70,9 @@ const fpOut = path.rect({
   height: T
 });
 
-const facePlateTab = pipe(
-  //withRoundedCorner([rect.width + T2 + T / 2, T / 2], T / 2, "ne"),
-  //withRoundedCorner([rect.width + T2 + T / 2, T * 2.5], T / 2, "se")
-)(
+const facePlateTab = pipe()(
+//withRoundedCorner([rect.width + T2 + T / 2, T / 2], T / 2, "ne"),
+//withRoundedCorner([rect.width + T2 + T / 2, T * 2.5], T / 2, "se")
   fpOut
     .unite(
       path.rect({
@@ -323,7 +322,7 @@ group([
       [rect.width + T2 + T / 2, T * 2],
       [rect.width + T2 + T / 2, T * 4]
     ])
-  ).translate([0, rect.height - (T*5)]),
+  ).translate([0, rect.height - T * 5]),
   cutHoles()
 ]).translate([300, 0]);
 
