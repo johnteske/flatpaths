@@ -38,15 +38,33 @@ const guides = [
   //palmButton.clone())
 ];
 
-// internalBounds
-guides.forEach((g, i) => guide(g).translate([i * (100 + T), 200 + T]));
-
 const cuts = [
+  cardOuterPart(),
   cardOuterPart()
-  //group(cardOuterPath(), pins())
   //, palmFrameouter
 ];
 
-cuts.forEach((g, i) => cut(g).translate([i * (100 + T), 0]));
+const cutWidths = cuts.map(c => c.internalBounds.width);
+const cutXPositions = cutWidths.reduce(
+  ({ positions, x }, width) => {
+    const _x = x + width + T;
+    return {
+      positions: [...positions, x],
+      x: _x
+    };
+  },
+  { positions: [], x: 0 }
+).positions;
+cuts.forEach((c, i) => {
+  cut(c).translate([cutXPositions[i], 0]);
+});
+
+// Get all cut heights, then get max
+const maxCutHeight = cuts
+  .map(c => c.internalBounds.height)
+  .sort()
+  .pop();
+
+guides.forEach((g, i) => guide(g).translate([i * (100 + T), maxCutHeight + T]));
 
 //const group = (...args) => new paper.Group(...args);
