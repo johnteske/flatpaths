@@ -1,6 +1,7 @@
 const root = require("app-root-path");
 
 const { cut, guide } = require(`${root}/stroke`);
+const { translateXWithOffset } = require(`${root}/distribution`);
 
 //const { cardOuter } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
@@ -38,26 +39,9 @@ const guides = [
   //palmButton.clone())
 ];
 
-const cuts = [
-  cardOuterPart(),
-  cardOuterPart()
-  //, palmFrameouter
-];
+const cuts = [cardOuterPart()];
 
-const cutWidths = cuts.map(c => c.internalBounds.width);
-const cutXPositions = cutWidths.reduce(
-  ({ positions, x }, width) => {
-    const _x = x + width + T;
-    return {
-      positions: [...positions, x],
-      x: _x
-    };
-  },
-  { positions: [], x: 0 }
-).positions;
-cuts.forEach((c, i) => {
-  cut(c).translate([cutXPositions[i], 0]);
-});
+translateXWithOffset(cuts, T).forEach(c => cut(c));
 
 // Get all cut heights, then get max
 const maxCutHeight = cuts
@@ -65,6 +49,6 @@ const maxCutHeight = cuts
   .sort()
   .pop();
 
-guides.forEach((g, i) => guide(g).translate([i * (100 + T), maxCutHeight + T]));
-
-//const group = (...args) => new paper.Group(...args);
+translateXWithOffset(guides, T)
+  .map(g => g.translate([0, maxCutHeight + T]))
+  .forEach(g => guide(g));
