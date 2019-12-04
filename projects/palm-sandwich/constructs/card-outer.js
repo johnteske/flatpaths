@@ -17,7 +17,7 @@ const cardOuterGeometry = {
 
 const cardOuter = path.rect(cardOuterGeometry);
 
-const pins = () =>
+const pins = withHead =>
   [
     [frameWidth / 2, frameWidth / 2],
     [cardOuterGeometry.width - frameWidth / 2, frameWidth / 2],
@@ -26,7 +26,7 @@ const pins = () =>
       cardOuterGeometry.width - frameWidth / 2,
       cardOuterGeometry.height - frameWidth / 2
     ]
-  ].map(point => pin().translate(point));
+  ].map(point => pin(withHead).translate(point));
 
 module.exports = {
   cardOuterGeometry,
