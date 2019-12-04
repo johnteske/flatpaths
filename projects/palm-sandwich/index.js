@@ -9,34 +9,13 @@ const { cardOuter, pins } = require("./constructs/card-outer");
 
 const cardCoverPart = require("./parts/card-cover");
 const cardLayerPart = require("./parts/card-layer");
+const palmLayerPart = require("./parts/palm-layer");
 
 const T = require("./material");
 
-//const palmButton1 = path.rect({
-//  x: cardOuter.width - outerWidth,
-//  y: outerWidth + palm.button.y, // from palm.y
-//  width: outerWidth / 2,
-//  height: palm.button.h
-//})
-//const palmButton2 = path.rect({
-//  x: cardOuter.width - outerWidth + (outerWidth / 2),
-//  y: outerWidth + palm.button.y + (palmButton1.height / 2), // from palm.y
-//  width: outerWidth / 2,
-//  height: palm.button.h / 2
-//})
-//const palmButton = palmButton1.unite(palmButton2);
-
-//const palmFrame = () => outerFrame().subtract(path.rect({
-//  width: palm.w,
-//  height: palm.h,
-//  x: (cardOuter.width - palm.w) / 2,
-//  y: outerWidth,
-//  radius: mm(9)
-//})).subtract(palmButton)
-
 const guides = [group(cardOuter(), ...pins(true))];
 
-const cuts = [cardCoverPart(), cardLayerPart()];
+const cuts = [cardCoverPart(), cardLayerPart(), palmLayerPart()];
 
 translateXWithOffset(cuts, T).forEach(c => cut(c));
 
