@@ -4,15 +4,13 @@ const path = require(`${root}/path`);
 const cards = require(`${root}/objects/cards`);
 const palm = require(`${root}/objects/palm`);
 
-const T = require("../material");
-
 const { width: frameWidth } = require("./frame");
-const { pin } = require("./pin");
+const { pin, pinGeometry } = require("./pin");
 
 const cardOuterGeometry = {
   width: frameWidth + cards.w + frameWidth,
   height: frameWidth + palm.h + frameWidth,
-  radius: T
+  radius: pinGeometry.head.r
 };
 
 const cardOuter = path.rect(cardOuterGeometry);
