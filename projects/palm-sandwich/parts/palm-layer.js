@@ -2,14 +2,21 @@ const root = require("app-root-path");
 
 const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
+const palm = require(`${root}/objects/palm`);
 
-const { cardOuter, pins } = require("../constructs/card-outer");
+const {
+  cardOuter,
+  cardOuterGeometry,
+  pins
+} = require("../constructs/card-outer");
 const palmCutout = require("../constructs/palm-cutout");
 const { width } = require("../constructs/frame");
 
 const part = pipe(
   ...pins().map(subtract),
-  subtract(palmCutout().translate([0, width]))
+  subtract(
+    palmCutout().translate([(cardOuterGeometry.width - palm.w) / 2, width])
+  )
 )(cardOuter());
 
 module.exports = () => {
