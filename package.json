@@ -12,6 +12,7 @@
   "author": "John Teske",
   "license": "MIT",
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "chokidar-cli": "^2.0.0",
     "eslint": "^6.5.1",
     "paper-jsdom": "^0.12.3",
