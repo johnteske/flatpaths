@@ -8,7 +8,7 @@ const { cardOuter, pins } = require("./constructs/card-outer");
 //const cardCutout = require("./constructs/card-cutout");
 
 const cardCoverPart = require("./parts/card-cover");
-const cardOuterPart = require("./parts/card-outer");
+const cardLayerPart = require("./parts/card-layer");
 
 const T = require("./material");
 
@@ -36,7 +36,7 @@ const T = require("./material");
 
 const guides = [group(cardOuter(), ...pins(true))];
 
-const cuts = [cardCoverPart(), cardOuterPart()];
+const cuts = [cardCoverPart(), cardLayerPart()];
 
 translateXWithOffset(cuts, T).forEach(c => cut(c));
 
