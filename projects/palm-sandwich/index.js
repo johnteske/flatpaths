@@ -1,11 +1,13 @@
 const root = require("app-root-path");
 
+const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
 const { translateXWithOffset } = require(`${root}/distribution`);
 
-//const { cardOuter } = require("./constructs/card-outer");
-const cardCutout = require("./constructs/card-cutout");
+const { cardOuter, pins } = require("./constructs/card-outer");
+//const cardCutout = require("./constructs/card-cutout");
 
+const cardCoverPart = require("./parts/card-cover");
 const cardOuterPart = require("./parts/card-outer");
 
 const T = require("./material");
@@ -32,14 +34,9 @@ const T = require("./material");
 //  radius: mm(9)
 //})).subtract(palmButton)
 
-const guides = [
-  cardCutout()
-  // cardCutout().translate([outerWidth, outerWidth]),
-  //group(cardOuterPath(),
-  //palmButton.clone())
-];
+const guides = [group(cardOuter(), ...pins(true))];
 
-const cuts = [cardOuterPart()];
+const cuts = [cardCoverPart(), cardOuterPart()];
 
 translateXWithOffset(cuts, T).forEach(c => cut(c));
 
