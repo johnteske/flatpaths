@@ -7,6 +7,7 @@ const { translateXWithOffset } = require(`${root}/distribution`);
 const { cardOuter, pins } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
 const palmCutout = require("./constructs/palm-cutout");
+const { button } = require("./constructs/button");
 
 const cardCoverPart = require("./parts/card-cover");
 const cardLayerPart = require("./parts/card-layer");
@@ -14,7 +15,9 @@ const palmLayerPart = require("./parts/palm-layer");
 
 const T = require("./material");
 
-const guides = [group(cardOuter(), cardCutout(), palmCutout(), ...pins(true))];
+const guides = [
+  group(cardOuter(), cardCutout(), palmCutout(), ...pins(true), button())
+];
 
 const cuts = [cardCoverPart(), cardLayerPart(), palmLayerPart()];
 
