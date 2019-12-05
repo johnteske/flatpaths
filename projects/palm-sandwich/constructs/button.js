@@ -1,6 +1,5 @@
 const root = require("app-root-path");
 
-const { unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
@@ -19,20 +18,18 @@ const y = width + palm.button.y;
 
 const buttonBase = path.rect({
   width: frameWidth / 2,
-  height: h * 2,
-  x,
-  y
+  height: h * 2
 });
 
 const button = path.rect({
   width: frameWidth + externalButtonHeight,
   height: h,
-  x,
-  y: y + h / 2
+  y: h / 2
 });
 
 const _button = buttonBase.unite(button);
 
 module.exports = {
-  button: () => _button.clone()
+  button: () => _button.clone(),
+  buttonTranslated: () => _button.clone().translate([x, y])
 };
