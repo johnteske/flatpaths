@@ -7,7 +7,7 @@ const { translateXWithOffset } = require(`${root}/distribution`);
 
 const { cardOuter, pins } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
-const palmCutout = require("./constructs/palm-cutout");
+const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 
 const buttonPart = require("./parts/button");
