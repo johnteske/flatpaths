@@ -1,16 +1,36 @@
 const root = require("app-root-path");
 
 const { subtract } = require(`${root}/boolean`);
+const path = require(`${root}/path`);
+const { mm } = require(`${root}/units`);
 const { pipe } = require(`${root}/fn`);
 
-const { cardOuter, pins } = require("../constructs/card-outer");
+const { width } = require("../constructs/frame");
+const {
+  cardOuter,
+  cardOuterGeometry,
+  pins
+} = require("../constructs/card-outer");
 const { buttonTranslated } = require("../constructs/button");
-const palmCutout = require("../constructs/palm-cutout");
+const { construct: cutout, geometry } = require("../constructs/palm-cutout");
+
+const usbPortGeometry = {
+  width: mm(15)
+};
+usbPortGeometry.x = geometry.x + geometry.width / 2 - usbPortGeometry.width / 2;
+
+const usbPortCutout = path.rect({
+  x: usbPortGeometry.x,
+  y: cardOuterGeometry.height - width,
+  width: usbPortGeometry.width,
+  height: 100 // arbitrary
+});
 
 const part = pipe(
   ...pins().map(subtract),
-  subtract(palmCutout()),
-  subtract(buttonTranslated())
+  subtract(cutout()),
+  subtract(buttonTranslated()),
+  subtract(usbPortCutout)
 )(cardOuter());
 
 module.exports = () => {
