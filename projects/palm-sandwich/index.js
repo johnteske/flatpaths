@@ -20,6 +20,15 @@ const palmCover = require("./parts/palm-cover");
 
 const T = require("./material");
 
+let renderY = 0;
+
+// Get all item heights, then get max
+const maxHeight = items =>
+  items
+    .map(c => c.internalBounds.height)
+    .sort((a, b) => a - b)
+    .pop();
+
 const guides = [
   group(
     cardOuter(),
@@ -33,8 +42,9 @@ const guides = [
 
 const acrylicCuts = [cardCoverPart()];
 
+translateXWithOffset(acrylicCuts, T).forEach(c => cut(c));
+
 const cuts = [
-  ...acrylicCuts, // TODO split out from other materials
   cardLayerPart(),
   palmLayerPart(),
   buttonPart(),
@@ -43,16 +53,16 @@ const cuts = [
   palmCover()
 ];
 
-translateXWithOffset(cuts, T).forEach(c => cut(c));
+renderY += maxHeight(acrylicCuts) + T;
 
-// Get all cut heights, then get max
-const maxCutHeight = cuts
-  .map(c => c.internalBounds.height)
-  .sort((a, b) => a - b)
-  .pop();
+translateXWithOffset(cuts, T)
+  .map(g => g.translate([0, renderY]))
+  .forEach(c => cut(c));
+
+renderY += maxHeight(cuts) + T;
 
 translateXWithOffset(guides, T)
-  .map(g => g.translate([0, maxCutHeight + T]))
+  .map(g => g.translate([0, renderY]))
   .forEach(g => guide(g));
 
 paper.view.viewSize = [2000, 2000];
