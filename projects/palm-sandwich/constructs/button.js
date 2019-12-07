@@ -13,8 +13,6 @@ const frameWidth = (cardOuterGeometry.width - palm.w) / 2;
 const externalButtonHeight = mm(1);
 
 const h = palm.button.h;
-const x = frameWidth + palm.w;
-const y = width + palm.button.y;
 
 const buttonBase = path.rect({
   width: frameWidth / 2,
@@ -28,6 +26,9 @@ const button = path.rect({
 });
 
 const _button = buttonBase.unite(button);
+
+const x = frameWidth + palm.w;
+const y = width + palm.button.y - h / 2;
 
 module.exports = {
   button: () => _button.clone(),
