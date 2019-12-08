@@ -13,20 +13,8 @@ const {
   supports
 } = require("../constructs/card-outer");
 const { buttonTranslated } = require("../constructs/button");
-const { construct: cutout, geometry } = require("../constructs/palm-cutout");
-
-// TODO this should be a construct
-const usbPortGeometry = {
-  width: mm(15)
-};
-usbPortGeometry.x = geometry.x + geometry.width / 2 - usbPortGeometry.width / 2;
-
-const usbPortCutout = path.rect({
-  x: usbPortGeometry.x,
-  y: cardOuterGeometry.height - width,
-  width: usbPortGeometry.width,
-  height: 100 // arbitrary
-});
+const usbPortCutout = require("../constructs/usb-port-cutout");
+const { construct: cutout } = require("../constructs/palm-cutout");
 
 // TODO this should be a construct
 const keyringTab = path
@@ -52,7 +40,7 @@ const part = pipe(
   ...supports().map(subtract),
   subtract(cutout()),
   subtract(buttonTranslated()),
-  subtract(usbPortCutout)
+  subtract(usbPortCutout.construct())
 )(cardOuter());
 
 module.exports = () => {
