@@ -3,10 +3,7 @@ const paper = require("paper-jsdom");
 
 const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
-const {
-  layoutRowsWithOffset,
-  translateXWithOffset
-} = require(`${root}/distribution`);
+const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
 const { cardOuter, pins, supports } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
