@@ -1,4 +1,11 @@
 const widths = paths => paths.map(p => p.internalBounds.width);
+const heights = paths => paths.map(p => p.internalBounds.height);
+
+// Get all item heights, then get max
+const maxHeight = items =>
+  heights(items)
+    .sort((a, b) => a - b)
+    .pop();
 
 const xPositions = (widths, offset = 0) =>
   widths.reduce(
@@ -17,6 +24,18 @@ const translateXWithOffset = (paths, offset) => {
   return paths.map((p, i) => p.translate([x[i], 0]));
 };
 
+const layoutRowsWithOffset = (rows, offset) => {
+  let y = 0;
+  return rows.map(row => {
+    const translated = translateXWithOffset(row, offset).map(item =>
+      item.translate([0, y])
+    );
+    y += maxHeight(translated) + offset;
+    return translated;
+  });
+};
+
 module.exports = {
-  translateXWithOffset
+  translateXWithOffset,
+  layoutRowsWithOffset
 };
