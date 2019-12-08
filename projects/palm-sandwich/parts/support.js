@@ -9,7 +9,8 @@ const T = require("../material");
 
 const part = path.rect({
   width: T + mm(0.2), // adjust for kerf
-  height: T * 4 // enough for layers
+  height: T * 4, // enough for layers
+  radius: mm(0.5)
 });
 
 module.exports = () => part.clone();
