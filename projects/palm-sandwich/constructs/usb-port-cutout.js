@@ -1,7 +1,8 @@
 const root = require("app-root-path");
 
-const withRoundedCorner = require(`${root}/rounded-corner`);
 const path = require(`${root}/path`);
+const { pipe } = require(`${root}/fn`);
+const { unite } = require(`${root}/boolean`);
 const { mm } = require(`${root}/units`);
 
 const frame = require("../constructs/frame");
@@ -15,30 +16,39 @@ const geometry = {
 geometry.x =
   palmCutout.geometry.x + palmCutout.geometry.width / 2 - geometry.width / 2;
 
-const construct = path
+const _cutout = path.rect({
+  x: geometry.x,
+  y: geometry.y,
+  width: geometry.width,
+  height: frame.width
+});
+
+const _corner = path
   .rect({
-    x: geometry.x,
-    y: geometry.y,
-    width: geometry.width,
-    height: 100 // arbitrary
+    width: frame.width / 2,
+    height: frame.width / 2
   })
-  .unite(
-    path.rect({
-      x: geometry.x - frame.width / 2,
-      y: geometry.y + frame.width / 2,
-      width: frame.width,
-      height: frame.width
-    })
-  )
   .subtract(
     path.circle({
-      x: geometry.x - frame.width / 2,
-      y: geometry.y + frame.width / 2,
       radius: frame.width / 2
     })
   );
 
+const _left = _corner
+  .clone()
+  .translate([geometry.x - frame.width / 2, geometry.y + frame.width / 2]);
+const _right = _corner
+  .clone()
+  .scale(-1, 1)
+  .translate([geometry.x + geometry.width, geometry.y + frame.width / 2]);
+
+const construct = pipe(
+  unite(_left),
+  unite(_right)
+)(_cutout);
+
 module.exports = {
   geometry,
+  components: () => [_cutout, _left, _right].map(item => item.clone()),
   construct: () => construct.clone()
 };
