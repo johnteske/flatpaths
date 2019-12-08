@@ -37,7 +37,7 @@ const acrylicCuts = [cardCoverPart()];
 
 const cuts = [
   cardLayerPart(),
-  support(),
+  ...support(),
   palmLayerPart(),
   palmLayerPart(),
   buttonPart(),
