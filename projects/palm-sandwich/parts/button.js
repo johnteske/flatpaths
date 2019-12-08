@@ -2,6 +2,7 @@ const root = require("app-root-path");
 
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
+const { mm } = require(`${root}/units`);
 const palm = require(`${root}/objects/palm`);
 const { translateXWithOffset } = require(`${root}/distribution`);
 
@@ -17,8 +18,9 @@ const pinHole = path.rect({
 });
 
 const pin = path.rect({
-  width: T * 1.5,
-  height: T * 2 // number of palm layers
+  width: T * 1.5 + mm(0.2), // adjust for kerf
+  height: T * 2, // number of palm layers
+  radius: mm(0.5)
 });
 
 const _button = () => button().subtract(pinHole);

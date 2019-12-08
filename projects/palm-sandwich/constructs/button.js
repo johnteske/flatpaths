@@ -22,7 +22,8 @@ const buttonBase = path.rect({
 const button = path.rect({
   width: frameWidth + externalButtonHeight,
   height: h,
-  y: h / 2
+  y: h / 2,
+  radius: mm(0.5)
 });
 
 const _button = buttonBase.unite(button);
