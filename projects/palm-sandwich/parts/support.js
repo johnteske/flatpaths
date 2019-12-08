@@ -13,4 +13,4 @@ const part = path.rect({
   radius: mm(0.5)
 });
 
-module.exports = () => part.clone();
+module.exports = () => [part.clone(), part.clone()];

@@ -32,11 +32,19 @@ const pins = withHead =>
 
 const support = path.rect({
   width: T,
-  height: T,
-  x: cardOuterGeometry.width - frameWidth / 2 - T / 2,
-  y: cardOuterGeometry.height / 2 - T / 2
+  height: T
 });
-const supports = () => [support.clone()];
+
+const supportPoints = [
+  [frameWidth / 2 - T / 2, cardOuterGeometry.height / 2 - T / 2],
+
+  [
+    cardOuterGeometry.width - frameWidth / 2 - T / 2,
+    cardOuterGeometry.height / 2 - T / 2
+  ]
+];
+
+const supports = () => supportPoints.map(p => support.clone().translate(p));
 
 module.exports = {
   cardOuterGeometry,
