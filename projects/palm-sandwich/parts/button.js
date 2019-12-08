@@ -3,6 +3,7 @@ const root = require("app-root-path");
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const palm = require(`${root}/objects/palm`);
+const { translateXWithOffset } = require(`${root}/distribution`);
 
 const T = require("../material");
 
@@ -16,11 +17,12 @@ const pinHole = path.rect({
 });
 
 const pin = path.rect({
-  y: 100, // arbitrary
   width: T * 1.5,
   height: T * 2 // number of palm layers
 });
 
-const part = group(button().subtract(pinHole), pin);
+const _button = () => button().subtract(pinHole);
+const components = [_button(), _button(), pin];
+const part = group(translateXWithOffset(components, 0));
 
 module.exports = () => part.clone();
