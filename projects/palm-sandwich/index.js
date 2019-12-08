@@ -29,7 +29,7 @@ const guides = [
     ...pins(true),
     ...supports(),
     buttonTranslated(),
-    usbPortCutout.construct()
+    ...usbPortCutout.components()
   )
 ];
 
