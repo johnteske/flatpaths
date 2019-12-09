@@ -32,6 +32,7 @@ const guides = [
     buttonTranslated(),
     ...usbPortCutout.components()
   ),
+  cardLayerPart.part(),
   keyringTab.construct(),
   palmLayerWithButtonPart.part()
 ];
@@ -39,7 +40,7 @@ const guides = [
 const acrylicCuts = [cardCoverPart()];
 
 const cuts = [
-  cardLayerPart(),
+  ...cardLayerPart.components(),
   ...support(),
   ...palmLayerWithButtonPart.components(),
   ...palmLayerWithButtonPart.components(),
