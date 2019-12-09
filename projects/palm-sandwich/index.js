@@ -34,7 +34,8 @@ const guides = [
   ),
   cardLayerPart.part(),
   keyringTab.construct(),
-  palmLayerWithButtonPart.part()
+  palmLayerWithButtonPart.part(),
+  palmLayerPart.part()
 ];
 
 const acrylicCuts = [cardCoverPart()];
@@ -45,7 +46,7 @@ const cuts = [
   ...palmLayerWithButtonPart.components(),
   ...palmLayerWithButtonPart.components(),
   buttonPart(),
-  palmLayerPart(),
+  ...palmLayerPart.components(),
   palmCover()
 ];
 
