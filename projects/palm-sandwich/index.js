@@ -15,8 +15,8 @@ const keyringTab = require("./constructs/keyring-tab");
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
 const cardLayerPart = require("./parts/card-layer");
+const palmLayerWithButtonPart = require("./parts/palm-layer-with-button");
 const palmLayerPart = require("./parts/palm-layer");
-const palmLayerPart2 = require("./parts/palm-layer2");
 const support = require("./parts/support");
 const palmCover = require("./parts/palm-cover");
 
@@ -40,10 +40,10 @@ const acrylicCuts = [cardCoverPart()];
 const cuts = [
   cardLayerPart(),
   ...support(),
-  palmLayerPart(),
-  palmLayerPart(),
+  palmLayerWithButtonPart(),
+  palmLayerWithButtonPart(),
   buttonPart(),
-  palmLayerPart2(),
+  palmLayerPart(),
   palmCover()
 ];
 
