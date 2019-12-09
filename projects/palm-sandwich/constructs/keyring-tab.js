@@ -3,7 +3,6 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
-const frame = require("./frame");
 const pin = require("./pin");
 
 const geometry = {
