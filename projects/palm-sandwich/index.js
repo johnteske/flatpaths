@@ -10,6 +10,7 @@ const cardCutout = require("./constructs/card-cutout");
 const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
+const keyringTab = require("./constructs/keyring-tab");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
@@ -30,7 +31,8 @@ const guides = [
     ...supports(),
     buttonTranslated(),
     ...usbPortCutout.components()
-  )
+  ),
+  keyringTab.construct()
 ];
 
 const acrylicCuts = [cardCoverPart()];
