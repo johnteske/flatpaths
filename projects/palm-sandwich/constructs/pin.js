@@ -11,7 +11,7 @@ const pinGeometry = {
   d,
   r: d / 2,
   head: {
-    d: mm(11),
+    d: headDiameter,
     r: headDiameter / 2
   }
 };

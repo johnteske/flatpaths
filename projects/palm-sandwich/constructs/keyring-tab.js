@@ -4,21 +4,27 @@ const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
 const frame = require("./frame");
+const pin = require("./pin");
+
+const geometry = {
+  width: pin.pinGeometry.head.d,
+  height: pin.pinGeometry.head.d * 2
+};
 
 const construct = path
   .rect({
-    width: frame.width,
-    height: frame.width * 2,
-    radius: mm(0.5)
+    ...geometry,
+    radius: pin.pinGeometry.head.r
   })
   .subtract(
     path.circle({
       radius: mm(1),
-      x: frame.width / 2,
-      y: frame.width * 1.5
+      x: geometry.width / 2,
+      y: geometry.height * 0.75
     })
   );
 
 module.exports = {
+  geometry,
   construct: () => construct.clone()
 };
