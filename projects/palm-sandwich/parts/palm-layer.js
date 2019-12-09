@@ -20,8 +20,8 @@ const part = pipe(
     keyringTab
       .construct()
       .translate([
-        cardOuterGeometry.width - width,
-        cardOuterGeometry.height - width
+        cardOuterGeometry.width - keyringTab.geometry.width,
+        cardOuterGeometry.height - keyringTab.geometry.height / 2
       ])
   ),
   ...pins().map(subtract),
