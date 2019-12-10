@@ -6,7 +6,7 @@ const palm = require(`${root}/objects/palm`);
 
 const T = require("../material");
 
-const { width: frameWidth } = require("./frame");
+const frame = require("./frame");
 const { pin, pinGeometry } = require("./pin");
 
 // this could also be thought of as padding
@@ -14,8 +14,8 @@ const { pin, pinGeometry } = require("./pin");
 const headRadius = pinGeometry.head.r;
 
 const cardOuterGeometry = {
-  width: frameWidth + cards.w + frameWidth,
-  height: frameWidth + palm.h + frameWidth,
+  width: frame.width + cards.w + frame.width,
+  height: frame.width + palm.h + frame.width,
   radius: pinGeometry.head.r
 };
 
@@ -35,13 +35,22 @@ const support = path.rect({
   height: T
 });
 
-const supportPoints = [
-  [frameWidth / 2 - T / 2, cardOuterGeometry.height / 2 - T / 2],
+const topXOffset = pinGeometry.head.d
+const frameMidY = cardOuterGeometry.height / 2 - T / 2
 
+const supportPoints = [
+  [topXOffset, frame.width / 2 - T / 2],
+  [cardOuterGeometry.width - topXOffset - T, frame.width / 2 - T / 2],
+
+  [frame.width / 2 - T / 2, frameMidY
+],
   [
-    cardOuterGeometry.width - frameWidth / 2 - T / 2,
-    cardOuterGeometry.height / 2 - T / 2
-  ]
+    cardOuterGeometry.width - frame.width / 2 - T / 2,
+    frameMidY
+  ],
+
+  [topXOffset, cardOuterGeometry.height - frame.width / 2 - T / 2],
+  [cardOuterGeometry.width - topXOffset - T, cardOuterGeometry.height - frame.width / 2 - T / 2],
 ];
 
 const supports = () => supportPoints.map(p => support.clone().translate(p));

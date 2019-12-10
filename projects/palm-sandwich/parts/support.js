@@ -4,13 +4,23 @@ const path = require(`${root}/path`);
 const { mm } = require(`${root}/units`);
 
 const T = require("../material");
+//const { supports } = require("../constructs/card-outer");
 
 // TODO should reference construct
 
-const part = path.rect({
+const part = layers => path.rect({
   width: T + mm(0.2), // adjust for kerf
-  height: T * 4, // enough for layers
+  height: T * layers,
   radius: mm(0.5)
 });
 
-module.exports = () => [part.clone(), part.clone()];
+// could get points, not rendered supports
+//module.exports = () => supports().map(() => part.clone());
+module.exports = () => [
+  part(4),
+  part(4),
+  part(5),
+  part(5),
+  part(5),
+  part(5)
+]
