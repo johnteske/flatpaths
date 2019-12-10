@@ -51,7 +51,11 @@ const cuts = [
 ];
 
 layoutRowsWithOffset(
-  [acrylicCuts.map(cut), cuts.map(cut), guides.map(guide)],
+  [
+    acrylicCuts.map(cut),
+    cuts.map(cut),
+    guides.map(guide)
+  ],
   T
 );
 
