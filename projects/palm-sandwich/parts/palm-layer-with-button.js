@@ -34,7 +34,7 @@ const mask = () =>
 
 const a = part.clone().subtract(mask());
 const b = part.clone().intersect(mask());
-b.position.x = 0; // TODO this is a bit clunky
+b.bounds.topLeft = [0, 0];
 
 module.exports = {
   part: () => part.clone(),
