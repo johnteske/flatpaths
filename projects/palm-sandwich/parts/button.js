@@ -25,6 +25,6 @@ const pin = path.rect({
 
 const _button = () => button().subtract(pinHole);
 const components = [_button(), _button(), pin];
-const part = group(translateXWithOffset(components, 0));
+const part = group(translateXWithOffset(components, T));
 
 module.exports = () => part.clone();
