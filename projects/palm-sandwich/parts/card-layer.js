@@ -25,6 +25,6 @@ const part = () => _part.clone();
 
 module.exports = {
   components: () => [part()],
-//  components: () => [a(), b()],
+  //  components: () => [a(), b()],
   part
 };

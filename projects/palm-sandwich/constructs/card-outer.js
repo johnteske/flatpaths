@@ -35,22 +35,21 @@ const support = path.rect({
   height: T
 });
 
-const topXOffset = pinGeometry.head.d
-const frameMidY = cardOuterGeometry.height / 2 - T / 2
+const topXOffset = pinGeometry.head.d;
+const frameMidY = cardOuterGeometry.height / 2 - T / 2;
 
 const supportPoints = [
   [topXOffset, frame.width / 2 - T / 2],
   [cardOuterGeometry.width - topXOffset - T, frame.width / 2 - T / 2],
 
-  [frame.width / 2 - T / 2, frameMidY
-],
-  [
-    cardOuterGeometry.width - frame.width / 2 - T / 2,
-    frameMidY
-  ],
+  [frame.width / 2 - T / 2, frameMidY],
+  [cardOuterGeometry.width - frame.width / 2 - T / 2, frameMidY],
 
   [topXOffset, cardOuterGeometry.height - frame.width / 2 - T / 2],
-  [cardOuterGeometry.width - topXOffset - T, cardOuterGeometry.height - frame.width / 2 - T / 2],
+  [
+    cardOuterGeometry.width - topXOffset - T,
+    cardOuterGeometry.height - frame.width / 2 - T / 2
+  ]
 ];
 
 const supports = () => supportPoints.map(p => support.clone().translate(p));

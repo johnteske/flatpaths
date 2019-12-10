@@ -7,7 +7,11 @@ const { pipe } = require(`${root}/fn`);
 //const { width } = require("../constructs/frame");
 const T = require("../material");
 const { pinGeometry } = require("../constructs/pin");
-const { cardOuterGeometry, pins, supports } = require("../constructs/card-outer");
+const {
+  cardOuterGeometry,
+  pins,
+  supports
+} = require("../constructs/card-outer");
 
 //const faceTop = path.rect({
 //  width: cardOuterGeometry.width,
@@ -28,11 +32,14 @@ const faceTopLeft = path.rect({
 //  .clone()
 //  .translate([cardOuterGeometry.width - tabSize, 0]);
 
-const face = faceTopLeft
+const face = faceTopLeft;
 //const face = faceTop
 //.unite(faceTopLeft)
 //.unite(faceTopRight);
 
-const part = pipe(...pins().map(subtract), ...supports().map(subtract))(face);
+const part = pipe(
+  ...pins().map(subtract),
+  ...supports().map(subtract)
+)(face);
 
 module.exports = () => part.clone();
