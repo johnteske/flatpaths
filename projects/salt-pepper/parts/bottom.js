@@ -37,11 +37,10 @@ const rightFingers = makeFingers(4).map(f =>
     .translate([bottomGeometry.width + fingerGeometry.height, 0])
 );
 
-const centerSlots = makeFingers(5).map(f =>
-  f.rotate(90, [0, 0]).translate([inches(2.5) + fingerGeometry.height, 0])
+const centerSlots = makeFingers(3).map(f =>
+  f.rotate(90, [0, 0]).translate([inches(2.5) + fingerGeometry.height, fingerGeometry.width])
 );
 
-// TODO needs support in the middle
 const bottomPart = pipe(
   withFingers(topFingers),
   withFingers(rightFingers),
