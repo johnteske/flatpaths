@@ -1,15 +1,11 @@
 const root = require("app-root-path");
 
-//const { pipe } = require(`${root}/fn`);
 const { inches } = require(`${root}/units`);
 
 const { T } = require("../material");
 
 const {
-  //  fingerGeometry,
   makeFingers
-  //withFingers,
-  //withSlots
 } = require("./finger");
 
 const bottomLengthFingers = () => {
@@ -21,6 +17,10 @@ const bottomLengthFingers = () => {
   return [].concat(lengthFingers1, lengthFingers2);
 };
 
+// TODO the width of these fingers should be length.height + T / 4
+const widthLengthFingers = () => makeFingers(2).map(f => f.rotate(90, [0, 0]));
+
 module.exports = {
-  bottomLengthFingers
+  bottomLengthFingers,
+  widthLengthFingers
 };

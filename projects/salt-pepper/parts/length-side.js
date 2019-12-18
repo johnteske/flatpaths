@@ -8,10 +8,14 @@ const { lengthSide, lengthSideGeometry } = require("../constructs/panels");
 
 const {
   fingerGeometry,
+  withFingers,
   withSlots
 } = require("../constructs/finger");
 
-const { bottomLengthFingers } = require("../constructs/joints");
+const {
+  bottomLengthFingers,
+  widthLengthFingers
+} = require("../constructs/joints");
 
 const lengthSidePart = () =>
   pipe(
@@ -28,12 +32,18 @@ const lengthSidePart = () =>
     ),
     withSlots(
       bottomLengthFingers().map(f => f.translate([0, -fingerGeometry.height]))
+    ),
+    withFingers(
+      widthLengthFingers().map(f => f.translate([0, -fingerGeometry.height]))
+    ),
+    withFingers(
+      widthLengthFingers().map(f =>
+        f.translate([
+          lengthSideGeometry.width + fingerGeometry.height,
+          -fingerGeometry.height
+        ])
+      )
     )
-    //    withFingers(
-    //      makeFingers(3).map(f =>
-    //        f.rotate(90, [0, 0]).translate([0, -fingerGeometry.height])
-    //      )
-    //    )
   )(lengthSide())
     .translate([fingerGeometry.height])
     .scale(1, -1);
