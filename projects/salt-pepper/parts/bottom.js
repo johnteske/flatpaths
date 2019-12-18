@@ -3,7 +3,6 @@ const root = require("app-root-path");
 const { pipe } = require(`${root}/fn`);
 const { inches } = require(`${root}/units`);
 
-const { T } = require("../material");
 const { bottomGeometry, bottom } = require("../constructs/panels");
 const {
   fingerGeometry,
@@ -11,21 +10,13 @@ const {
   withFingers,
   withSlots
 } = require("../constructs/finger");
+const { bottomLengthFingers } = require("../constructs/joints");
 
-const makeLengthFingers = () => {
-  const lengthFingers1 = makeFingers(4);
-  const lengthFingers2 = makeFingers(4).map(f =>
-    f.translate([inches(2.5) + T, 0])
-  );
-
-  return [].concat(lengthFingers1, lengthFingers2);
-};
-
-const topFingers = makeLengthFingers().map(f =>
+const topFingers = bottomLengthFingers().map(f =>
   f.translate([0, -fingerGeometry.height])
 );
 
-const bottomFingers = makeLengthFingers().map(f =>
+const bottomFingers = bottomLengthFingers().map(f =>
   f.translate([0, bottomGeometry.height])
 );
 
@@ -38,15 +29,18 @@ const rightFingers = makeFingers(4).map(f =>
 );
 
 const centerSlots = makeFingers(3).map(f =>
-  f.rotate(90, [0, 0]).translate([inches(2.5) + fingerGeometry.height, fingerGeometry.width])
+  f
+    .rotate(90, [0, 0])
+    .translate([inches(2.5) + fingerGeometry.height, fingerGeometry.width])
 );
 
-const bottomPart = pipe(
-  withFingers(topFingers),
-  withFingers(rightFingers),
-  withFingers(bottomFingers),
-  withFingers(leftFingers),
-  withSlots(centerSlots)
-)(bottom());
+const bottomPart = () =>
+  pipe(
+    withFingers(topFingers),
+    withFingers(rightFingers),
+    withFingers(bottomFingers),
+    withFingers(leftFingers),
+    withSlots(centerSlots)
+  )(bottom()).translate([fingerGeometry.height]);
 
 module.exports = bottomPart;

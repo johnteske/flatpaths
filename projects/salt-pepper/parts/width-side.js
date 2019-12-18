@@ -3,4 +3,4 @@ const { finger } = require("../constructs/finger");
 
 const widthSidePart = widthSide().unite(finger());
 
-module.exports = widthSidePart;
+module.exports = () => widthSidePart.clone();
