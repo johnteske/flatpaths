@@ -1,6 +1,12 @@
-const { widthSide } = require("../constructs/panels");
-const { finger } = require("../constructs/finger");
+const root = require("app-root-path");
 
-const widthSidePart = widthSide().unite(finger());
+const { unite } = require(`${root}/boolean`);
+const { pipe } = require(`${root}/fn`);
+
+const { widthSide } = require("../constructs/panels");
+
+const { widthLengthFingers } = require("../constructs/joints");
+
+const widthSidePart = pipe(...widthLengthFingers().map(unite))(widthSide());
 
 module.exports = () => widthSidePart.clone();

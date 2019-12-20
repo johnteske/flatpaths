@@ -1,12 +1,15 @@
 const root = require("app-root-path");
 
 const { inches } = require(`${root}/units`);
+const fingerJoint = require(`${root}/constructs/finger-joint`);
 
 const { T } = require("../material");
 
-const {
-  makeFingers
-} = require("./finger");
+const makeFingers = fingerJoint({
+  width: inches(2.5),
+  height: T,
+  n: 7
+});
 
 const bottomLengthFingers = () => {
   const lengthFingers1 = makeFingers(4);
@@ -17,8 +20,10 @@ const bottomLengthFingers = () => {
   return [].concat(lengthFingers1, lengthFingers2);
 };
 
-// TODO the width of these fingers should be length.height + T / 4
-const widthLengthFingers = () => makeFingers(2).map(f => f.rotate(90, [0, 0]));
+const widthLengthFingers = () =>
+  fingerJoint({ width: inches(1.25) + T, height: T, n: 4 })().map(f =>
+    f.rotate(90, [0, 0])
+  );
 
 module.exports = {
   bottomLengthFingers,
