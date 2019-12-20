@@ -25,7 +25,11 @@ const widthLengthFingers = () =>
     f.rotate(90, [0, 0])
   );
 
+const bottomWidthFingers = () =>
+  fingerJoint({ width: inches(2.5), height: T, n: 7 })();
+
 module.exports = {
   bottomLengthFingers,
-  widthLengthFingers
+  widthLengthFingers,
+  bottomWidthFingers
 };
