@@ -11,7 +11,7 @@ const path = require(`${root}/path`);
 const pitch = inches(0.1);
 const pinHoleDiameter = inches(0.04);
 
-const rowDistance = 100; // TODO
+const rowDistance = pitch * 6;
 
 const pinHole = path.circle({
   radius: pinHoleDiameter / 2
@@ -26,8 +26,9 @@ const bottomRow = () => row().map(p => p.translate([0, rowDistance]));
 
 const support = () =>
   path.rect({
+    y: -pitch / 2,
     width: 11 * pitch,
-    height: 100
+    height: pitch
   });
 
 layoutRowsWithOffset(
