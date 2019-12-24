@@ -10,6 +10,9 @@ const {
   widthLengthFingers,
   bottomWidthFingers
 } = require("../constructs/joints");
+
+const { fingerGeometry } = require("../constructs/finger");
+
 const { T } = require("../material");
 
 const widthSidePart = pipe(
@@ -29,6 +32,6 @@ const widthSidePart = pipe(
   ...bottomWidthFingers()
     .map(f => f.translate([0, inches(1.25)]))
     .map(subtract)
-)(widthSide());
+)(widthSide()).translate([fingerGeometry.height, 0]);
 
 module.exports = () => widthSidePart.clone();
