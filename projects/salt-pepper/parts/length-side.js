@@ -3,6 +3,8 @@ const root = require("app-root-path");
 const { unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
 const { pipe } = require(`${root}/fn`);
+const { inches } = require(`${root}/units`);
+const { T } = require(`../material`);
 
 const { lengthSide, lengthSideGeometry } = require("../constructs/panels");
 
@@ -35,6 +37,14 @@ const lengthSidePart = () =>
     ),
     withFingers(
       widthLengthFingers().map(f => f.translate([0, -fingerGeometry.height]))
+    ),
+    withSlots(
+      widthLengthFingers().map(f =>
+        f.translate([
+          inches(2.5) + T,
+          (inches(1.25) + T) / 4 - T // TODO get from finger function
+        ])
+      )
     ),
     withFingers(
       widthLengthFingers().map(f =>

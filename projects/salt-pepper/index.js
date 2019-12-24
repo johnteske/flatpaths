@@ -12,9 +12,11 @@ const { T } = require("./material");
 
 layoutRowsWithOffset(
   [
-    [finger()].map(guide),
+    // [finger()].map(guide),
     [lengthSide()].map(cut),
-    [bottom(), widthSide()].map(cut)
+    [lengthSide()].map(cut),
+    [bottom()].map(cut),
+    [widthSide(), widthSide()].map(cut)
   ],
   T
 );
