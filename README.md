@@ -2,6 +2,10 @@
 - less manual work in prepping files for cutting
 - ability to change dimensions dynamically (i.e. for material thickness)
 
+```
+node generate.js -p project-name
+```
+
 ## Design inspiration
 - https://learn.adafruit.com/adabox011/build-the-pyportal-stand
     - captive nut
