@@ -4,7 +4,6 @@
   "description": "- generate shapes programmatically - less manual work in prepping files for cutting - parametric (i.e. for material thickness)",
   "main": "index.js",
   "scripts": {
-    "watch": "chokidar \"{.,projects/**}/*.js\" -c \"node generate.js\"",
     "format": "npm run lint -- --fix; prettier \"**/*.js\" --write",
     "lint": "eslint \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +12,6 @@
   "license": "MIT",
   "dependencies": {
     "app-root-path": "^3.0.0",
-    "chokidar-cli": "^2.0.0",
     "eslint": "^6.5.1",
     "minimist": "^1.2.0",
     "paper-jsdom": "^0.12.3",
