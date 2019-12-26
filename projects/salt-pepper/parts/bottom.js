@@ -3,35 +3,33 @@ const root = require("app-root-path");
 const { pipe } = require(`${root}/fn`);
 const { inches } = require(`${root}/units`);
 
-const { bottomGeometry, bottom } = require("../constructs/panels");
-const {
-  fingerGeometry,
-  makeFingers,
-  withFingers,
-  withSlots
-} = require("../constructs/finger");
-const { bottomLengthFingers } = require("../constructs/joints");
+const { T } = require("../material");
 
-const topFingers = bottomLengthFingers().map(f =>
-  f.translate([0, -fingerGeometry.height])
-);
+const { bottomGeometry, bottom } = require("../constructs/panels");
+const { withFingers } = require("../constructs/finger");
+const {
+  bottomLengthFingers,
+
+  bottomWidthFingers
+} = require("../constructs/joints");
+
+const topFingers = bottomLengthFingers().map(f => f.translate([0, -T]));
 
 const bottomFingers = bottomLengthFingers().map(f =>
   f.translate([0, bottomGeometry.height])
 );
 
-const leftFingers = makeFingers(4).map(f => f.rotate(90, [0, 0]));
+const rotatedFingers = () =>
+  bottomWidthFingers().map(f => f.rotate(90, [0, 0]));
 
-const rightFingers = makeFingers(4).map(f =>
-  f
-    .rotate(90, [0, 0])
-    .translate([bottomGeometry.width + fingerGeometry.height, 0])
+const leftFingers = rotatedFingers();
+
+const rightFingers = rotatedFingers().map(f =>
+  f.translate([bottomGeometry.width + T, 0])
 );
 
-const centerSlots = makeFingers(3).map(f =>
-  f
-    .rotate(90, [0, 0])
-    .translate([inches(2.5) + fingerGeometry.height, fingerGeometry.width])
+const centerFingers = rotatedFingers().map(f =>
+  f.translate([inches(2.5) + T, 0])
 );
 
 const bottomPart = () =>
@@ -40,7 +38,7 @@ const bottomPart = () =>
     withFingers(rightFingers),
     withFingers(bottomFingers),
     withFingers(leftFingers),
-    withSlots(centerSlots)
-  )(bottom()).translate([fingerGeometry.height]);
+    withFingers(centerFingers)
+  )(bottom()).translate([T]);
 
 module.exports = bottomPart;

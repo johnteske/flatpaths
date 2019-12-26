@@ -14,7 +14,18 @@ const bottomGeometry = {
   height: boxSize
 };
 
-const bottom = path.rect(bottomGeometry);
+const bottom = path
+  .rect({
+    width: boxSize,
+    height: boxSize
+  })
+  .unite(
+    path.rect({
+      x: boxSize + T,
+      width: boxSize,
+      height: boxSize
+    })
+  );
 
 const lengthSideGeometry = {
   width: length,

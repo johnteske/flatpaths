@@ -11,6 +11,8 @@ const {
   bottomWidthFingers
 } = require("../constructs/joints");
 
+const { fingerGeometry } = require("../constructs/finger");
+
 const { T } = require("../material");
 
 const widthSidePart = pipe(
@@ -29,15 +31,15 @@ const widthSidePart = pipe(
   ),
   ...bottomWidthFingers()
     .map(f => f.translate([0, inches(1.25)]))
-    .map(subtract),
+    .map(subtract)
   // bottom standoff
-  unite(
-    path.rect({
-      y: inches(1.25) + T,
-      width: inches(2.5),
-      height: T
-    })
-  )
-)(widthSide()).translate([T, 0]);
+  //  unite(
+  //    path.rect({
+  //      y: inches(1.25) + T,
+  //      width: inches(2.5),
+  //      height: T
+  //    })
+  //  )
+)(widthSide()).translate([fingerGeometry.height, 0]);
 
 module.exports = () => widthSidePart.clone();
