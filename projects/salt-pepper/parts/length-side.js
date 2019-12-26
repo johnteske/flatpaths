@@ -53,9 +53,18 @@ const lengthSidePart = () =>
           -fingerGeometry.height
         ])
       )
+    ),
+    // bottom standoff
+    unite(
+      path.rect({
+        x: -T,
+        y: -2 * T,
+        width: T + inches(2.5) + T + inches(2.5) + T,
+        height: T
+      })
     )
   )(lengthSide())
-    .translate([fingerGeometry.height])
+    .translate([fingerGeometry.height, 2 * T])
     .scale(1, -1);
 
 module.exports = lengthSidePart;
