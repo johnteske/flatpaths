@@ -13,31 +13,36 @@ const {
 
 const { T } = require("../material");
 
-const widthSidePart = pipe(
-  // side fingers
-  ...widthLengthFingers().map(unite),
-  ...widthLengthFingers()
-    .map(f => f.translate([inches(2.5) + T, 0]))
-    .map(unite),
-  // bottom fingers
-  unite(
-    path.rect({
-      width: inches(2.5),
-      height: T,
-      y: inches(1.25)
-    })
-  ),
-  ...bottomWidthFingers()
-    .map(f => f.translate([0, inches(1.25)]))
-    .map(subtract),
-  // bottom standoff
-  unite(
-    path.rect({
-      y: inches(1.25) + T,
-      width: inches(2.5),
-      height: T
-    })
-  )
-)(widthSide()).translate([T, 0]);
+const noop = _ => _;
 
-module.exports = () => widthSidePart.clone();
+const widthSidePart = ({ withStandoff } = { withStandoff: true }) =>
+  pipe(
+    // side fingers
+    ...widthLengthFingers().map(unite),
+    ...widthLengthFingers()
+      .map(f => f.translate([inches(2.5) + T, 0]))
+      .map(unite),
+    // bottom fingers
+    unite(
+      path.rect({
+        width: inches(2.5),
+        height: T,
+        y: inches(1.25)
+      })
+    ),
+    ...bottomWidthFingers()
+      .map(f => f.translate([0, inches(1.25)]))
+      .map(subtract),
+    withStandoff
+      ? // bottom standoff
+        unite(
+          path.rect({
+            y: inches(1.25) + T,
+            width: inches(2.5),
+            height: T
+          })
+        )
+      : noop
+  )(widthSide()).translate([T, 0]);
+
+module.exports = widthSidePart;
