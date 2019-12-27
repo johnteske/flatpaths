@@ -1,11 +1,10 @@
 const widths = paths => paths.map(p => p.internalBounds.width);
 const heights = paths => paths.map(p => p.internalBounds.height);
 
-// Get all item heights, then get max
-const maxHeight = items =>
-  heights(items)
-    .sort((a, b) => a - b)
-    .pop();
+const max = items => items.sort((a, b) => a - b).pop();
+
+// const maxWidth = items => max(widths(items));
+const maxHeight = items => max(heights(items));
 
 const xPositions = (widths, offset = 0) =>
   widths.reduce(
