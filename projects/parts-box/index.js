@@ -26,6 +26,7 @@ layoutRowsWithOffset(
     body()
       .map(guide)
       .map(_ => {
+        // TODO this is for better viewing during design
         _.strokeWidth = 4;
         return _;
       })
