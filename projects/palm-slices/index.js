@@ -279,7 +279,7 @@ const facePlate = (() => {
 })();
 cut(facePlate.clone().translate([300, rect.height + T]));
 
-const scoreSliceLabel = n => {
+const scoreSliceLabel = () => {
   return score(new paper.Path([T, T * 1.5], [rect.width - T, T * 1.5]));
 };
 
