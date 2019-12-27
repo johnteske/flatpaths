@@ -7,10 +7,10 @@ const dimensions = require("../../dimensions");
 // TODO break out into own part
 // dimensions are external--
 // --finger joints will be inside these dimensions
-const bottom = () =>
+const back = () =>
   path.rect({
     width: dimensions.width,
-    height: dimensions.depth
+    height: dimensions.height
   });
 
 // TODO break out into own part
@@ -22,4 +22,13 @@ const side = () =>
     height: dimensions.height
   });
 
-module.exports = () => [bottom(), side()];
+// TODO break out into own part
+// dimensions are external--
+// --finger joints will be inside these dimensions
+const shelf = () =>
+  path.rect({
+    width: dimensions.width,
+    height: dimensions.depth
+  });
+
+module.exports = () => [back(), side(), shelf()];
