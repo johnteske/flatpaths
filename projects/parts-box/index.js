@@ -15,10 +15,22 @@
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
+const { layoutRowsWithOffset } = require(`${root}/distribution`);
 const { guide } = require(`${root}/stroke`);
 
+const { T } = require("./material");
 const body = require("./parts/body");
 
-guide(body());
+layoutRowsWithOffset(
+  [
+    body()
+      .map(guide)
+      .map(_ => {
+        _.strokeWidth = 4;
+        return _;
+      })
+  ],
+  T
+);
 
-paper.view.viewSize = [2000, 2000];
+paper.view.viewSize = [9999, 9999];
