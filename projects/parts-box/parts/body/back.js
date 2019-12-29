@@ -6,7 +6,7 @@ const path = require(`${root}/path`);
 
 const fingerJoint = require(`${root}/constructs/finger-joint`);
 
-const thing = require("../../constructs/drawer");
+const drawer = require("../../constructs/drawer");
 const dimensions = require("../../dimensions");
 const { T } = require("../../material");
 
@@ -18,17 +18,17 @@ const panel = path.rect({
 });
 
 const widthJointSection = fingerJoint({
-  width: thing.width,
+  width: drawer.width,
   height: T,
   n: 5
 });
 
 const translate = (...args) => target => target.translate(args);
 
-const widthJoint = Array.from({ length: NUM_DRAWERS }).reduce(
+const widthJoint = () => Array.from({ length: NUM_DRAWERS }).reduce(
   (acc, _, i) =>
     acc.concat(
-      widthJointSection().map(translate(T + i * (thing.width + T), 0))
+      widthJointSection().map(translate(T + i * (drawer.width + T), 0))
     ),
   []
 );
@@ -37,17 +37,26 @@ const widthJoint = Array.from({ length: NUM_DRAWERS }).reduce(
 // --finger joints will be inside these dimensions
 const back = () =>
   pipe(
+    // top
     subtract(
-      // remove top joint material
       path.rect({
         width: dimensions.width,
         height: T
       })
     ),
-
-    ...widthJoint
-      //      .map(translate(T, 0))
+    ...widthJoint()
+      .map(unite),
+    // bottom
+    subtract(
+      path.rect({
+        y: dimensions.height - T,
+        width: dimensions.width,
+        height: T
+      })
+    ),
+    ...widthJoint()
+      .map(translate(0, dimensions.height - T))
       .map(unite)
-  )(panel);
+   )(panel);
 
 module.exports = back;
