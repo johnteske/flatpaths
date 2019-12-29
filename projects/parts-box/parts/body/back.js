@@ -30,62 +30,51 @@ const widthJointSection = fingerJoint({
 });
 
 const widthJointSpace = () =>
-  nItems(NUM_DRAWERS).reduce(
-    (acc, _, i) =>
-      acc.concat(
-        path
-          .rect({
-            width: drawer.width,
-            height: T
-          })
-          .translate(T + i * (drawer.width + T), 0)
-      ),
-    []
-  );
+  nItems(NUM_DRAWERS)
+    .map((_, i) =>
+      path
+        .rect({
+          width: drawer.width,
+          height: T
+        })
+        .translate(T + i * (drawer.width + T), 0)
+    )
+    .flat();
 
 const widthJointSpaces = () =>
-  nItems(NUM_SHELVES + 1).reduce(
-    (acc, _, i) =>
-      acc.concat(widthJointSpace().map(translateByDrawerHeight(i))),
-    []
-  );
+  nItems(NUM_SHELVES + 1)
+    .map((_, i) => widthJointSpace().map(translateByDrawerHeight(i)))
+    .flat();
 
 const widthJoint = () =>
-  nItems(NUM_DRAWERS).reduce(
-    (acc, _, i) =>
-      acc.concat(
-        widthJointSection().map(translateX(T + i * (drawer.width + T)))
-      ),
-    []
-  );
+  nItems(NUM_DRAWERS)
+    .map((_, i) =>
+      widthJointSection().map(translateX(T + i * (drawer.width + T)))
+    )
+    .flat();
 
 const widthJoints = () =>
-  nItems(NUM_SHELVES + 1).reduce(
-    (acc, _, i) => acc.concat(widthJoint().map(translateByDrawerHeight(i))),
-    []
-  );
+  nItems(NUM_SHELVES + 1)
+    .map((_, i) => widthJoint().map(translateByDrawerHeight(i)))
+    .flat();
 
 // spans full height, all shelves
 const heightJointSpace = () =>
-  nItems(NUM_SHELVES).reduce(
-    (acc, _, i) =>
-      acc.concat(
-        path
-          .rect({
-            width: T,
-            height: drawer.height
-          })
-          .translate([0, T + i * (drawer.height + T)])
-      ),
-    []
-  );
+  nItems(NUM_SHELVES)
+    .map((_, i) =>
+      path
+        .rect({
+          width: T,
+          height: drawer.height
+        })
+        .translate([0, T + i * (drawer.height + T)])
+    )
+    .flat();
 
 const heightJointSpaces = () =>
-  nItems(NUM_DRAWERS + 1).reduce(
-    (acc, _, i) =>
-      acc.concat(heightJointSpace().map(translateByDrawerWidth(i))),
-    []
-  );
+  nItems(NUM_DRAWERS + 1)
+    .map((_, i) => heightJointSpace().map(translateByDrawerWidth(i)))
+    .flat();
 
 const heightJointSection = fingerJoint({
   width: drawer.height,
@@ -95,27 +84,22 @@ const heightJointSection = fingerJoint({
 
 const heightJoint = () =>
   nItems(NUM_SHELVES)
-    .reduce(
-      (acc, _, i) =>
-        acc.concat(
-          heightJointSection()
-            .map(translateX(i * (drawer.height + T)))
-            .map(translateX(T))
-        ),
-      []
+    .map((_, i) =>
+      heightJointSection()
+        .map(translateX(i * (drawer.height + T)))
+        .map(translateX(T))
     )
+    .flat()
     .map(rotate(90, [0, 0]));
 
 const heightJoints = () =>
-  nItems(NUM_DRAWERS + 1).reduce(
-    (acc, _, i) =>
-      acc.concat(
-        heightJoint()
-          .map(translateByDrawerWidth(i))
-          .map(translateX(T))
-      ),
-    []
-  );
+  nItems(NUM_DRAWERS + 1)
+    .map((_, i) =>
+      heightJoint()
+        .map(translateByDrawerWidth(i))
+        .map(translateX(T))
+    )
+    .flat();
 
 const back = () =>
   pipe(
