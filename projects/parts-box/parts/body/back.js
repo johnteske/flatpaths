@@ -3,7 +3,7 @@ const root = require("app-root-path");
 const { pipe } = require(`${root}/fn`);
 const { subtract, unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
-const { guide } = require(`${root}/stroke`);
+//const { guide } = require(`${root}/stroke`);
 
 const fingerJoint = require(`${root}/constructs/finger-joint`);
 
@@ -16,9 +16,11 @@ const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
 const rotate = (...args) => target => target.rotate(...args);
 const translate = (...args) => target => target.translate(...args);
 
+const { width, height } = dimensions;
+
 const panel = path.rect({
-  width: dimensions.width,
-  height: dimensions.height
+  width,
+  height
 });
 
 const widthJointSection = fingerJoint({
@@ -64,7 +66,7 @@ const back = () =>
     // top
     subtract(
       path.rect({
-        width: dimensions.width,
+        width,
         height: T
       })
     ),
@@ -72,19 +74,19 @@ const back = () =>
     // bottom
     subtract(
       path.rect({
-        y: dimensions.height - T,
-        width: dimensions.width,
+        y: height - T,
+        width,
         height: T
       })
     ),
     ...widthJoint()
-      .map(translate(0, dimensions.height - T))
+      .map(translate(0, height - T))
       .map(unite),
     // left
     subtract(
       path.rect({
         width: T,
-        height: dimensions.height
+        height
       })
     ),
     ...heightJoint()
@@ -93,13 +95,13 @@ const back = () =>
     // right
     subtract(
       path.rect({
-        x: dimensions.width - T,
+        x: width - T,
         width: T,
-        height: dimensions.height
+        height
       })
     ),
     ...heightJoint()
-      .map(translate(dimensions.width, 0))
+      .map(translate(width, 0))
       .map(unite)
   )(panel);
 
