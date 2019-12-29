@@ -1,8 +1,3 @@
-// body
-// - shelves/top/bottom
-// - shelf dividers
-// - sides
-//
 // drawers stoppers
 //
 // parts drawers 1u, 2u, 3u, 4u
