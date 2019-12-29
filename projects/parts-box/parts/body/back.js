@@ -3,7 +3,6 @@ const root = require("app-root-path");
 const { pipe } = require(`${root}/fn`);
 const { subtract, unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
-//const { guide } = require(`${root}/stroke`);
 
 const fingerJoint = require(`${root}/constructs/finger-joint`);
 
@@ -15,6 +14,8 @@ const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
 
 const rotate = (...args) => target => target.rotate(...args);
 const translate = (...args) => target => target.translate(...args);
+
+const nItems = length => Array.from({ length });
 
 const { width, height } = dimensions;
 
@@ -29,12 +30,40 @@ const widthJointSection = fingerJoint({
   n: 5
 });
 
+const widthJointSpace = () =>
+  nItems(NUM_DRAWERS).reduce(
+    (acc, _, i) =>
+      acc.concat(
+        path
+          .rect({
+            width: drawer.width,
+            height: T
+          })
+          .translate(T + i * (drawer.width + T), 0)
+      ),
+    []
+  );
+
+const translateByShelf = i => translate(0, i * (drawer.height + T));
+
+const widthJointSpaces = () =>
+  nItems(NUM_SHELVES + 1).reduce(
+    (acc, _, i) => acc.concat(widthJointSpace().map(translateByShelf(i))),
+    []
+  );
+
 const widthJoint = () =>
   Array.from({ length: NUM_DRAWERS }).reduce(
     (acc, _, i) =>
       acc.concat(
         widthJointSection().map(translate(T + i * (drawer.width + T), 0))
       ),
+    []
+  );
+
+const widthJoints = () =>
+  nItems(NUM_SHELVES + 1).reduce(
+    (acc, _, i) => acc.concat(widthJoint().map(translateByShelf(i))),
     []
   );
 
@@ -55,33 +84,14 @@ const heightJoint = () =>
     )
     .map(rotate(90, [0, 0]));
 
-//heightJoint()
-//  .map(translate(T, 0))
-//  .map(guide)
-
 // dimensions are external--
 // --finger joints will be inside these dimensions
 const back = () =>
   pipe(
-    // top
-    subtract(
-      path.rect({
-        width,
-        height: T
-      })
-    ),
-    ...widthJoint().map(unite),
-    // bottom
-    subtract(
-      path.rect({
-        y: height - T,
-        width,
-        height: T
-      })
-    ),
-    ...widthJoint()
-      .map(translate(0, height - T))
-      .map(unite),
+    // cutout areas for width joints
+    ...widthJointSpaces().map(subtract),
+    // width joints
+    ...widthJoints().map(unite),
     // left
     subtract(
       path.rect({
