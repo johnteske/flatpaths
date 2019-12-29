@@ -1,3 +1,4 @@
+// outer dimensions for parts box
 const root = require("app-root-path");
 
 const { inches } = require(`${root}/units`);
@@ -14,8 +15,8 @@ const width = inches(5);
 const height = inches(4);
 const depth = inches(3);
 
-const NUM_SHELVES = 4;
-const NUM_DRAWERS = 4; // per shelf
+const NUM_SHELVES = 2;
+const NUM_DRAWERS = 2; // per shelf
 
 module.exports = {
   width,
