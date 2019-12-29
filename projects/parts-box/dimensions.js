@@ -14,8 +14,13 @@ const width = inches(5);
 const height = inches(4);
 const depth = inches(3);
 
+const NUM_SHELVES = 4;
+const NUM_DRAWERS = 4; // per shelf
+
 module.exports = {
   width,
   height,
-  depth
+  depth,
+  NUM_SHELVES,
+  NUM_DRAWERS
 };
