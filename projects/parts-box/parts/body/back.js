@@ -14,6 +14,8 @@ const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
 
 const rotate = (...args) => target => target.rotate(...args);
 const translate = (...args) => target => target.translate(...args);
+const translateX = x => target => target.translate([x, 0]);
+//const translateY = y => target => target.translate([0, y]);
 
 const nItems = length => Array.from({ length });
 
@@ -67,6 +69,30 @@ const widthJoints = () =>
     []
   );
 
+const translateByDrawerWidth = i => translateX(i * (drawer.width + T));
+
+// spans full height, all shelves
+const heightJointSpace = () =>
+  nItems(NUM_SHELVES).reduce(
+    (acc, _, i) =>
+      acc.concat(
+        path
+          .rect({
+            width: T,
+            height: drawer.height
+          })
+          .translate([0, T + i * (drawer.height + T)])
+      ),
+    []
+  );
+
+const heightJointSpaces = () =>
+  nItems(NUM_DRAWERS + 1).reduce(
+    (acc, _, i) =>
+      acc.concat(heightJointSpace().map(translateByDrawerWidth(i))),
+    []
+  );
+
 const heightJointSection = fingerJoint({
   width: drawer.height,
   height: T,
@@ -84,35 +110,33 @@ const heightJoint = () =>
     )
     .map(rotate(90, [0, 0]));
 
-// dimensions are external--
-// --finger joints will be inside these dimensions
+const heightJoints = () =>
+  nItems(NUM_DRAWERS + 1).reduce(
+    (acc, _, i) =>
+      acc.concat(
+        heightJoint()
+          .map(translateByDrawerWidth(i))
+          .map(translateX(T))
+      ),
+    []
+  );
+
 const back = () =>
   pipe(
     // cutout areas for width joints
     ...widthJointSpaces().map(subtract),
     // width joints
     ...widthJoints().map(unite),
-    // left
-    subtract(
-      path.rect({
-        width: T,
-        height
-      })
-    ),
-    ...heightJoint()
-      .map(translate(T, 0))
-      .map(unite),
-    // right
-    subtract(
-      path.rect({
-        x: width - T,
-        width: T,
-        height
-      })
-    ),
-    ...heightJoint()
-      .map(translate(width, 0))
-      .map(unite)
+    // cutout areas for height joints
+    ...heightJointSpaces().map(subtract),
+    // height joints
+    ...heightJoints().map(unite)
+    //    ...heightJoint()
+    //      .map(translate(T, 0))
+    //      .map(unite),
+    //    ...heightJoint()
+    //      .map(translate(width, 0))
+    //      .map(unite)
   )(panel);
 
 module.exports = back;
