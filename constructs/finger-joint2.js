@@ -1,7 +1,3 @@
-// TODO
-// - B part
-// - allow left- and rightmost finger tips to be square
-
 const root = require("app-root-path");
 
 const group = require(`${root}/group`);
@@ -27,6 +23,7 @@ const fingerJoint = ({ width, height, n, radius }) => {
   const finger = () =>
     path
       // TODO skip this operation if radius is 0
+      // TODO allow left- and rightmost finger tips to be square
       .rect({
         width: fingerWidth,
         height,
@@ -49,7 +46,7 @@ const fingerJoint = ({ width, height, n, radius }) => {
 
   return {
     a: () => group(area(), ...makeFingers(isOdd)),
-    b: () => makeFingers(isEven)
+    b: () => group(area(), ...makeFingers(isEven))
   };
 };
 
