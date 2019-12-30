@@ -28,7 +28,7 @@ const widthJointSection = fingerJoint2({
   width: drawer.width,
   height: T,
   n: 5
-});
+}).a;
 
 const widthJointSpace = () =>
   nItems(NUM_DRAWERS)
