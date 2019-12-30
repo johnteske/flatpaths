@@ -30,29 +30,11 @@ const widthJointSection = fingerJoint2({
   n: 5
 }).a;
 
-const widthJointSpace = () =>
-  nItems(NUM_DRAWERS)
-    .map((_, i) =>
-      path
-        .rect({
-          width: drawer.width,
-          height: T
-        })
-        .translate(T + i * (drawer.width + T), 0)
-    )
-    .flat();
-
-const widthJointSpaces = () =>
-  nItems(NUM_SHELVES + 1)
-    .map((_, i) => widthJointSpace().map(translateByDrawerHeight(i)))
-    .flat();
-
 const widthJoint = () =>
-  nItems(NUM_DRAWERS)
-    .map((_, i) =>
-      widthJointSection().map(translateX(T + i * (drawer.width + T)))
-    )
-    .flat();
+  nItems(NUM_DRAWERS).map((_, i) =>
+    widthJointSection().translate(T + i * (drawer.width + T), 0)
+  );
+//.flat();
 
 const widthJoints = () =>
   nItems(NUM_SHELVES + 1)
@@ -102,12 +84,15 @@ const heightJoints = () =>
     )
     .flat();
 
+const applyFingerJoint = joint => [
+  ...joint.children.filter(v => v.name === "finger-joint-area").map(subtract),
+  ...joint.children.filter(v => v.name !== "finger-joint-area").map(unite)
+];
+
 const back = () =>
   pipe(
-    // cutout areas for width joints
-    ...widthJointSpaces().map(subtract),
     // width joints
-    ...widthJoints().map(unite),
+    ...applyFingerJoint(widthJointSection()),
     // cutout areas for height joints
     ...heightJointSpaces().map(subtract),
     // height joints

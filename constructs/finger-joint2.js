@@ -1,5 +1,6 @@
 const root = require("app-root-path");
 
+const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const { nItems } = require(`${root}/fn`);
 const { translateX } = require(`${root}/transform`);
@@ -8,6 +9,8 @@ const isOdd = i => i % 2 === 0;
 const isEven = i => i % 2 === 1;
 
 const fingerJoint = ({ width, height, n }) => {
+  const area = () => path.rect({ width, height, name: "finger-joint-area" });
+
   const fingerWidth = width / n;
   const finger = () =>
     path.rect({
@@ -23,7 +26,7 @@ const fingerJoint = ({ width, height, n }) => {
       .filter(v => v != null);
 
   return {
-    a: () => makeFingers(isOdd),
+    a: () => group(area(), ...makeFingers(isOdd)),
     b: () => makeFingers(isEven)
   };
 };
