@@ -60,8 +60,7 @@ const heightJoints = () =>
       heightJoint()
         .map(translateByDrawerWidth(i))
         .map(translateX(T))
-    )
-    .flat();
+    );
 
 const back = () =>
   pipe(
