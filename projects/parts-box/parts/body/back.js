@@ -17,6 +17,7 @@ const {
 } = require(`${root}/constructs/finger-joint2`);
 
 const drawer = require("../../constructs/drawer");
+const shelfBackJoint = require("../../constructs/shelf-back-joint");
 const dimensions = require("../../dimensions");
 const { T } = require("../../material");
 
@@ -33,24 +34,6 @@ const panel = path.rect({
 
 const translateByDrawerWidth = i => translateX(i * (drawer.width + T));
 const translateByDrawerHeight = i => translateY(i * (drawer.height + T));
-
-const widthJointSection = radius =>
-  fingerJoint({
-    width: drawer.width,
-    height: T,
-    n: 5,
-    radius
-  }).a();
-
-const widthJoint = r =>
-  nItems(NUM_DRAWERS).flatMap((_, i) =>
-    widthJointSection(r).translate(T + i * (drawer.width + T), 0)
-  );
-
-const widthJoints = () =>
-  nItems(NUM_SHELVES - 1).flatMap((_, i) =>
-    widthJoint(0).map(translateByDrawerHeight(i + 1))
-  );
 
 const heightJointSection = radius =>
   fingerJoint({
@@ -78,11 +61,12 @@ const heightJoints = () =>
 const back = () =>
   pipe(
     // top
-    ...widthJoint(mm(0.5)).flatMap(applyFingerJoint),
+    ...shelfBackJoint.joint().flatMap(applyFingerJoint),
     // middle
-    ...widthJoints().flatMap(applyFingerJoint),
+    ...shelfBackJoint.interiorJoints().flatMap(applyFingerJoint),
     // bottom
-    ...widthJoint(mm(0.5))
+    ...shelfBackJoint
+      .joint()
       .map(translateByDrawerHeight(NUM_SHELVES))
       .map(flipV)
       .flatMap(applyFingerJoint),
