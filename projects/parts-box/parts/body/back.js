@@ -6,6 +6,7 @@ const path = require(`${root}/path`);
 const { rotate, translateX, translateY } = require(`${root}/transform`);
 
 const fingerJoint = require(`${root}/constructs/finger-joint`);
+const fingerJoint2 = require(`${root}/constructs/finger-joint2`);
 
 const drawer = require("../../constructs/drawer");
 const dimensions = require("../../dimensions");
@@ -23,7 +24,7 @@ const panel = path.rect({
 const translateByDrawerWidth = i => translateX(i * (drawer.width + T));
 const translateByDrawerHeight = i => translateY(i * (drawer.height + T));
 
-const widthJointSection = fingerJoint({
+const widthJointSection = fingerJoint2({
   width: drawer.width,
   height: T,
   n: 5

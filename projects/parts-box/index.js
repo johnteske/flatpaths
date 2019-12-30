@@ -16,17 +16,6 @@ const { guide } = require(`${root}/stroke`);
 const { T } = require("./material");
 const body = require("./parts/body");
 
-layoutRowsWithOffset(
-  [
-    body()
-      .map(guide)
-      .map(_ => {
-        // TODO this is for better viewing during design
-        _.strokeWidth = 4;
-        return _;
-      })
-  ],
-  T
-);
+layoutRowsWithOffset([body().map(guide)], T);
 
 paper.view.viewSize = [9999, 9999];
