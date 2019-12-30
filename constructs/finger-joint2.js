@@ -9,15 +9,29 @@ const { translateX } = require(`${root}/transform`);
 const isOdd = i => i % 2 === 0;
 const isEven = i => i % 2 === 1;
 
-const fingerJoint = ({ width, height, n }) => {
+const fingerJoint = ({ width, height, n, radius }) => {
+  if (radius >= height / 2) {
+    throw new Error("finger joint radius is too large");
+  }
+
   const area = () => path.rect({ width, height, name: "finger-joint-area" });
 
   const fingerWidth = width / n;
+  const fingerCornerRadius = radius || 0;
   const finger = () =>
-    path.rect({
-      width: fingerWidth,
-      height
-    });
+    path
+      .rect({
+        width: fingerWidth,
+        height,
+        radius: fingerCornerRadius
+      })
+      .unite(
+        path.rect({
+          width: fingerWidth,
+          height: height / 2,
+          y: height / 2
+        })
+      );
 
   const makeFingers = indexComparison =>
     nItems(n)
