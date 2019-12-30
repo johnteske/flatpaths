@@ -1,11 +1,9 @@
 const root = require("app-root-path");
 
 const { pipe, nItems } = require(`${root}/fn`);
-const { subtract, unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
 const { rotate, translateX, translateY } = require(`${root}/transform`);
 
-const fingerJoint_OLD = require(`${root}/constructs/finger-joint`);
 const {
   fingerJoint,
   applyFingerJoint
@@ -43,43 +41,22 @@ const widthJoints = () =>
     widthJoint().map(translateByDrawerHeight(i))
   );
 
-// spans full height, all shelves
-const heightJointSpace = () =>
-  nItems(NUM_SHELVES)
-    .map((_, i) =>
-      path
-        .rect({
-          width: T,
-          height: drawer.height
-        })
-        .translate([0, T + i * (drawer.height + T)])
-    )
-    .flat();
-
-const heightJointSpaces = () =>
-  nItems(NUM_DRAWERS + 1)
-    .map((_, i) => heightJointSpace().map(translateByDrawerWidth(i)))
-    .flat();
-
-const heightJointSection = fingerJoint_OLD({
+const heightJointSection = fingerJoint({
   width: drawer.height,
   height: T,
   n: 5
-});
+}).a;
 
 const heightJoint = () =>
   nItems(NUM_SHELVES)
-    .map((_, i) =>
-      heightJointSection()
-        .map(translateX(i * (drawer.height + T)))
-        .map(translateX(T))
+    .flatMap((_, i) =>
+      heightJointSection().translate(T + i * (drawer.height + T), 0)
     )
-    .flat()
     .map(rotate(90, [0, 0]));
 
 const heightJoints = () =>
   nItems(NUM_DRAWERS + 1)
-    .map((_, i) =>
+    .flatMap((_, i) =>
       heightJoint()
         .map(translateByDrawerWidth(i))
         .map(translateX(T))
@@ -88,12 +65,8 @@ const heightJoints = () =>
 
 const back = () =>
   pipe(
-    // width joints
     ...widthJoints().flatMap(applyFingerJoint),
-    // cutout areas for height joints
-    ...heightJointSpaces().map(subtract),
-    // height joints
-    ...heightJoints().map(unite)
+    ...heightJoints().flatMap(applyFingerJoint)
   )(panel);
 
 module.exports = back;
