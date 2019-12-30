@@ -2,6 +2,7 @@ const root = require("app-root-path");
 
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
+const { unite, subtract } = require(`${root}/boolean`);
 const { nItems } = require(`${root}/fn`);
 const { translateX } = require(`${root}/transform`);
 
@@ -31,4 +32,12 @@ const fingerJoint = ({ width, height, n }) => {
   };
 };
 
-module.exports = fingerJoint;
+const applyFingerJoint = joint => [
+  ...joint.children.filter(v => v.name === "finger-joint-area").map(subtract),
+  ...joint.children.filter(v => v.name !== "finger-joint-area").map(unite)
+];
+
+module.exports = {
+  fingerJoint,
+  applyFingerJoint
+};

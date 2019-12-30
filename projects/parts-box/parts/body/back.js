@@ -5,8 +5,11 @@ const { subtract, unite } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
 const { rotate, translateX, translateY } = require(`${root}/transform`);
 
-const fingerJoint = require(`${root}/constructs/finger-joint`);
-const fingerJoint2 = require(`${root}/constructs/finger-joint2`);
+const fingerJoint_OLD = require(`${root}/constructs/finger-joint`);
+const {
+  fingerJoint,
+  applyFingerJoint
+} = require(`${root}/constructs/finger-joint2`);
 
 const drawer = require("../../constructs/drawer");
 const dimensions = require("../../dimensions");
@@ -24,7 +27,7 @@ const panel = path.rect({
 const translateByDrawerWidth = i => translateX(i * (drawer.width + T));
 const translateByDrawerHeight = i => translateY(i * (drawer.height + T));
 
-const widthJointSection = fingerJoint2({
+const widthJointSection = fingerJoint({
   width: drawer.width,
   height: T,
   n: 5
@@ -58,7 +61,7 @@ const heightJointSpaces = () =>
     .map((_, i) => heightJointSpace().map(translateByDrawerWidth(i)))
     .flat();
 
-const heightJointSection = fingerJoint({
+const heightJointSection = fingerJoint_OLD({
   width: drawer.height,
   height: T,
   n: 5
@@ -83,15 +86,10 @@ const heightJoints = () =>
     )
     .flat();
 
-const applyFingerJoint = joint => [
-  ...joint.children.filter(v => v.name === "finger-joint-area").map(subtract),
-  ...joint.children.filter(v => v.name !== "finger-joint-area").map(unite)
-];
-
 const back = () =>
   pipe(
     // width joints
-    ...widthJoint().flatMap(applyFingerJoint),
+    ...widthJoints().flatMap(applyFingerJoint),
     // cutout areas for height joints
     ...heightJointSpaces().map(subtract),
     // height joints
