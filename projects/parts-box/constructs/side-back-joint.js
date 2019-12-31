@@ -18,7 +18,7 @@ const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
 
 const r = mm(0.5); // TODO is a duplicate
 
-const heightJointSection = (part, radius) =>
+const jointSection = (part, radius = r) =>
   fingerJoint({
     width: drawer.height,
     height: T,
@@ -26,14 +26,16 @@ const heightJointSection = (part, radius) =>
     radius
   })[part]();
 
-const joint = (part, radius = r) =>
+// rotated for back only
+const joint = (part, radius) =>
   nItems(NUM_SHELVES)
     .flatMap((_, i) =>
-      heightJointSection(part, radius).translate(T + i * (drawer.height + T), 0)
+      jointSection(part, radius).translate(T + i * (drawer.height + T), 0)
     )
     .map(rotate(90, [0, 0]))
     .map(translateX(T));
 
+// for back only
 const interiorJoints = () =>
   nItems(NUM_DRAWERS - 1).flatMap((_, i) =>
     joint("a", 0)
@@ -42,6 +44,7 @@ const interiorJoints = () =>
   );
 
 module.exports = {
+  jointSection,
   joint,
   interiorJoints
 };
