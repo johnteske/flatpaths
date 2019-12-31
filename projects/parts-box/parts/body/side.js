@@ -3,12 +3,12 @@ const root = require("app-root-path");
 const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
-const { flipH } = require(`${root}/transform`);
-const { translateX } = require(`${root}/transform`);
+const { flipH, translateY } = require(`${root}/transform`);
 
 const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
 
 const sideBackJoint = require("../../constructs/side-back-joint");
+const shelfSideJoint = require("../../constructs/shelf-side-joint");
 const dimensions = require("../../dimensions");
 const { T } = require("../../material");
 
@@ -25,6 +25,15 @@ const panel = () =>
 
 const side = () =>
   pipe(
+    // top
+    ...applyFingerJoint(shelfSideJoint.joint("b")),
+    // interior slots
+    ...shelfSideJoint.interiorJoints().flatMap(applyFingerJoint),
+    // bottom
+    ...pipe(
+      translateY(height - T),
+      applyFingerJoint
+    )(shelfSideJoint.joint("b")),
     // left
     subtract(
       path.rect({
