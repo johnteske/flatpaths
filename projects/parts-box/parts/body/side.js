@@ -3,7 +3,7 @@ const root = require("app-root-path");
 const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
-const { flipH, translateY } = require(`${root}/transform`);
+const { flipH, flipV, translateY } = require(`${root}/transform`);
 
 const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
 
@@ -32,6 +32,7 @@ const side = () =>
     // bottom
     ...pipe(
       translateY(height - T),
+      flipV,
       applyFingerJoint
     )(shelfSideJoint.joint("a")),
     // left
