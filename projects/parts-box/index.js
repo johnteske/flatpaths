@@ -14,8 +14,10 @@ const { layoutRowsWithOffset } = require(`${root}/distribution`);
 const { cut } = require(`${root}/stroke`);
 
 const { T } = require("./material");
-const body = require("./parts/body");
 
-layoutRowsWithOffset([body().map(cut)], T);
+const body = require("./parts/body");
+const drawer = require("./parts/drawer");
+
+layoutRowsWithOffset([body().map(cut), drawer().map(cut)], T);
 
 paper.view.viewSize = [9999, 9999];
