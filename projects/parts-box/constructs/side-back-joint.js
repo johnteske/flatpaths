@@ -38,9 +38,7 @@ const joint = (part, radius) =>
 // for back only
 const interiorJoints = () =>
   nItems(NUM_DRAWERS - 1).flatMap((_, i) =>
-    joint("a", 0)
-      .map(drawer.translateByWidths(i + 1))
-      .map(translateX(T))
+    joint("a", 0).map(drawer.translateByWidths(i + 1))
   );
 
 module.exports = {

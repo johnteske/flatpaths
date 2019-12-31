@@ -33,17 +33,13 @@ const shelf = () =>
       translateX(T),
       applyFingerJoint
     )(shelfSideJoint.joint("b")),
-    // interior joints, for shelf dividers
+    // interior joints, for shelf dividers // TODO for each row
     ...pipe(
       rotate(90, [0, 0]),
       drawer.translateByWidths(1),
       translateX(T),
       applyFingerJoint
     )(shelfSideJoint.joint("a", 0)),
-    ///    ...shelfSideJoint.interiorJoints()
-    //      .flatMap(rotate(90, [0, 0]))
-    //      //.flatMap(translateX(width))
-    //      .flatMap(applyFingerJoint),
     // right joint
     ...pipe(
       rotate(90, [0, 0]),
