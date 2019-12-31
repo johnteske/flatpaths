@@ -26,14 +26,14 @@ const panel = () =>
 const side = () =>
   pipe(
     // top
-    ...applyFingerJoint(shelfSideJoint.joint("b")),
+    ...applyFingerJoint(shelfSideJoint.joint("a")),
     // interior slots
     ...shelfSideJoint.interiorJoints().flatMap(applyFingerJoint),
     // bottom
     ...pipe(
       translateY(height - T),
       applyFingerJoint
-    )(shelfSideJoint.joint("b")),
+    )(shelfSideJoint.joint("a")),
     // left
     subtract(
       path.rect({
