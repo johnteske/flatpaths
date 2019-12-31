@@ -4,7 +4,7 @@ const { pipe } = require(`${root}/fn`);
 
 const path = require(`${root}/path`);
 const { subtract } = require(`${root}/boolean`);
-const { rotate, translateX } = require(`${root}/transform`);
+const { rotate, flipH, translateX } = require(`${root}/transform`);
 
 const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
 
@@ -31,6 +31,7 @@ const shelf = () =>
     ...pipe(
       rotate(90, [0, 0]),
       translateX(T),
+      flipH,
       applyFingerJoint
     )(shelfSideJoint.joint("b")),
     // interior joints, for shelf dividers // TODO for each row
