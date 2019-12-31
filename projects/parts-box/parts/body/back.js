@@ -8,7 +8,7 @@ const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
 
 const drawer = require("../../constructs/drawer");
 const shelfBackJoint = require("../../constructs/shelf-back-joint");
-const shelfSideJoint = require("../../constructs/shelf-side-joint");
+const sideBackJoint = require("../../constructs/side-back-joint");
 const dimensions = require("../../dimensions");
 
 const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
@@ -35,14 +35,14 @@ const back = () =>
       .map(flipV)
       .flatMap(applyFingerJoint),
     // left
-    ...shelfSideJoint
+    ...sideBackJoint
       .joint("a")
       .map(flipH)
       .flatMap(applyFingerJoint),
     // middle
-    ...shelfSideJoint.interiorJoints("a").flatMap(applyFingerJoint),
+    ...sideBackJoint.interiorJoints("a").flatMap(applyFingerJoint),
     // right
-    ...shelfSideJoint
+    ...sideBackJoint
       .joint("a")
       .map(drawer.translateByWidths(NUM_DRAWERS))
       .flatMap(applyFingerJoint)
