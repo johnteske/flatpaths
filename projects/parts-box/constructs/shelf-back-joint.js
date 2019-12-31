@@ -16,22 +16,22 @@ const { NUM_DRAWERS, NUM_SHELVES } = dimensions;
 
 const r = mm(0.5);
 
-const widthJointSection = radius =>
+const widthJointSection = (part, radius) =>
   fingerJoint({
     width: drawer.width,
     height: T,
     n: 5,
     radius
-  }).a();
+  })[part]();
 
-const joint = (radius = r) =>
+const joint = (part, radius = r) =>
   nItems(NUM_DRAWERS).flatMap((_, i) =>
-    widthJointSection(radius).translate(T + i * (drawer.width + T), 0)
+    widthJointSection(part, radius).translate(T + i * (drawer.width + T), 0)
   );
 
 const interiorJoints = () =>
   nItems(NUM_SHELVES - 1).flatMap((_, i) =>
-    joint(0).map(drawer.translateByHeights(i + 1))
+    joint("a", 0).map(drawer.translateByHeights(i + 1))
   );
 
 module.exports = {

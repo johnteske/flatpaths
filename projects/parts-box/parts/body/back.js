@@ -61,12 +61,12 @@ const heightJoints = () =>
 const back = () =>
   pipe(
     // top
-    ...shelfBackJoint.joint().flatMap(applyFingerJoint),
+    ...shelfBackJoint.joint("a").flatMap(applyFingerJoint),
     // middle
     ...shelfBackJoint.interiorJoints().flatMap(applyFingerJoint),
     // bottom
     ...shelfBackJoint
-      .joint()
+      .joint("a")
       .map(translateByDrawerHeight(NUM_SHELVES))
       .map(flipV)
       .flatMap(applyFingerJoint),
