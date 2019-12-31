@@ -1,16 +1,25 @@
 const root = require("app-root-path");
 
+const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
 
+const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
+
+const drawer = require("../../constructs/drawer");
+const sideBackJoint = require("../../constructs/side-back-joint");
+
 const dimensions = require("../../dimensions");
+//const { T } = require("../../material");
 
-const { T } = require("../../material");
+//
 
-const NUM_SHELVES = 4;
-const shelfDivider = () =>
+const panel = () =>
   path.rect({
-    width: (dimensions.height - (T * NUM_SHELVES + 1)) / NUM_SHELVES, // internal
-    height: dimensions.depth // external
+    width: drawer.height,
+    height: dimensions.depth
   });
+
+const shelfDivider = () =>
+  pipe(...applyFingerJoint(sideBackJoint.jointSection("b")))(panel());
 
 module.exports = shelfDivider;
