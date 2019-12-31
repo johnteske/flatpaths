@@ -35,18 +35,6 @@ const side = () =>
     ...sideBackJoint
       .joint("b")
       .map(flipH)
-      .flatMap(applyFingerJoint),
-    // right
-    subtract(
-      path.rect({
-        width: T,
-        height,
-        x: width - T
-      })
-    ),
-    ...sideBackJoint
-      .joint("b")
-      .map(translateX(width - T))
       .flatMap(applyFingerJoint)
   )(panel());
 
