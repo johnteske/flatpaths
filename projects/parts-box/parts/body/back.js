@@ -19,7 +19,8 @@ const { width, height } = dimensions;
 
 const panel = path.rect({
   width,
-  height
+  height,
+  radius: dimensions.softCornerRadius
 });
 
 const back = () =>

@@ -22,7 +22,8 @@ const { width } = dimensions;
 const panel = () =>
   path.rect({
     width,
-    height: dimensions.depth
+    height: dimensions.depth,
+    radius: dimensions.softCornerRadius
   });
 
 const shelf = () =>

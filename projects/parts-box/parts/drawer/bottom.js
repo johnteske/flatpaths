@@ -15,7 +15,8 @@ const height = dimensions.depth - T;
 const panel = () =>
   path.rect({
     width,
-    height
+    height,
+    radius: dimensions.softCornerRadius
   });
 
 module.exports = panel;
