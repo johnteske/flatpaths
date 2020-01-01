@@ -23,7 +23,8 @@ const width = drawer.height;
 const panel = () =>
   path.rect({
     width,
-    height: dimensions.depth
+    height: dimensions.depth,
+    radius: dimensions.softCornerRadius
   });
 
 const r = mm(0.5); // TODO dup

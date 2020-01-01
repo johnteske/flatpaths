@@ -1,11 +1,7 @@
 // drawers stoppers
-//
-// parts drawers 1u, 2u, 3u, 4u
-// - bottom with pull
-// - sides
-// - front
-// - back
-// - divider (1 or 2, optional)
+
+// soften remaining corners on parts where finger joints
+// have removed material
 
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
