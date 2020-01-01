@@ -1,5 +1,6 @@
 const root = require("app-root-path");
 
+const { unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
 const { flipV, translateY } = require(`${root}/transform`);
@@ -26,7 +27,19 @@ const panel = () =>
   });
 
 const bottom = () =>
-  pipe(...applyFingerJoint(translateY(height - T)(flipV(joint(width, "a")))))(
+  pipe(
+    ...applyFingerJoint(joint(width, "a", 0)),
+    // TODO handle
+    unite(path.rect({
+      width,
+      height: T * 2,
+      y: T * -2,
+      radius: dimensions.softCornerRadius
+    })),
+    ...applyFingerJoint(translateY(height - T)(flipV(joint(width, "a")))),
+translateY(T * 2)
+
+)(
     panel()
   );
 
