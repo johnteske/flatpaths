@@ -3,6 +3,8 @@
 // soften remaining corners on parts where finger joints
 // have removed material
 
+// fix finger joint edges or mask with rectangles
+
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
