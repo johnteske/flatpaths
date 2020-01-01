@@ -1,11 +1,23 @@
 const root = require("app-root-path");
 
 const path = require(`${root}/path`);
+const { pipe } = require(`${root}/fn`);
+const {
+  flipH,
+  flipV,
+  rotate,
+  translateX,
+  translateY
+} = require(`${root}/transform`);
 
 const drawer = require("../../constructs/drawer");
 const dimensions = require("../../dimensions");
 
 const { T } = require("../../material");
+
+const { joint } = require("./constructs/joint");
+
+const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
 
 //
 
@@ -19,4 +31,21 @@ const panel = () =>
     radius: dimensions.softCornerRadius
   });
 
-module.exports = panel;
+const side = () =>
+  pipe(
+    ...pipe(applyFingerJoint)(joint(width, "a")),
+    ...pipe(
+      translateY(height - T),
+      flipV,
+      applyFingerJoint
+    )(joint(width, "a")),
+
+    ...pipe(
+      rotate(90, [0, 0]),
+      translateX(T),
+      flipH,
+      applyFingerJoint
+    )(joint(height, "b"))
+  )(panel());
+
+module.exports = side;
