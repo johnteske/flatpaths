@@ -17,7 +17,10 @@ const { T } = require("../../material");
 
 const { joint } = require("./constructs/joint");
 
-const { applyFingerJoint } = require(`${root}/constructs/finger-joint2`);
+const {
+  applyFingerJoint,
+  pipeFingerJoint
+} = require(`${root}/constructs/finger-joint2`);
 
 //
 
@@ -33,7 +36,8 @@ const panel = () =>
 
 const side = () =>
   pipe(
-    ...pipe(applyFingerJoint)(joint(width, "a")),
+    //...pipe(applyFingerJoint)(joint(width, "a")),
+    pipeFingerJoint(joint(width, "a")),
     ...pipe(
       translateY(height - T),
       flipV,
