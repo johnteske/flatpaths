@@ -9,13 +9,6 @@ paper.setup(new paper.Size(999, 999));
 
 require(`./projects/${argv.p}`);
 
-// Remove empty paths // TODO this only captures a few items
-var items = paper.project.getItems({
-  strokeColor: "none"
-});
-items.forEach(v => v.remove());
-console.info("Items removed: %d", items.length);
-
 const svg = paper.project.exportSVG({ asString: true });
 
 fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
