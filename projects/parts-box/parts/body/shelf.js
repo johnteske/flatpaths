@@ -1,6 +1,6 @@
 const root = require("app-root-path");
 
-const { pipe } = require(`${root}/fn`);
+const { nItems, pipe } = require(`${root}/fn`);
 
 const path = require(`${root}/path`);
 const { subtract } = require(`${root}/boolean`);
@@ -26,6 +26,16 @@ const panel = () =>
     radius: dimensions.softCornerRadius
   });
 
+const dividerSlot = i =>
+  pipe(
+    rotate(90, [0, 0]),
+    drawer.translateByWidths(i),
+    translateX(T)
+  )(shelfSideJoint.joint("a", 0));
+
+const dividerSlots = () =>
+  nItems(dimensions.NUM_DRAWERS).map((_, i) => dividerSlot(i));
+
 const shelf = () =>
   pipe(
     // left joint
@@ -35,13 +45,8 @@ const shelf = () =>
       flipH,
       applyFingerJoint
     )(shelfSideJoint.joint("b")),
-    // interior joints, for shelf dividers // TODO for each row
-    ...pipe(
-      rotate(90, [0, 0]),
-      drawer.translateByWidths(1),
-      translateX(T),
-      applyFingerJoint
-    )(shelfSideJoint.joint("a", 0)),
+    // interior joints, for shelf dividers
+    ...dividerSlots().flatMap(applyFingerJoint),
     // right joint
     ...pipe(
       rotate(90, [0, 0]),
