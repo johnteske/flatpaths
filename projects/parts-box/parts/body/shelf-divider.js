@@ -14,25 +14,24 @@ const dimensions = require("../../dimensions");
 const { T } = require("../../material");
 
 const { fingerJoint } = require(`${root}/constructs/finger-joint2`);
-const { mm } = require(`${root}/units`);
 
 //
 
 const width = drawer.height;
+const r = dimensions.softCornerRadius;
 
 const panel = () =>
   path.rect({
     width,
     height: dimensions.depth,
-    radius: dimensions.softCornerRadius
+    radius: r
   });
 
-const r = mm(0.5); // TODO dup
 const joint = (part, radius = r) =>
   fingerJoint({
     width: dimensions.depth,
     height: T,
-    n: 5 * 2, // TODO twice the finger count as shelfSideJoint
+    n: dimensions.FINGERS * 2,
     radius
   })[part]();
 

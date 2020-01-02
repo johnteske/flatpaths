@@ -6,17 +6,15 @@ const { inches, mm } = require(`${root}/units`);
 // IKEA Kallax interior shelf dimensions = 13.25" square, 15" deep
 // const kallax = inches(13);
 
-// hall shelf
-//const width = inches(8);
-//const height = inches(10);
-//const depth = inches(9);
+// hall shelf 8w 10h 9d
+const width = inches(8);
+const height = inches(8);
+const depth = inches(8);
 
-const width = inches(5);
-const height = inches(4);
-const depth = inches(3);
+const NUM_SHELVES = 3;
+const NUM_DRAWERS = 3; // per shelf
 
-const NUM_SHELVES = 2;
-const NUM_DRAWERS = 2; // per shelf
+const FINGERS = 7;
 
 module.exports = {
   width,
@@ -24,5 +22,6 @@ module.exports = {
   depth,
   NUM_SHELVES,
   NUM_DRAWERS,
+  FINGERS,
   softCornerRadius: mm(0.5)
 };

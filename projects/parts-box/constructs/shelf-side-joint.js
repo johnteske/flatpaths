@@ -1,7 +1,6 @@
 const root = require("app-root-path");
 
 const { nItems } = require(`${root}/fn`);
-const { mm } = require(`${root}/units`);
 
 const { fingerJoint } = require(`${root}/constructs/finger-joint2`);
 
@@ -14,13 +13,13 @@ const { NUM_SHELVES } = dimensions;
 
 //
 
-const r = mm(0.5); // TODO is a duplicate
+const r = dimensions.softCornerRadius;
 
 const joint = (part, radius = r) =>
   fingerJoint({
     width: dimensions.depth,
     height: T,
-    n: 5,
+    n: dimensions.FINGERS,
     radius
   })[part]();
 
