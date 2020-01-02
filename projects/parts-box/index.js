@@ -15,14 +15,22 @@ const { rotate, translateX } = require(`${root}/transform`);
 const { T } = require("./material");
 const drawerConstruct = require("./constructs/drawer");
 
-const body = require("./parts/body");
-const drawer = require("./parts/drawer");
+//const body = require("./parts/body");
+const back = require("./parts/body/back");
+const side = require("./parts/body/side");
+const shelf = require("./parts/body/shelf");
+const shelfDivider = require("./parts/body/shelf-divider");
+
+//const drawer = require("./parts/drawer");
+const bottom = require("./parts/drawer/bottom");
+const depthSide = require("./parts/drawer/depth-side");
 const widthSide = require("./parts/drawer/width-side");
 
 layoutRowsWithOffset(
   [
-    body().map(cut),
-    drawer().map(cut),
+    [back(), side(), side()].map(cut),
+    [shelf(), shelfDivider()].map(cut),
+    [bottom(), depthSide(), depthSide()].map(cut),
     [
       widthSide(),
       translateX(drawerConstruct.height)(rotate(90, [0, 0])(widthSide()))
