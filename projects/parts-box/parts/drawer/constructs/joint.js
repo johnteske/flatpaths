@@ -13,7 +13,7 @@ const joint = (width, part, radius = r) =>
   fingerJoint({
     width,
     height: T,
-    n: 5,
+    n: dimensions.FINGERS,
     radius
   })[part]();
 
