@@ -16,7 +16,7 @@ const fingerJoint = ({ width, height, n, radius }) => {
     throw new Error("finger joint radius is too large");
   }
 
-  const area = () => path.rect({ width, height, name: "finger-joint-area" });
+  const area = path.rect({ width, height, name: "finger-joint-area" });
 
   const fingerWidth = width / n;
   const fingerCornerRadius = radius || 0;
@@ -46,8 +46,8 @@ const fingerJoint = ({ width, height, n, radius }) => {
       .filter(v => v != null);
 
   return {
-    a: () => group(area(), ...makeFingers(isOdd)),
-    b: () => group(area(), ...makeFingers(isEven))
+    a: () => group(area.clone(), ...makeFingers(isOdd)),
+    b: () => group(area.clone(), ...makeFingers(isEven))
   };
 };
 
