@@ -4,22 +4,24 @@ const path = require("path");
 const fs = require("fs");
 
 const startTime = process.hrtime();
+const projectPath = `./projects/${argv.p}`
+const projectOutput = path.resolve(`${projectPath}/out.svg`)
 
 paper.setup(new paper.Size(999, 999));
 
-require(`./projects/${argv.p}`);
+require(projectPath);
 
 console.info("Paths: %d", paper.project.getItems({ class: paper.Path }).length);
 const svg = paper.project.exportSVG({ asString: true });
 
-fs.writeFile(path.resolve("./out.svg"), svg, function(err) {
+fs.writeFile(projectOutput, svg, function(err) {
   if (err) throw err;
 
   const endTime = process.hrtime(startTime);
   console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
   console.info(
     "File size: %dkB",
-    getFilesizeInKilobytes(path.resolve("./out.svg"))
+    getFilesizeInKilobytes(projectOutput)
   );
 });
 
