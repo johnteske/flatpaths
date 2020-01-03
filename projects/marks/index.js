@@ -1,15 +1,10 @@
 const paper = require("paper-jsdom");
 
 const cardinalToPoint = require("./cardinalToPoint");
+const getGlyph = require("./glyphs");
 
 paper.project.currentStyle = {
   strokeColor: "#000000"
-};
-
-const glyphs = {
-  a: "swnn nnse",
-  b: "nwww wwee eesw",
-  c: "neww wwse"
 };
 
 const cardinalDyadToPointDyad = dyad => {
@@ -29,9 +24,9 @@ const glyphToPath = (glyphData, i = 0, tracking = 1.5) =>
     .map(v => `M${v[0]} L${v[1]}`)
     .join(" ");
 
-"abc"
+"abcdefghijklmnop"
   .split("")
-  .map(c => glyphs[c])
+  .map(getGlyph)
   .map((glyph, i) =>
     // TODO use all glyphs in a single compound path
     new paper.CompoundPath(glyphToPath(glyph, i)).scale(48, 48, [0, 0])
