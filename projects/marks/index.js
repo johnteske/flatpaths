@@ -13,11 +13,15 @@ const cardinalDyadToPoints = dyad => {
 };
 
 const drawGlyph = glyphData => {
-  const glyph = new paper.Path();
-  const points = glyphData.split(" ").flatMap(cardinalDyadToPoints);
-  glyph.add(...points);
-  return glyph;
+  const pathData = glyphData
+    .split(" ")
+    .map(cardinalDyadToPoints)
+    .map(v => `M${v[0]} L${v[1]}`)
+    .join(" ");
+
+  return new paper.CompoundPath(pathData);
 };
 
-const test = drawGlyph(glyphs.a).scale(48, 48, [0, 0]);
+const test = drawGlyph(glyphs.a);
+test.scale(48, 48, [0, 0]);
 test.strokeColor = "#000000";
