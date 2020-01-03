@@ -34,7 +34,7 @@ const dividerSlot = i =>
   )(shelfSideJoint.joint("a", 0));
 
 const dividerSlots = () =>
-  nItems(dimensions.NUM_DRAWERS).map((_, i) => dividerSlot(i));
+  nItems(dimensions.NUM_DRAWERS - 1).map((_, i) => dividerSlot(i + 1));
 
 const shelf = () =>
   pipe(
