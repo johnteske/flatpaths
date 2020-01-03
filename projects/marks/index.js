@@ -29,16 +29,17 @@ const glyphToPath = (glyphData, i = 0, tracking = 1.5) =>
 
 const stringToGlyphs = str => str.split("").map(getGlyph);
 
-const drawStringInGlyphs = str =>
+const drawStringInGlyphs = (str, size = 32) =>
   stringToGlyphs(str).map(
     (glyph, i) =>
       // TODO use all glyphs in a single compound path
       new paper.CompoundPath(glyphToPath(glyph, i))
-  );
+  ).map(
+ scale(size, [0, 0]));
 
 [
   drawStringInGlyphs("abcdefghij"),
   drawStringInGlyphs("klmnopqrst"),
   drawStringInGlyphs("uvwxyz"),
   drawStringInGlyphs("1234567890")
-].map((row, i) => row.map(scale(32, 32, [0, 0])).map(translateY(i * 32 * 2)));
+].map((row, i) => row.map(translateY(i * 32 * 2)));
