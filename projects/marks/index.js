@@ -8,7 +8,8 @@ paper.project.currentStyle = {
 
 const glyphs = {
   a: "swnn nnse",
-  b: "nwww wwee eesw"
+  b: "nwww wwee eesw",
+  c: "neww wwse"
 };
 
 const cardinalDyadToPointDyad = dyad => {
@@ -17,14 +18,21 @@ const cardinalDyadToPointDyad = dyad => {
   return [cardinalToPoint[a], cardinalToPoint[b]];
 };
 
-const glyphToPath = (glyphData, i = 0) =>
+const glyphToPath = (glyphData, i = 0, tracking = 1.5) =>
   glyphData
     .split(" ")
     .map(cardinalDyadToPointDyad)
-    .map(([p1, p2]) => [[p1[0] + i, p1[1]], [p2[0] + i, p2[1]]]) // transpose by character
+    .map(([p1, p2]) => [
+      [p1[0] + i * tracking, p1[1]],
+      [p2[0] + i * tracking, p2[1]]
+    ]) // transpose by character
     .map(v => `M${v[0]} L${v[1]}`)
     .join(" ");
 
-[glyphs.a, glyphs.b].map((glyph, i) =>
-  new paper.CompoundPath(glyphToPath(glyph, i)).scale(48, 48, [0, 0])
-);
+"abc"
+  .split("")
+  .map(c => glyphs[c])
+  .map((glyph, i) =>
+    // TODO use all glyphs in a single compound path
+    new paper.CompoundPath(glyphToPath(glyph, i)).scale(48, 48, [0, 0])
+  );
