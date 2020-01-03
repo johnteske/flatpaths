@@ -30,16 +30,21 @@ const glyphToPath = (glyphData, i = 0, tracking = 1.5) =>
 const stringToGlyphs = str => str.split("").map(getGlyph);
 
 const drawStringInGlyphs = (str, size = 32) =>
-  stringToGlyphs(str).map(
-    (glyph, i) =>
-      // TODO use all glyphs in a single compound path
-      new paper.CompoundPath(glyphToPath(glyph, i))
-  ).map(
- scale(size, [0, 0]));
+  stringToGlyphs(str)
+    .map(
+      (glyph, i) =>
+        // TODO use all glyphs in a single compound path
+        new paper.CompoundPath(glyphToPath(glyph, i))
+    )
+    .map(scale(size, [0, 0]));
+
+const commit = require("child_process").execSync("git rev-parse HEAD");
+const hash = commit.toString().slice(0, 8);
 
 [
   drawStringInGlyphs("abcdefghij"),
   drawStringInGlyphs("klmnopqrst"),
   drawStringInGlyphs("uvwxyz"),
-  drawStringInGlyphs("1234567890")
+  drawStringInGlyphs("1234567890"),
+  drawStringInGlyphs(hash)
 ].map((row, i) => row.map(translateY(i * 32 * 2)));
