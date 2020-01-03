@@ -14,9 +14,9 @@ const glyphs = {
   l: "wwsw swse",
   m: "swnw nwee eene",
   n: "swww wwse",
-  o: "nwne swse swww neee",
+  o: "wwee swse swww seee",
   p: "wwsw nwee",
-  q: "nwne swse swww neee wwse",
+  q: "wwee swse swww seee wwse",
   r: "swww wwee",
   s: "eeww wwse sesw",
   t: "wwee eese",
@@ -24,7 +24,7 @@ const glyphs = {
   u: "wwsw seee swse",
   v: "wwsw swee",
   w: "nwsw swee eese",
-  x: "nwse swne",
+  x: "wwse swee",
   y: "nwee eese",
   z: "wwee eesw swse",
 
@@ -35,9 +35,9 @@ const glyphs = {
   5: "nenw wwee eesw",
   6: "nenw wwse seee eeww",
   7: "wwee eesw",
-  8: "nwne nwse swne swse",
+  8: "wwee wwse swee swse",
   9: "nenw nwee eese",
-  0: "nwne swse swnw nese nesw",
+  0: "wwee swse swww seee eesw",
 
   NOT_FOUND: "nwne swse nwsw nese nwse nesw"
 };
