@@ -1,7 +1,6 @@
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
-//const { layoutRowsWithOffset } = require(`${root}/distribution`);
 const { scale, translateY } = require(`${root}/transform`);
 
 const cardinalToPoint = require("./cardinalToPoint");
