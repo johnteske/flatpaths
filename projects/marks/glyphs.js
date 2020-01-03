@@ -33,7 +33,7 @@ const glyphs = {
   3: "nwne neww wwse sesw",
   4: "neww eese",
   5: "nenw wwee eesw",
-  6: "nenw wwse seee eeww",
+  6: "nwww wwse sesw",
   7: "wwee eesw",
   8: "wwee wwse swee swse",
   9: "nenw nwee eese",
