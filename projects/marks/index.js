@@ -2,7 +2,7 @@ const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
 //const { layoutRowsWithOffset } = require(`${root}/distribution`);
-const { translateY } = require(`${root}/transform`);
+const { scale, translateY } = require(`${root}/transform`);
 
 const cardinalToPoint = require("./cardinalToPoint");
 const getGlyph = require("./glyphs");
@@ -31,9 +31,10 @@ const glyphToPath = (glyphData, i = 0, tracking = 1.5) =>
 const stringToGlyphs = str => str.split("").map(getGlyph);
 
 const drawStringInGlyphs = str =>
-  stringToGlyphs(str).map((glyph, i) =>
-    // TODO use all glyphs in a single compound path
-    new paper.CompoundPath(glyphToPath(glyph, i)).scale(48, 48, [0, 0])
+  stringToGlyphs(str).map(
+    (glyph, i) =>
+      // TODO use all glyphs in a single compound path
+      new paper.CompoundPath(glyphToPath(glyph, i))
   );
 
 [
@@ -41,4 +42,4 @@ const drawStringInGlyphs = str =>
   drawStringInGlyphs("klmnopqrst"),
   drawStringInGlyphs("uvwxyz"),
   drawStringInGlyphs("1234567890")
-].map((row, i) => row.map(translateY(i * 48 * 2)));
+].map((row, i) => row.map(scale(32, 32, [0, 0])).map(translateY(i * 32 * 2)));

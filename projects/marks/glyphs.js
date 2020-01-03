@@ -8,6 +8,7 @@ const glyphs = {
   g: "neww wwse seee",
   h: "nwsw wwse",
   i: "nwsw",
+  j: "nese seww",
   6: "neww wwse seee eeww",
   NOT_FOUND: "nwne swse nwsw nese"
 };
