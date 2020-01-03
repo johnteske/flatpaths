@@ -3,6 +3,12 @@ const glyphs = {
   b: "nwww wwee eesw",
   c: "neww wwse",
   d: "neee eeww wwse",
+  e: "neww eeww seww",
+  f: "nenw eeww wwsw",
+  g: "neww wwse seee",
+  h: "nwsw wwse",
+  i: "nwsw",
+  6: "neww wwse seee eeww",
   NOT_FOUND: "nwne swse nwsw nese"
 };
 
