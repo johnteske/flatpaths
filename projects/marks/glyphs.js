@@ -1,15 +1,19 @@
 const glyphs = {
   a: "swne nese",
-  b: "nwww wwee eesw",
+  b: "nwww eesw",
   c: "neww wwse",
-  d: "neee eeww wwse",
-  e: "neww eeww seww",
+  d: "neee wwse",
+  e: "nwne eeww swse",
   f: "nenw eeww wwsw",
   g: "neww wwse seee",
   h: "nwsw wwse",
   i: "nwsw",
   j: "nese seww",
+  k: "nwsw neww seww",
+  l: "nwsw swse",
+
   6: "neww wwse seee eeww",
+
   NOT_FOUND: "nwne swse nwsw nese"
 };
 
