@@ -20,21 +20,23 @@ const fingerJoint = ({ width, height, n, radius }) => {
 
   const fingerWidth = width / n;
   const fingerCornerRadius = radius || 0;
-  const finger = path
-    // TODO skip this operation if radius is 0
-    // TODO allow left- and rightmost finger tips to be square
-    .rect({
-      width: fingerWidth,
-      height,
-      radius: fingerCornerRadius
-    })
-    .unite(
-      path.rect({
-        width: fingerWidth,
-        height: height / 2,
-        y: height / 2
-      })
-    );
+
+  const fingerTip = path.rect({
+    width: fingerWidth,
+    height,
+    radius: fingerCornerRadius
+  });
+
+  const fingerBase = path.rect({
+    width: fingerWidth,
+    height: height / 2,
+    y: height / 2
+  });
+
+  // TODO allow left- and rightmost finger tips to be square
+  const finger = radius !== 0 ? fingerTip.unite(fingerBase) : fingerTip;
+  fingerTip.remove();
+  fingerBase.remove();
 
   const makeFingers = indexComparison =>
     nItems(n)
