@@ -7,6 +7,8 @@ const startTime = process.hrtime();
 const projectPath = `./projects/${argv.p}`
 const projectOutput = path.resolve(`${projectPath}/out.svg`)
 
+console.info("%s", projectPath);
+
 paper.setup(new paper.Size(999, 999));
 
 require(projectPath);
