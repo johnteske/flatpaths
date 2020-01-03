@@ -40,13 +40,12 @@ const dividerWithDouble = pipe(
   // twice the finger count
   ...pipe(
     rotate(90, [0, 0]),
-    translateX(T),
     flipH,
     applyFingerJoint
   )(joint("b")),
   ...pipe(
     rotate(90, [0, 0]),
-    translateX(width),
+    translateX(width + T),
     applyFingerJoint
   )(joint("a"))
 )(panel());
@@ -56,17 +55,16 @@ const dividerWithSingle = pipe(
   // twice the finger count
   ...pipe(
     rotate(90, [0, 0]),
-    translateX(T),
     flipH,
     applyFingerJoint
   )(shelfSideJoint.joint("b")),
   ...pipe(
     rotate(90, [0, 0]),
-    translateX(width),
+    translateX(width + T),
     applyFingerJoint
   )(shelfSideJoint.joint("b"))
 )(panel());
 
-const shelfDivider = () => dividerWithSingle.intersect(dividerWithDouble);
+const shelfDivider = () => dividerWithSingle.intersect(dividerWithDouble).translate([T, 0]);
 
 module.exports = shelfDivider;
