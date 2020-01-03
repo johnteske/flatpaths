@@ -4,8 +4,8 @@ const path = require("path");
 const fs = require("fs");
 
 const startTime = process.hrtime();
-const projectPath = `./projects/${argv.p}`
-const projectOutput = path.resolve(`${projectPath}/out.svg`)
+const projectPath = `./projects/${argv.p}`;
+const projectOutput = path.resolve(`${projectPath}/out.svg`);
 
 console.info("%s", projectPath);
 
@@ -21,10 +21,7 @@ fs.writeFile(projectOutput, svg, function(err) {
 
   const endTime = process.hrtime(startTime);
   console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
-  console.info(
-    "File size: %dkB",
-    getFilesizeInKilobytes(projectOutput)
-  );
+  console.info("File size: %dkB", getFilesizeInKilobytes(projectOutput));
 });
 
 function getFilesizeInKilobytes(filename) {
