@@ -65,6 +65,7 @@ const dividerWithSingle = pipe(
   )(shelfSideJoint.joint("b"))
 )(panel());
 
-const shelfDivider = () => dividerWithSingle.intersect(dividerWithDouble).translate([T, 0]);
+const shelfDivider = () =>
+  dividerWithSingle.intersect(dividerWithDouble).translate([T, 0]);
 
 module.exports = shelfDivider;
