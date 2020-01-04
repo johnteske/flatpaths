@@ -1,5 +1,6 @@
 const root = require("app-root-path");
 
+const { subtract } = require(`${root}/boolean`);
 const path = require(`${root}/path`);
 const { pipe } = require(`${root}/fn`);
 const { flipH, rotate, translateX } = require(`${root}/transform`);
@@ -25,6 +26,13 @@ const panel = () =>
 
 const side = () =>
   pipe(
+    subtract(
+      path.circle({
+        radius: width / 4,
+        x: width / 2,
+        y: height
+      })
+    ),
     // bottom edge
     ...applyFingerJoint(joint(width, "b", 0)),
     // left
