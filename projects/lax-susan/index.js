@@ -2,7 +2,9 @@ const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
-const { cut } = require(`${root}/stroke`);
+const { cut, guide } = require(`${root}/stroke`);
+const { nItems } = require(`${root}/fn`);
+const group = require(`${root}/group`);
 //const { inches } = require(`${root}/units`);
 //const path = require(`${root}/path`);
 
@@ -10,7 +12,7 @@ const topBase = require("./parts/top-base");
 const ring = require("./parts/top-ring");
 const ringJointPin = require("./parts/ring-joint-pin");
 
-const { T } = require("./parameters.js");
+const { T, ringT } = require("./parameters.js");
 
 layoutRowsWithOffset(
   [
@@ -18,9 +20,21 @@ layoutRowsWithOffset(
     [topBase()].map(cut),
 
     // top support
-    [ring()].map(cut),
+    [ring()].map(guide),
 
-    [ringJointPin()].map(cut)
+    [ringJointPin()].map(guide),
+
+    [
+      group(
+        nItems(4)
+          .map(ring)
+          .map((p, i) => p.translate(i * (ringT + T)))
+          .map(cut)
+      )
+    ],
+    nItems(12)
+      .map(ringJointPin)
+      .map(cut)
 
     // bottom base
     //[
