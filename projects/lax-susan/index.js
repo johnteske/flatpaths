@@ -8,6 +8,7 @@ const { cut } = require(`${root}/stroke`);
 
 const topBase = require("./parts/top-base");
 const ring = require("./parts/top-ring");
+const ringJointPin = require("./parts/ring-joint-pin");
 
 const { T } = require("./parameters.js");
 
@@ -17,7 +18,9 @@ layoutRowsWithOffset(
     [topBase()].map(cut),
 
     // top support
-    [ring()].map(cut)
+    [ring()].map(cut),
+
+    [ringJointPin()].map(cut)
 
     // bottom base
     //[
