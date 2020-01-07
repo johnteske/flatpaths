@@ -5,7 +5,11 @@ const { subtract, unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const palm = require(`${root}/objects/palm`);
 
-const { cardOuterGeometry, pins } = require("../constructs/card-outer");
+const {
+  cardOuterGeometry,
+  pins,
+  supportHoles
+} = require("../constructs/card-outer");
 const frame = require("../constructs/frame");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
@@ -20,7 +24,11 @@ const part = pipe(
         cardOuterGeometry.height - keyringTab.geometry.height / 2
       ])
   ),
-  ...pins().map(subtract), // need to subtract again to get hole covered by keyring tab
+
+  // need to subtract again to get hole covered by keyring tab
+  ...pins().map(subtract),
+  ...supportHoles().map(subtract),
+
   subtract(buttonTranslated())
 )(palmLayer.construct());
 
