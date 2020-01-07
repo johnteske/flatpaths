@@ -4,8 +4,6 @@ const path = require(`${root}/path`);
 const cards = require(`${root}/objects/cards`);
 const palm = require(`${root}/objects/palm`);
 
-const T = require("../material");
-
 const frame = require("./frame");
 const support = require("./support-pin");
 const { pin, pinGeometry } = require("./pin");
@@ -32,19 +30,19 @@ const pins = withHead =>
   );
 
 const topXOffset = pinGeometry.head.d;
-const frameMidY = cardOuterGeometry.height / 2 - T / 2;
+const frameMidY = cardOuterGeometry.height / 2;
 
 const supportPoints = [
-  [topXOffset, frame.width / 2 - T / 2],
-  [cardOuterGeometry.width - topXOffset - T, frame.width / 2 - T / 2],
+  [topXOffset, frame.width / 2],
+  [cardOuterGeometry.width - topXOffset, frame.width / 2],
 
-  [frame.width / 2 - T / 2, frameMidY],
-  [cardOuterGeometry.width - frame.width / 2 - T / 2, frameMidY],
+  [frame.width / 2, frameMidY],
+  [cardOuterGeometry.width - frame.width / 2, frameMidY],
 
-  [topXOffset, cardOuterGeometry.height - frame.width / 2 - T / 2],
+  [topXOffset, cardOuterGeometry.height - frame.width / 2],
   [
-    cardOuterGeometry.width - topXOffset - T,
-    cardOuterGeometry.height - frame.width / 2 - T / 2
+    cardOuterGeometry.width - topXOffset,
+    cardOuterGeometry.height - frame.width / 2
   ]
 ];
 

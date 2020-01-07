@@ -1,12 +1,10 @@
 const root = require("app-root-path");
 
 const path = require(`${root}/path`);
+const { inches } = require(`${root}/units`);
 
-const T = require("../material");
-
-const hole = path.rect({
-  width: T,
-  height: T
+const hole = path.circle({
+  radius: inches(3 / 64) / 2 // TODO
 });
 
 module.exports = {
