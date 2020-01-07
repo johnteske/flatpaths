@@ -2,7 +2,8 @@ const root = require("app-root-path");
 
 const path = require(`${root}/path`);
 const { subtract, unite } = require(`${root}/boolean`);
-const { pipe } = require(`${root}/fn`);
+const { pipe, nItems } = require(`${root}/fn`);
+const { mm } = require(`${root}/units`);
 const palm = require(`${root}/objects/palm`);
 
 const {
@@ -14,8 +15,33 @@ const frame = require("../constructs/frame");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
 const keyringTab = require("../constructs/keyring-tab");
+const T = require("../material");
+
+/**/
+const gripY = frame.width + mm(9); // subtract corner radius
+const gripH = palm.h - mm(18); // subtract corner radius
+const grip = path.rect({
+  width: mm(1),
+  height: gripH / 5,
+  x: -1 * mm(0.5),
+  y: gripY,
+  radius: mm(0.5)
+});
+/**/
 
 const part = pipe(
+  ...nItems(5)
+    .map((_, i) => grip.clone().translate(0, i * (gripH / 5)))
+    .map(unite),
+  ...nItems(5)
+    .map((_, i) =>
+      grip
+        .clone()
+        .scale(-1, 1)
+        .translate(-1 * mm(0.75), i * (gripH / 5))
+    )
+    .map(subtract),
+  //unite(grip.clone()), // TODO loop
   unite(
     keyringTab
       .construct()
