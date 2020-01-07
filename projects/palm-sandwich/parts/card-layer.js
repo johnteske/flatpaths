@@ -4,13 +4,13 @@ const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 
 //const mask = require("../constructs/half-mask");
-const { cardOuter, pins, supports } = require("../constructs/card-outer");
+const { cardOuter, pins, supportHoles } = require("../constructs/card-outer");
 const cardCutout = require("../constructs/card-cutout");
 //const { cardOuterGeometry } = require("../constructs/card-outer");
 
 const _part = pipe(
   ...pins().map(subtract),
-  ...supports().map(subtract),
+  ...supportHoles().map(subtract),
   subtract(cardCutout())
 )(cardOuter());
 
