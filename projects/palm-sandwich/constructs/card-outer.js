@@ -7,6 +7,7 @@ const palm = require(`${root}/objects/palm`);
 const T = require("../material");
 
 const frame = require("./frame");
+const support = require("./support-pin");
 const { pin, pinGeometry } = require("./pin");
 
 // this could also be thought of as padding
@@ -30,11 +31,6 @@ const pins = withHead =>
     pin(withHead).translate(point)
   );
 
-const support = path.rect({
-  width: T,
-  height: T
-});
-
 const topXOffset = pinGeometry.head.d;
 const frameMidY = cardOuterGeometry.height / 2 - T / 2;
 
@@ -52,11 +48,11 @@ const supportPoints = [
   ]
 ];
 
-const supports = () => supportPoints.map(p => support.clone().translate(p));
+const supportHoles = () => supportPoints.map(p => support.hole().translate(p));
 
 module.exports = {
   cardOuterGeometry,
   cardOuter: () => cardOuter.clone(),
   pins,
-  supports
+  supportHoles
 };

@@ -10,7 +10,7 @@ const { pinGeometry } = require("../constructs/pin");
 const {
   cardOuterGeometry,
   pins,
-  supports
+  supportHoles
 } = require("../constructs/card-outer");
 
 //const faceTop = path.rect({
@@ -39,7 +39,7 @@ const face = faceTopLeft;
 
 const part = pipe(
   ...pins().map(subtract),
-  ...supports().map(subtract)
+  ...supportHoles().map(subtract)
 )(face);
 
 module.exports = () => part.clone();

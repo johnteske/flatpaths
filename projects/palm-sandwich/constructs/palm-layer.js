@@ -3,13 +3,13 @@ const root = require("app-root-path");
 const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 
-const { cardOuter, pins, supports } = require("../constructs/card-outer");
+const { cardOuter, pins, supportHoles } = require("../constructs/card-outer");
 const usbPortCutout = require("../constructs/usb-port-cutout");
 const { construct: cutout } = require("../constructs/palm-cutout");
 
 const construct = pipe(
   ...pins().map(subtract),
-  ...supports().map(subtract),
+  ...supportHoles().map(subtract),
   subtract(cutout()),
   subtract(usbPortCutout.construct())
 )(cardOuter());

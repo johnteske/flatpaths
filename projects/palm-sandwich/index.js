@@ -5,7 +5,7 @@ const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
-const { cardOuter, pins, supports } = require("./constructs/card-outer");
+const { cardOuter, pins, supportHoles } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
 const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
@@ -28,7 +28,7 @@ const guides = [
     cardCutout(),
     palmCutout(),
     ...pins(true),
-    ...supports(),
+    ...supportHoles(),
     buttonTranslated(),
     ...usbPortCutout.components()
   ),
