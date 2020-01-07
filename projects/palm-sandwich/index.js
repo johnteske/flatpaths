@@ -17,7 +17,7 @@ const cardCoverPart = require("./parts/card-cover");
 const cardLayerPart = require("./parts/card-layer");
 const palmLayerWithButtonPart = require("./parts/palm-layer-with-button");
 const palmLayerPart = require("./parts/palm-layer");
-const support = require("./parts/support");
+// const support = require("./parts/support");
 const palmCover = require("./parts/palm-cover");
 
 const T = require("./material");
@@ -42,7 +42,7 @@ const acrylicCuts = [cardCoverPart()];
 
 const cuts = [
   ...cardLayerPart.components(),
-  ...support(),
+  // ...support(),
   ...palmLayerWithButtonPart.components(),
   ...palmLayerWithButtonPart.components(),
   buttonPart(),
