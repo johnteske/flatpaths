@@ -4,23 +4,16 @@ const path = require(`${root}/path`);
 const { subtract } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 
-//const { width } = require("../constructs/frame");
-const T = require("../material");
-const { pinGeometry } = require("../constructs/pin");
+const palm = require(`${root}/objects/palm`);
+
+const frame = require("../constructs/frame");
 const {
   cardOuterGeometry,
   pins,
   supportHoles
 } = require("../constructs/card-outer");
 
-//const faceTop = path.rect({
-//  width: cardOuterGeometry.width,
-//  height: width,
-//  radius: cardOuterGeometry.radius
-//});
-
-//const tabSize = pinGeometry.head.d * 2;
-const tabSize = pinGeometry.head.d + T * 2;
+const tabSize = frame.width + Math.min(palm.face.y, palm.face.y2)
 
 const faceTopLeft = path.rect({
   width: tabSize,
@@ -28,14 +21,7 @@ const faceTopLeft = path.rect({
   radius: cardOuterGeometry.radius
 });
 
-//const faceTopRight = faceTopLeft
-//  .clone()
-//  .translate([cardOuterGeometry.width - tabSize, 0]);
-
 const face = faceTopLeft;
-//const face = faceTop
-//.unite(faceTopLeft)
-//.unite(faceTopRight);
 
 const part = pipe(
   ...pins().map(subtract),
