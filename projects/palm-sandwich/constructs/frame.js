@@ -7,8 +7,8 @@ const a = {
 };
 
 const b = {
-  label: "pin head radius + pin radius",
-  value: pinGeometry.head.r + pinGeometry.r
+  label: "pin head radius",
+  value: pinGeometry.head.r
 };
 
 const width = Math.max(a.value, b.value);
