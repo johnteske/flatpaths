@@ -13,7 +13,7 @@ const {
   supportHoles
 } = require("../constructs/card-outer");
 
-const tabSize = frame.width + Math.min(palm.face.y, palm.face.y2)
+const tabSize = frame.width + Math.min(palm.face.y, palm.face.y2);
 
 const faceTopLeft = path.rect({
   width: tabSize,

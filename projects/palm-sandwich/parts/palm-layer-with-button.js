@@ -65,7 +65,7 @@ const part = pipe(
 const mask = () =>
   path.rect({
     x: cardOuterGeometry.width / 2,
-    y: frame.width + palm.button.y,
+    y: frame.width + palm.button.y + palm.button.h / 2,
     width: cardOuterGeometry.width / 2,
     height: 9999 // arbitrary
   });
