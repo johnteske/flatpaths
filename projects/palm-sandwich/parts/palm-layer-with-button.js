@@ -15,14 +15,16 @@ const frame = require("../constructs/frame");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
 const keyringTab = require("../constructs/keyring-tab");
-const T = require("../material");
 
 /**/
 const gripY = frame.width + mm(9); // subtract corner radius
 const gripH = palm.h - mm(18); // subtract corner radius
+const ridges = 9;
+const ridgeH = gripH / ridges;
+
 const grip = path.rect({
   width: mm(1),
-  height: gripH / 5,
+  height: ridgeH,
   x: -1 * mm(0.5),
   y: gripY,
   radius: mm(0.5)
@@ -30,18 +32,20 @@ const grip = path.rect({
 /**/
 
 const part = pipe(
-  ...nItems(5)
-    .map((_, i) => grip.clone().translate(0, i * (gripH / 5)))
+  ...nItems(ridges)
+    .map((_, i) => (i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null))
+    .filter(r => r != null)
     .map(unite),
-  ...nItems(5)
-    .map((_, i) =>
-      grip
-        .clone()
-        .scale(-1, 1)
-        .translate(-1 * mm(0.75), i * (gripH / 5))
-    )
-    .map(subtract),
-  //unite(grip.clone()), // TODO loop
+  //  ...nItems(ridges)
+  //    .map((_, i) =>
+  //      i % 2 === 1 ?
+  //      grip
+  //        .clone()
+  //        .scale(-1, 1)
+  //        .translate(-1 * mm(0.5), i * ridgeH) : null
+  //    )
+  //    .filter(r => r != null)
+  //    .map(subtract),
   unite(
     keyringTab
       .construct()
