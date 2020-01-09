@@ -4,7 +4,7 @@ const path = require(`${root}/path`);
 const { inches } = require(`${root}/units`);
 
 const hole = path.circle({
-  radius: inches(3 / 64) / 2 // TODO
+  radius: inches(3 / 32) / 2
 });
 
 module.exports = {
