@@ -33,6 +33,7 @@ const guides = [
     buttonTranslated(),
     ...usbPortCutout.components()
   ),
+  cardLayerPart.joint(),
   cardLayerPart.part(),
   keyringTab.construct(),
   palmLayerWithButtonPart.part(),
