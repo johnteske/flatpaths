@@ -14,7 +14,7 @@ const {
 const frame = require("../constructs/frame");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
-const keyringTab = require("../constructs/keyring-tab");
+const snapReceiver = require("../constructs/snap-receiver");
 
 /**/
 const gripY = frame.width + mm(9); // subtract corner radius
@@ -36,24 +36,8 @@ const part = pipe(
     .map((_, i) => (i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null))
     .filter(r => r != null)
     .map(unite),
-  //  ...nItems(ridges)
-  //    .map((_, i) =>
-  //      i % 2 === 1 ?
-  //      grip
-  //        .clone()
-  //        .scale(-1, 1)
-  //        .translate(-1 * mm(0.5), i * ridgeH) : null
-  //    )
-  //    .filter(r => r != null)
-  //    .map(subtract),
-  unite(
-    keyringTab
-      .construct()
-      .translate([
-        cardOuterGeometry.width - keyringTab.geometry.width,
-        cardOuterGeometry.height - keyringTab.geometry.height / 2
-      ])
-  ),
+
+  unite(snapReceiver.constructTranslated()),
 
   // need to subtract again to get hole covered by keyring tab
   ...pins().map(subtract),
