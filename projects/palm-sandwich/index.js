@@ -14,6 +14,7 @@ const keyringTab = require("./constructs/keyring-tab");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
+const palmCutoutPart = require("./parts/palm-cutout");
 const cardLayerPart = require("./parts/card-layer");
 const palmLayerWithButtonPart = require("./parts/palm-layer-with-button");
 const palmLayerPart = require("./parts/palm-layer");
@@ -40,6 +41,8 @@ const guides = [
 
 const acrylicCuts = [cardCoverPart()];
 
+const cardboardCuts = [palmCutoutPart.part()];
+
 const cuts = [
   ...cardLayerPart.components(),
   // ...support(),
@@ -51,7 +54,12 @@ const cuts = [
 ];
 
 layoutRowsWithOffset(
-  [acrylicCuts.map(cut), cuts.map(cut), guides.map(guide)],
+  [
+    acrylicCuts.map(cut),
+    cardboardCuts.map(cut),
+    cuts.map(cut),
+    guides.map(guide)
+  ],
   T
 );
 
