@@ -22,4 +22,17 @@ https://lasercutlikeaboss.weebly.com/uploads/2/7/8/8/27883957/advancedjoinery_ma
 //  returnAngle = 45 // angle of the nose underside edge (permanance..reversible/slop)
 //}) => {};
 
-//const receiving
+const snap = () => {
+  // snap
+  //const a
+
+  // fit
+  //const b
+
+  return {
+    a: () => {},
+    b: () => {}
+  };
+};
+
+module.exports = snap;
