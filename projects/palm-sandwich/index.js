@@ -35,8 +35,10 @@ const guides = [
   ),
   cardLayerPart.joint(),
   cardLayerPart.part(),
-  snapReceiver.construct(),
+  snapReceiver.cover(),
+  snapReceiver.receiver(),
   palmLayerWithButtonPart.part(),
+  palmLayerWithButtonPart.partWithReceiver(),
   palmLayerPart.part()
 ];
 

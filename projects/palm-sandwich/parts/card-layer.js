@@ -16,7 +16,7 @@ const { cardOuterGeometry } = require("../constructs/card-outer");
 const _part = pipe(
   ...pins().map(subtract),
   ...supportHoles().map(subtract),
-  unite(snapReceiver.constructTranslated()),
+  unite(snapReceiver.coverTranslated()),
   subtract(cardCutout())
 )(cardOuter());
 

@@ -31,20 +31,23 @@ const grip = path.rect({
 });
 /**/
 
-const part = pipe(
-  ...nItems(ridges)
-    .map((_, i) => (i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null))
-    .filter(r => r != null)
-    .map(unite),
+const part = (attachment = "coverTranslated") =>
+  pipe(
+    ...nItems(ridges)
+      .map((_, i) =>
+        i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null
+      )
+      .filter(r => r != null)
+      .map(unite),
 
-  unite(snapReceiver.constructTranslated()),
+    unite(snapReceiver[attachment]()),
 
-  // need to subtract again to get hole covered by keyring tab
-  ...pins().map(subtract),
-  ...supportHoles().map(subtract),
+    // need to subtract again to get hole covered by keyring tab
+    ...pins().map(subtract),
+    ...supportHoles().map(subtract),
 
-  subtract(buttonTranslated())
-)(palmLayer.construct());
+    subtract(buttonTranslated())
+  )(palmLayer.construct());
 
 const mask = () =>
   path.rect({
@@ -54,12 +57,13 @@ const mask = () =>
     height: 9999 // arbitrary
   });
 
-const a = part.clone().subtract(mask());
-const b = part.clone().intersect(mask());
+const a = part().subtract(mask());
+const b = part().intersect(mask());
 b.bounds.topLeft = [0, 0];
 
 module.exports = {
-  part: () => part.clone(),
+  part,
+  partWithReceiver: () => part("receiverTranslated"),
   components: () => {
     return [a.clone(), b.clone()];
   }
