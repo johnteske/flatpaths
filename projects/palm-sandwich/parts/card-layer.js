@@ -56,11 +56,11 @@ const a = () =>
     .unite(jointTop())
     .subtract(jointBottom());
 
-// TODO
 const b = () => {
   const _ = part()
     .subtract(mask())
-    .subtract(joint.clone().translate(cardOuterGeometry.width / 2, 0));
+    .subtract(jointTop())
+    .unite(jointBottom());
   _.bounds.topLeft = [0, 0];
   return _;
 };
