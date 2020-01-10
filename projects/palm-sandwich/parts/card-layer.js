@@ -34,23 +34,33 @@ const joint = new paper.CompoundPath([
   [0, jointThinY] // close path
 ]);
 
+const jointTop = () =>
+  joint.clone().unite(joint.clone().translate(cardOuterGeometry.width / 2, 0));
+
+const jointBottom = () =>
+  joint
+    .clone()
+    .scale(-1, -1)
+    .translate(
+      cardOuterGeometry.width / 2 - T * 2,
+      cardOuterGeometry.height - frameTVertical
+    );
+
 const a = () =>
   part()
-    .subtract(mask().translate([cardOuterGeometry.width / 2, 0]))
-    .unite(joint.clone().translate(cardOuterGeometry.width / 2, 0))
     .subtract(
-      joint
-        .clone()
-        .scale(-1, -1)
-        .translate(
-          cardOuterGeometry.width / 2 - T * 2,
-          cardOuterGeometry.height - frameTVertical
-        )
-    );
+      mask()
+        .translate([cardOuterGeometry.width / 2, 0])
+        .scale(1, 9)
+    )
+    .unite(jointTop())
+    .subtract(jointBottom());
 
 // TODO
 const b = () => {
-  const _ = part().subtract(mask());
+  const _ = part()
+    .subtract(mask())
+    .subtract(joint.clone().translate(cardOuterGeometry.width / 2, 0));
   _.bounds.topLeft = [0, 0];
   return _;
 };
