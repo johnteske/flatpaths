@@ -34,8 +34,7 @@ const joint = new paper.CompoundPath([
   [0, jointThinY] // close path
 ]);
 
-const jointTop = () =>
-  joint.clone().unite(joint.clone().translate(cardOuterGeometry.width / 2, 0));
+const jointTop = () => joint.clone().translate(cardOuterGeometry.width / 2, 0);
 
 const jointBottom = () =>
   joint
