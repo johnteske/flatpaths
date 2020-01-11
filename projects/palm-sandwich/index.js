@@ -37,8 +37,8 @@ const guides = [
   cardLayerPart.part(),
   snapReceiver.cover(),
   snapReceiver.receiver(),
-  palmLayerWithButtonPart.part(),
   palmLayerWithButtonPart.partWithReceiver(),
+  palmLayerWithButtonPart.part(),
   palmLayerPart.part()
 ];
 
@@ -49,8 +49,8 @@ const cardboardCuts = [palmCutoutPart.part()];
 const cuts = [
   ...cardLayerPart.components(),
   // ...support(),
-  ...palmLayerWithButtonPart.components(),
   ...palmLayerWithButtonPart.receiverComponents(),
+  ...palmLayerWithButtonPart.components(),
   buttonPart(),
   ...palmLayerPart.components(),
   palmCover()
