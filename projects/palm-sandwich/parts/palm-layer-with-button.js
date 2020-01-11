@@ -31,7 +31,7 @@ const grip = path.rect({
 });
 /**/
 
-const part = (attachment = "coverTranslated") =>
+const _part = (attachment = "coverTranslated") => () =>
   pipe(
     ...nItems(ridges)
       .map((_, i) =>
@@ -49,6 +49,9 @@ const part = (attachment = "coverTranslated") =>
     subtract(buttonTranslated())
   )(palmLayer.construct());
 
+const part = _part("coverTranslated");
+const partWithReceiver = _part("receiverTranslated");
+
 const mask = () =>
   path.rect({
     x: cardOuterGeometry.width / 2,
@@ -57,14 +60,17 @@ const mask = () =>
     height: 9999 // arbitrary
   });
 
-const a = part().subtract(mask());
-const b = part().intersect(mask());
-b.bounds.topLeft = [0, 0];
+const makeComponents = _ => {
+  const a = _().subtract(mask());
+  const b = _().intersect(mask());
+  b.bounds.topLeft = [0, 0];
+
+  return [a, b];
+};
 
 module.exports = {
   part,
-  partWithReceiver: () => part("receiverTranslated"),
-  components: () => {
-    return [a.clone(), b.clone()];
-  }
+  components: () => makeComponents(part),
+  partWithReceiver,
+  receiverComponents: () => makeComponents(partWithReceiver)
 };

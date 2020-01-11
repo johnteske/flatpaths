@@ -50,7 +50,7 @@ const cuts = [
   ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.components(),
-  ...palmLayerWithButtonPart.components(),
+  ...palmLayerWithButtonPart.receiverComponents(),
   buttonPart(),
   ...palmLayerPart.components(),
   palmCover()
