@@ -20,6 +20,7 @@ const palmLayerWithButtonPart = require("./parts/palm-layer-with-button");
 const palmLayerPart = require("./parts/palm-layer");
 // const support = require("./parts/support");
 const palmCover = require("./parts/palm-cover");
+const snap = require("./parts/snap");
 
 const T = require("./material");
 
@@ -47,6 +48,7 @@ const acrylicCuts = [cardCoverPart()];
 const cardboardCuts = [palmCutoutPart.part()];
 
 const cuts = [
+  snap.part(),
   ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.receiverComponents(),
