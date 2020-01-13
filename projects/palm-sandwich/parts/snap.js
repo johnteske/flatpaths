@@ -1,12 +1,9 @@
 const root = require("app-root-path");
 
-const path = require(`${root}/path`);
+const snap = require(`${root}/constructs/cantilever-snap-fit`);
 
-const _part = path.rect({
-  width: 100,
-  height: 100
-});
+const _snap = snap({ t: 10 });
 
 module.exports = {
-  part: () => _part.clone()
+  part: _snap.a
 };
