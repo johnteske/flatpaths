@@ -22,7 +22,7 @@ const snap = ({
   w3 = mm(12), // slot width, between the insides of fingers
   w4 = mm(3), // width of inside gutter (strength..flexibility), limits deformation towards center
   w5 = mm(3), // width of outside gutter (strength..flexibility), limits deformation away from center
-  slipAngle = 45, // angle of the nose leading edge (..ease)
+  slipAngle = 15, // angle of the nose leading edge (..ease)
   returnAngle = 45 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
   w2 = w2 || w1 + w4;
@@ -32,6 +32,15 @@ const snap = ({
 
   const l4 = 100; // t + TODO_finger
   const height = gutterFillHeight + l4;
+
+  // trig
+  const degToRadians = deg => deg * (Math.PI / 180)
+  const a = degToRadians(slipAngle)
+  //const b = degToRadians(90)
+  //c?
+  const adjacent = w2 - w1
+  const opposite = adjacent * Math.tan(a)
+  // trig
 
   const outerEdge = path.rect({
     width: t,
@@ -68,9 +77,9 @@ const snap = ({
       new paper.CompoundPath([
         [0, 0],
         [w1, 0],
-        [w2, 0], // TODO
-        [w2, 10], // TODO
-        [0, 10], //TODO
+        [w2, opposite], // TODO
+        [w2, 20], // TODO
+        [0, 20], //TODO
         [0, 0]
       ]).translate(t + w5, 0)
     ),
