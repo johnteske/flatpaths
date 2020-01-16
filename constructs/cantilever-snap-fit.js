@@ -9,38 +9,48 @@ const paper = require("paper-jsdom");
 const { unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
-const { mm } = require(`${root}/units`);
 
 const snap = ({
   t, // thickness of material
-  l1 = mm(3), // height of gutter 1 (strength..flexibility in pushing towards center)
-  // l2 = mm(3), // length of the nose face (calculated)
-  l3 = mm(3), // height of gutter 2 (strength..flexibility in pulling towards center)
-  // l4 = mm(6), // useale length of finger, must be longer than `t`,
-  w1 = mm(3), // width of finger, must be less than w2
+  l1, // height of gutter 1 (strength..flexibility in pushing towards center)
+  l2, // length of the nose face
+  l3, // height of gutter 2 (strength..flexibility in pulling towards center)
+  // l4, // useable length of finger, must be longer than `t`,
+  w1, // width of finger, must be less than w2
   w2, // overhang width, use w1 + w4 as default, must not be greater than w1 + w4
-  w3 = mm(12), // slot width, between the insides of fingers
-  w4 = mm(3), // width of inside gutter (strength..flexibility), limits deformation towards center
-  w5 = mm(3), // width of outside gutter (strength..flexibility), limits deformation away from center
-  slipAngle = 15, // angle of the nose leading edge (..ease)
-  returnAngle = 45 // angle of the nose underside edge (permanance..reversible/slop)
+  w3, // slot width, between the insides of fingers
+  w4, // width of inside gutter (strength..flexibility), limits deformation towards center
+  w5, // width of outside gutter (strength..flexibility), limits deformation away from center
+  slipAngle = 45, // angle of the nose leading edge (..ease)
+  returnAngle = 0 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
+  l1 = l1 || t * 4;
+  l2 = l2 || t;
+  l3 = l3 || t * 4;
+  w1 = w1 || t;
+
+  w4 = w4 || t;
   w2 = w2 || w1 + w4;
+
+  w3 = w3 || t * 4;
+  w5 = w5 || t;
 
   const gutterFillHeight = Math.max(l1, l3);
   const halfSlotWidth = w3 / 2;
 
-  const l4 = 100; // t + TODO_finger
-  const height = gutterFillHeight + l4;
+  const fingerY = deg => {
+    const radians = deg * (Math.PI / 180);
 
-  // trig
-  const degToRadians = deg => deg * (Math.PI / 180)
-  const a = degToRadians(slipAngle)
-  //const b = degToRadians(90)
-  //c?
-  const adjacent = w2 - w1
-  const opposite = adjacent * Math.tan(a)
-  // trig
+    const adjacent = w2 - w1;
+    const opposite = adjacent * Math.tan(radians);
+
+    return opposite;
+  };
+
+  const slipY = fingerY(slipAngle);
+  const returnY = fingerY(returnAngle);
+
+  const height = slipY + l2 + returnY + t + gutterFillHeight;
 
   const outerEdge = path.rect({
     width: t,
@@ -63,7 +73,7 @@ const snap = ({
         y: height - gutterFillHeight
       })
     ),
-    // TODO subtract from gutter
+    // TODO subtract circle from outer gutter
     // finger
     unite(
       path.rect({
@@ -75,12 +85,11 @@ const snap = ({
     // finger tip
     unite(
       new paper.CompoundPath([
-        [0, 0],
         [w1, 0],
-        [w2, opposite], // TODO
-        [w2, 20], // TODO
-        [0, 20], //TODO
-        [0, 0]
+        [w2, slipY],
+        [w2, slipY + l2],
+        [w1, slipY + l2 + returnY],
+        [w1, 0] // close
       ]).translate(t + w5, 0)
     ),
     // inner gutter
@@ -92,7 +101,7 @@ const snap = ({
         y: height - gutterFillHeight
       })
     ),
-    // TODO subtract from gutter
+    // TODO subtract circle from inner gutter
     //    unite(slotContact)
     unite(
       path.rect({
@@ -104,12 +113,9 @@ const snap = ({
     )
   )(outerEdge);
 
-  // fit
-  //const b
-
   return {
     a: () => _a.clone(),
-    b: () => {}
+    b: () => {} // receiving
   };
 };
 
