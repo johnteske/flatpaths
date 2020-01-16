@@ -6,15 +6,15 @@ https://lasercutlikeaboss.weebly.com/uploads/2/7/8/8/27883957/advancedjoinery_ma
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
-const { unite } = require(`${root}/boolean`);
+const { subtract, unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const path = require(`${root}/path`);
 
 const snap = ({
   t, // thickness of material
-  l1, // height of gutter 1 (strength..flexibility in pushing towards center)
+  l1, // height of outer gutter (strength..flexibility in pushing towards center)
   l2, // length of the nose face
-  l3, // height of gutter 2 (strength..flexibility in pulling towards center)
+  l3, // height of inside gutter (strength..flexibility in pulling towards center)
   // l4, // useable length of finger, must be longer than `t`,
   w1, // width of finger, must be less than w2
   w2, // overhang width, use w1 + w4 as default, must not be greater than w1 + w4
@@ -24,9 +24,9 @@ const snap = ({
   slipAngle = 45, // angle of the nose leading edge (..ease)
   returnAngle = 0 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
-  l1 = l1 || t * 4;
+  l1 = l1 || t * 3; // TODO BUG this should reflect depth from finger, not the base
   l2 = l2 || t;
-  l3 = l3 || t * 4;
+  l3 = l3 || t * 4; // TODO BUG ^^
   w1 = w1 || t;
 
   w4 = w4 || t;
@@ -68,12 +68,18 @@ const snap = ({
     unite(
       path.rect({
         width: w5,
-        height: gutterFillHeight,
+        height: l1, // TODO add radius
         x: t, // outerEdge width
-        y: height - gutterFillHeight
+        y: height - l1 - w5 / 2 // minus radius
       })
     ),
-    // TODO subtract circle from outer gutter
+    subtract(
+      path.circle({
+        x: t + w5 / 2,
+        y: height - l1 - w5 / 2,
+        radius: w5 / 2
+      })
+    ),
     // finger
     unite(
       path.rect({
@@ -96,12 +102,18 @@ const snap = ({
     unite(
       path.rect({
         width: w4,
-        height: gutterFillHeight,
+        height: l3, // add radius
         x: t + w5 + w1,
-        y: height - gutterFillHeight
+        y: height - l3 - w4 / 2 // minus radius
       })
     ),
-    // TODO subtract circle from inner gutter
+    subtract(
+      path.circle({
+        x: t + w5 + w1 + w4 / 2,
+        y: height - l3 - w4 / 2,
+        radius: w4 / 2
+      })
+    ),
     //    unite(slotContact)
     unite(
       path.rect({
