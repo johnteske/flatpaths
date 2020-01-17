@@ -59,7 +59,7 @@ const snap = ({
   });
 
   // snap
-  const _a = pipe(
+  const _aHalf = pipe(
     // outer gutter
     // fill
     unite(
@@ -120,6 +120,15 @@ const snap = ({
       })
     )
   )(outerEdge);
+
+  const halfWidth = t + w5 + w1 + w4 + halfSlotWidth;
+
+  const _a = _aHalf.clone().unite(
+    _aHalf
+      .clone()
+      .scale(-1, 1)
+      .translate(halfWidth, 0)
+  );
 
   return {
     a: () => _a.clone(),
