@@ -24,9 +24,9 @@ const snap = ({
   slipAngle = 45, // angle of the nose leading edge (..ease)
   returnAngle = 0 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
-  l1 = l1 || t * 3; // TODO BUG this should reflect depth from finger, not the base
+  l1 = l1 || t;
   l2 = l2 || t;
-  l3 = l3 || t * 4; // TODO BUG ^^
+  l3 = l3 || t;
   w1 = w1 || t;
 
   w4 = w4 || t;
@@ -50,33 +50,30 @@ const snap = ({
   const slipY = fingerY(slipAngle);
   const returnY = fingerY(returnAngle);
 
-  const height = slipY + l2 + returnY + t + gutterFillHeight;
+  const l4 = slipY + l2 + returnY + t;
+  const height = l4 + gutterFillHeight;
 
   const outerEdge = path.rect({
     width: t,
     height
   });
 
-  //  const slotContact = path.rect({
-  //    width: halfSlotWidth,
-  //    height: gutterFillHeight
-  //  });
-
   // snap
   const _a = pipe(
     // outer gutter
+    // fill
     unite(
       path.rect({
         width: w5,
-        height: l1, // TODO add radius
+        height: height - l4 - l1 + w5 / 2,
         x: t, // outerEdge width
-        y: height - l1 - w5 / 2 // minus radius
+        y: l4 + l1 - w5 / 2 // minus radius
       })
     ),
     subtract(
       path.circle({
         x: t + w5 / 2,
-        y: height - l1 - w5 / 2,
+        y: l4 + l1 - w5 / 2,
         radius: w5 / 2
       })
     ),
@@ -102,19 +99,18 @@ const snap = ({
     unite(
       path.rect({
         width: w4,
-        height: l3, // add radius
+        height: height - l4 - l3 + w4 / 2,
         x: t + w5 + w1,
-        y: height - l3 - w4 / 2 // minus radius
+        y: l4 + l3 - w4 / 2 // minus radius
       })
     ),
     subtract(
       path.circle({
         x: t + w5 + w1 + w4 / 2,
-        y: height - l3 - w4 / 2,
+        y: l4 + l3 - w4 / 2,
         radius: w4 / 2
       })
     ),
-    //    unite(slotContact)
     unite(
       path.rect({
         width: halfSlotWidth,
