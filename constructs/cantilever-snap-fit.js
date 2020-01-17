@@ -50,6 +50,9 @@ const snap = ({
   const slipY = fingerY(slipAngle);
   const returnY = fingerY(returnAngle);
 
+  // TODO this is needed for a planar receiver
+  console.log("finger length", slipY + l2 + returnY);
+
   const l4 = slipY + l2 + returnY + t;
   const height = l4 + gutterFillHeight;
 
