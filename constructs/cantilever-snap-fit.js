@@ -24,16 +24,16 @@ const snap = ({
   slipAngle = 45, // angle of the nose leading edge (..ease)
   returnAngle = 0 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
-  l1 = l1 || t * 2;
-  l2 = l2 || t;
-  l3 = l3 || t * 2;
-  w1 = w1 || t;
+  l1 = typeof l1 !== "undefined" ? l1 : t * 2;
+  l2 = typeof l2 !== "undefined" ? l2 : t;
+  l3 = typeof l3 !== "undefined" ? l3 : t * 2;
+  w1 = typeof w1 !== "undefined" ? w1 : t;
 
-  w4 = w4 || t;
-  w2 = w2 || w1 + w4;
+  w4 = typeof w4 !== "undefined" ? w4 : t;
+  w2 = typeof w2 !== "undefined" ? w2 : w1 + w4;
 
-  w3 = w3 || t * 4;
-  w5 = w5 || t;
+  w3 = typeof w3 !== "undefined" ? w3 : t * 4;
+  w5 = typeof w5 !== "undefined" ? w5 : t;
 
   const gutterFillHeight = Math.max(l1, l3);
   const halfSlotWidth = w3 / 2;
