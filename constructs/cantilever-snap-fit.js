@@ -24,9 +24,9 @@ const snap = ({
   slipAngle = 45, // angle of the nose leading edge (..ease)
   returnAngle = 0 // angle of the nose underside edge (permanance..reversible/slop)
 }) => {
-  l1 = l1 || t;
+  l1 = l1 || t * 2;
   l2 = l2 || t;
-  l3 = l3 || t;
+  l3 = l3 || t * 2;
   w1 = w1 || t;
 
   w4 = w4 || t;
