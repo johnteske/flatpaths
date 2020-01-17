@@ -12,7 +12,8 @@ const { cardOuterGeometry } = require("./card-outer");
 const geometry = {
   width: (cardOuterGeometry.width - usb.geometry.width) / 2
 };
-geometry.height = T * 3;
+const fingerLength = 25;
+geometry.height = T + fingerLength + T;
 
 const cover = path.rect({
   ...geometry,
@@ -35,7 +36,7 @@ const receiver = path
       width: T * 2, // TODO match snap part
       x: geometry.width / 2 - T,
       y: T,
-      height: T
+      height: fingerLength
     })
   )
   .unite(
@@ -43,7 +44,7 @@ const receiver = path
       width: T * 4, // TODO match snap part
       height: T,
       x: geometry.width / 2 - T * 2,
-      y: T * 2,
+      y: T + fingerLength,
       radius: mm(0.5)
     })
   );
