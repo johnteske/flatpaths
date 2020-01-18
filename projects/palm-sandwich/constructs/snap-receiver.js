@@ -12,6 +12,7 @@ const { cardOuterGeometry } = require("./card-outer");
 const geometry = {
   width: (cardOuterGeometry.width - usb.geometry.width) / 2
 };
+console.log("receiver width", geometry.width);
 const fingerLength = 25;
 geometry.height = T + fingerLength + T;
 

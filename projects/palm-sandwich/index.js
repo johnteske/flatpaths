@@ -2,6 +2,7 @@ const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
 const group = require(`${root}/group`);
+const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
@@ -36,6 +37,7 @@ const guides = [
   ),
   cardLayerPart.joint(),
   cardLayerPart.part(),
+  snap.part(),
   snapReceiver.cover(),
   snapReceiver.receiver(),
   palmLayerWithButtonPart.partWithReceiver(),
@@ -47,8 +49,16 @@ const acrylicCuts = [cardCoverPart()];
 
 const cardboardCuts = [palmCutoutPart.part()];
 
+const testStock = width => path.rect({ width, height: 100 });
+
 const cuts = [
-  snap.part(),
+  testStock(125).unite(
+    snap
+      .part()
+      .scale(1, -1)
+      .translate(0, 100)
+  ),
+  testStock(99).unite(snapReceiver.receiver().translate(0, 100)),
   ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.receiverComponents(),
