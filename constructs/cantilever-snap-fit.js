@@ -125,6 +125,7 @@ const snap = ({
   )(outerEdge);
 
   const halfWidth = t + w5 + w1 + w4 + halfSlotWidth;
+  console.log("snap width", halfWidth * 2);
 
   const _a = _aHalf.clone().unite(
     _aHalf
