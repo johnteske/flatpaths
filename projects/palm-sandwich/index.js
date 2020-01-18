@@ -49,7 +49,10 @@ const acrylicCuts = [cardCoverPart()];
 
 const cardboardCuts = [palmCutoutPart.part()];
 
-const testStock = width => path.rect({ width, height: 100 });
+// TODO extra 1 unit is to help join snap
+// ideally the snap would have some of its own base
+// to join to
+const testStock = width => path.rect({ width, height: 101 });
 
 const cuts = [
   testStock(125).unite(
