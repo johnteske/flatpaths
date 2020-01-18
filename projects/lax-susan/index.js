@@ -19,11 +19,6 @@ layoutRowsWithOffset(
     // top base
     [topBase()].map(cut),
 
-    // top support
-    [ring()].map(guide),
-
-    [ringJointPin()].map(guide),
-
     [
       group(
         nItems(4)
@@ -34,7 +29,7 @@ layoutRowsWithOffset(
     ],
     nItems(12)
       .map(ringJointPin)
-      .map(cut)
+      .map(cut),
 
     // bottom base
     //[
@@ -44,6 +39,9 @@ layoutRowsWithOffset(
     //    radius: inches(0.25)
     //  })
     //].map(cut)
+
+    [ring()].map(guide),
+    [ringJointPin()].map(guide)
   ],
   T
 );
