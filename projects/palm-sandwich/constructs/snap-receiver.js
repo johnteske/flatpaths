@@ -13,7 +13,7 @@ const geometry = {
   width: (cardOuterGeometry.width - usb.geometry.width) / 2
 };
 console.log("receiver width", geometry.width);
-const fingerLength = 25;
+const fingerLength = 67.7;
 geometry.height = T + fingerLength + T;
 
 const cover = path.rect({
