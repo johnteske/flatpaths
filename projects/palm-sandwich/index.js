@@ -62,7 +62,7 @@ const snapPart = snap
 const snapPartWidth = snapPart.internalBounds.width;
 const snapPartHeight = snapPart.internalBounds.height;
 
-const cuts = [
+const acetalCuts = [
   testStock(T + snapPartWidth + T)
     .unite(snapPart.translate(T, 0))
     .unite(
@@ -88,8 +88,10 @@ const cuts = [
         x: T + T,
         y: T
       })
-    ),
-  testStock(98.89).unite(snapReceiver.receiver().translate(0, 100)),
+    )
+];
+
+const cuts = [
   ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.receiverComponents(),
@@ -101,10 +103,11 @@ const cuts = [
 
 layoutRowsWithOffset(
   [
-    //    acrylicCuts.map(cut),
-    //    cardboardCuts.map(cut),
-    cuts.map(cut)
-    //    guides.map(guide)
+    acrylicCuts.map(cut),
+    cardboardCuts.map(cut),
+    acetalCuts.map(cut),
+    cuts.map(cut),
+    guides.map(guide)
   ],
   T
 );
