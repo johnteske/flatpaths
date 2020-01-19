@@ -54,14 +54,42 @@ const cardboardCuts = [palmCutoutPart.part()];
 // to join to
 const testStock = width => path.rect({ width, height: 101 });
 
+const snapPart = snap
+  .part()
+  .scale(1, -1)
+  .translate(0, 100);
+
+const snapPartWidth = snapPart.internalBounds.width;
+const snapPartHeight = snapPart.internalBounds.height;
+
 const cuts = [
-  testStock(125).unite(
-    snap
-      .part()
-      .scale(1, -1)
-      .translate(0, 100)
-  ),
-  testStock(99).unite(snapReceiver.receiver().translate(0, 100)),
+  testStock(T + snapPartWidth + T)
+    .unite(snapPart.translate(T, 0))
+    .unite(
+      path.rect({
+        width: T,
+        height: snapPartHeight,
+        y: 100
+      })
+    )
+    .unite(
+      path.rect({
+        width: T,
+        height: snapPartHeight,
+        y: 100,
+        x: T + snapPartWidth
+      })
+    )
+    .subtract(
+      path.rect({
+        width: snapPartWidth - T - T,
+        height: T,
+        r: 1,
+        x: T + T,
+        y: T
+      })
+    ),
+  testStock(98.89).unite(snapReceiver.receiver().translate(0, 100)),
   ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.receiverComponents(),
@@ -73,10 +101,10 @@ const cuts = [
 
 layoutRowsWithOffset(
   [
-    acrylicCuts.map(cut),
-    cardboardCuts.map(cut),
-    cuts.map(cut),
-    guides.map(guide)
+    //    acrylicCuts.map(cut),
+    //    cardboardCuts.map(cut),
+    cuts.map(cut)
+    //    guides.map(guide)
   ],
   T
 );
