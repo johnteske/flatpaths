@@ -112,7 +112,17 @@ layoutRowsWithOffset(
     acetalCuts.map(cut),
     cuts.map(cut),
     guides.map(guide),
-    [qr.guides(), qr.a(), qr.b()].map(guide)
+    [
+      qr.guides(),
+      qr.a(),
+      qr.b(),
+      qr
+        .b()
+        .translate(0, T)
+        .unite(path.rect({ width: 3 * T, height: T })),
+      qr.inner(),
+      qr.outer()
+    ].map(guide)
   ],
   T
 );
