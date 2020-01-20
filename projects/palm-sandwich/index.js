@@ -6,6 +6,8 @@ const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
+const quickRelease = require(`${root}/constructs/button-quick-release`);
+
 const { cardOuter, pins, supportHoles } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
 const { construct: palmCutout } = require("./constructs/palm-cutout");
@@ -101,15 +103,18 @@ const cuts = [
   palmCover()
 ];
 
+const qr = quickRelease(T);
+
 layoutRowsWithOffset(
   [
     acrylicCuts.map(cut),
     cardboardCuts.map(cut),
     acetalCuts.map(cut),
     cuts.map(cut),
-    guides.map(guide)
+    guides.map(guide),
+    [qr.guides(), qr.a(), qr.b()].map(guide)
   ],
   T
 );
 
-paper.view.viewSize = [2000, 2000];
+paper.view.viewSize = [2000, 3000];
