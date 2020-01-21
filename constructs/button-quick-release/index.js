@@ -5,15 +5,24 @@ const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const { subtract, unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
-const { inches, mm } = require(`${root}/units`);
-const { flipH } = require(`${root}/transform`);
+const { mm } = require(`${root}/units`);
+const { flipH, flipV } = require(`${root}/transform`);
 
 const construct = unit => {
+  const geometry = {
+    width: unit * 8
+  };
+
+  const _slip = new paper.Path(
+    [0, 0],
+    [unit, unit],
+    [0, unit],
+    [0, 0]
+  ).translate(unit, 0);
+
   const _a = pipe(
     // latch
-    unite(
-      new paper.Path([0, 0], [unit, unit], [0, unit], [0, 0]).translate(unit, 0)
-    ),
+    unite(_slip.clone()),
     // arm
     unite(
       path.rect({
@@ -33,14 +42,9 @@ const construct = unit => {
   );
 
   const _b = pipe(
-    unite(
-      path.rect({
-        width: unit * 2,
-        height: unit,
-        y: unit * 2
-      })
-    ),
-    flipH
+    unite(_slip.clone()),
+    flipH,
+    flipV
   )(
     path.rect({
       width: unit,
@@ -48,40 +52,42 @@ const construct = unit => {
     })
   );
 
-  const hole = path.circle({
-    radius: inches(3 / 32) / 2
-  });
   const halfUnit = unit / 2;
+
+  const hole = path.circle({
+    radius: mm(3) / 2
+  });
+
   const holePositions = [
     [halfUnit, halfUnit],
     [halfUnit, -halfUnit + unit * 5], // _outer.height - 1/2u
-    [-halfUnit + unit * 7, halfUnit], // _outer.width - 1/2u
-    [-halfUnit + unit * 7, -halfUnit + unit * 5],
-    [halfUnit + unit * 5, halfUnit + unit * 2]
+    [-halfUnit + geometry.width, halfUnit], // _outer.width - 1/2u
+    [-halfUnit + geometry.width, -halfUnit + unit * 5],
+    [halfUnit + unit * 6, halfUnit + unit * 2]
   ];
   const holePattern = holePositions.map(point => hole.clone().translate(point));
 
   const _outer = pipe(...holePattern.map(subtract))(
     path.rect({
-      width: unit * 7,
+      width: geometry.width,
       height: unit * 5,
       radius: unit * 0.5
     })
   );
 
   const _inner = pipe(
-    // space for hook
+    // space for hook (part b)
     subtract(
       path.rect({
         width: unit * 2,
         height: unit * 3,
-        x: unit * 3
+        x: unit * 4
       })
     ),
-    // space for latch
+    // space for latch (part a)
     subtract(
       path.rect({
-        width: unit * 2,
+        width: unit * 3,
         height: unit * 3,
         x: unit,
         y: unit
@@ -90,7 +96,7 @@ const construct = unit => {
     // space for button/latch arm
     subtract(
       path.rect({
-        width: unit * 6,
+        width: geometry.width - unit,
         height: unit,
         x: unit,
         y: unit * 3
@@ -99,15 +105,15 @@ const construct = unit => {
   )(_outer.clone());
 
   const fill = color => o => {
-    o.fillColor = color;
-    o.opacity = 0.5; // TODO
+    // o.fillColor = color;
+    // o.opacity = 0.5; // TODO
     return o;
   };
 
   const guides = () =>
     group(
-      fill("#ff0000")(_a.clone().translate(unit * 2, unit)),
-      fill("#0000ff")(_b.clone().translate(unit * 3, 0)),
+      fill("#ff0000")(_a.clone().translate(unit * 3, unit)),
+      fill("#0000ff")(_b.clone().translate(unit * 4, 0)),
       fill("#00ffff")(_inner.clone()),
       fill("#00ff00")(_outer.clone())
     );
