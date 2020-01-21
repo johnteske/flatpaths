@@ -1,19 +1,18 @@
 const root = require("app-root-path");
+const paper = require("paper-jsdom");
 
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const { subtract, unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
+const { inches, mm } = require(`${root}/units`);
 const { flipH } = require(`${root}/transform`);
 
 const construct = unit => {
   const _a = pipe(
     // latch
     unite(
-      path.rect({
-        width: unit * 2, // TODO take out notch
-        height: unit
-      })
+      new paper.Path([0, 0], [unit, unit], [0, unit], [0, 0]).translate(unit, 0)
     ),
     // arm
     unite(
@@ -22,7 +21,7 @@ const construct = unit => {
         height: unit,
         x: unit * 0.5,
         y: unit * 2,
-        radius: unit * 0.5
+        radius: mm(0.5)
       })
     )
   )(
@@ -49,11 +48,26 @@ const construct = unit => {
     })
   );
 
-  const _outer = path.rect({
-    width: unit * 7,
-    height: unit * 5,
-    radius: unit * 0.5
+  const hole = path.circle({
+    radius: inches(3 / 32) / 2
   });
+  const halfUnit = unit / 2;
+  const holePositions = [
+    [halfUnit, halfUnit],
+    [halfUnit, -halfUnit + unit * 5], // _outer.height - 1/2u
+    [-halfUnit + unit * 7, halfUnit], // _outer.width - 1/2u
+    [-halfUnit + unit * 7, -halfUnit + unit * 5],
+    [halfUnit + unit * 5, halfUnit + unit * 2]
+  ];
+  const holePattern = holePositions.map(point => hole.clone().translate(point));
+
+  const _outer = pipe(...holePattern.map(subtract))(
+    path.rect({
+      width: unit * 7,
+      height: unit * 5,
+      radius: unit * 0.5
+    })
+  );
 
   const _inner = pipe(
     // space for hook

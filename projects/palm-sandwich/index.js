@@ -103,7 +103,8 @@ const cuts = [
   palmCover()
 ];
 
-const qr = quickRelease(T);
+const qrUnit = T * 2;
+const qr = quickRelease(qrUnit);
 
 layoutRowsWithOffset(
   [
@@ -118,8 +119,8 @@ layoutRowsWithOffset(
       qr.b(),
       qr
         .b()
-        .translate(0, T)
-        .unite(path.rect({ width: 3 * T, height: T })),
+        .translate(0, qrUnit)
+        .unite(path.rect({ width: 3 * qrUnit, height: qrUnit })),
       qr.inner(),
       qr.outer()
     ].map(guide)
