@@ -107,7 +107,7 @@ layoutRowsWithOffset(
     cardboardCuts.map(cut),
     acetalCuts.map(cut),
     cuts.map(cut),
-    guides.map(guide),
+    guides.map(guide)
   ],
   T
 );
