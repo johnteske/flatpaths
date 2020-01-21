@@ -16,12 +16,10 @@ layoutRowsWithOffset(
       qr.outer(),
       qr.inner(),
       qr.a(),
-
       qr
         .b()
         .translate(0, qrUnit)
         .unite(path.rect({ width: 3 * qrUnit, height: qrUnit })),
-
       qr.outer()
     ].map(cut),
     [qr.guides(), qr.a(), qr.b(), qr.inner(), qr.outer()].map(guide)

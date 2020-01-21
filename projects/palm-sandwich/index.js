@@ -12,6 +12,7 @@ const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
 const snapReceiver = require("./constructs/snap-receiver");
+const quickRelease = require("./constructs/quick-release");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
@@ -101,12 +102,20 @@ const cuts = [
   palmCover()
 ];
 
+const qrCuts = [
+  quickRelease.outer(),
+  quickRelease.inner(),
+  quickRelease.a(),
+  quickRelease.outer()
+];
+
 layoutRowsWithOffset(
   [
     acrylicCuts.map(cut),
     cardboardCuts.map(cut),
     acetalCuts.map(cut),
     cuts.map(cut),
+    qrCuts.map(cut),
     guides.map(guide)
   ],
   T

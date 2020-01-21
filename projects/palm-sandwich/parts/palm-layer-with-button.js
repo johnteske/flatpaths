@@ -12,9 +12,11 @@ const {
   supportHoles
 } = require("../constructs/card-outer");
 const frame = require("../constructs/frame");
+const T = require("../material");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
-const snapReceiver = require("../constructs/snap-receiver");
+//const snapReceiver = require("../constructs/snap-receiver");
+const quickRelease = require("../constructs/quick-release");
 
 /**/
 const gripY = frame.width + mm(9); // subtract corner radius
@@ -31,7 +33,7 @@ const grip = path.rect({
 });
 /**/
 
-const _part = (attachment = "coverTranslated") => () =>
+const _part = (withHook = false) => () =>
   pipe(
     ...nItems(ridges)
       .map((_, i) =>
@@ -40,17 +42,17 @@ const _part = (attachment = "coverTranslated") => () =>
       .filter(r => r != null)
       .map(unite),
 
-    unite(snapReceiver[attachment]()),
+      withHook ? unite(quickRelease.b().translate(0,cardOuterGeometry.height)) : o => o,
 
-    // need to subtract again to get hole covered by keyring tab
+      // need to subtract again to get hole covered by keyring tab
     ...pins().map(subtract),
     ...supportHoles().map(subtract),
 
     subtract(buttonTranslated())
   )(palmLayer.construct());
 
-const part = _part("coverTranslated");
-const partWithReceiver = _part("receiverTranslated");
+const part = _part();
+const partWithReceiver = _part(true);
 
 const mask = () =>
   path.rect({

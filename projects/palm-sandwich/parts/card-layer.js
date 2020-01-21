@@ -10,13 +10,13 @@ const T = require("../material");
 const mask = require("../constructs/half-mask");
 const { cardOuter, pins, supportHoles } = require("../constructs/card-outer");
 const cardCutout = require("../constructs/card-cutout");
-const snapReceiver = require("../constructs/snap-receiver");
+//const snapReceiver = require("../constructs/snap-receiver");
 const { cardOuterGeometry } = require("../constructs/card-outer");
 
 const _part = pipe(
   ...pins().map(subtract),
   ...supportHoles().map(subtract),
-  unite(snapReceiver.coverTranslated()),
+  //unite(snapReceiver.coverTranslated()),
   subtract(cardCutout())
 )(cardOuter());
 
@@ -56,12 +56,13 @@ const a = () =>
     .subtract(jointBottom());
 
 const b = () => {
-  const _ = part()
-    .subtract(mask())
-    .subtract(jointTop())
-    .unite(jointBottom());
-  _.bounds.topLeft = [0, 0];
-  return _;
+  return a()
+//  const _ = part()
+//    .subtract(mask())
+//    .subtract(jointTop())
+//    .unite(jointBottom());
+//  _.bounds.topLeft = [0, 0];
+//  return _;
 };
 
 module.exports = {
