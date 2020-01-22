@@ -42,9 +42,11 @@ const _part = (withHook = false) => () =>
       .filter(r => r != null)
       .map(unite),
 
-      withHook ? unite(quickRelease.b().translate(0,cardOuterGeometry.height)) : o => o,
+    withHook
+      ? unite(quickRelease.b().translate(0, cardOuterGeometry.height))
+      : o => o,
 
-      // need to subtract again to get hole covered by keyring tab
+    // need to subtract again to get hole covered by keyring tab
     ...pins().map(subtract),
     ...supportHoles().map(subtract),
 
