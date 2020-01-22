@@ -7,11 +7,12 @@ const T = require("../material");
 
 const quickRelease = require(`${root}/constructs/button-quick-release`);
 
-const unit = T * 2;
+// use a consistent size to keep connectors between iterations
+const unit = mm(6);
 const qr = quickRelease(unit);
 
 const keyringAttachment = {
-  x: unit * 4,
+  x: unit * 5,
   y: unit * 5
 };
 
@@ -22,6 +23,6 @@ const withKeyringAttachment = o =>
 
 module.exports = {
   ...qr,
-  outer: () => withKeyringAttachment(qr.outer()),
+  outer: () => qr.outer(),
   inner: () => withKeyringAttachment(qr.inner())
 };

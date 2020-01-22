@@ -9,8 +9,10 @@ const { mm } = require(`${root}/units`);
 const { flipH, flipV } = require(`${root}/transform`);
 
 const construct = unit => {
+  const halfUnit = unit / 2;
+
   const geometry = {
-    width: unit * 8
+    width: unit * 10
   };
 
   const _slip = new paper.Path(
@@ -26,9 +28,9 @@ const construct = unit => {
     // arm
     unite(
       path.rect({
-        width: unit * 5.5,
+        width: -halfUnit + unit * 8,
         height: unit,
-        x: unit * 0.5,
+        x: halfUnit,
         y: unit * 2,
         radius: mm(0.5)
       })
@@ -41,18 +43,23 @@ const construct = unit => {
     })
   );
 
+  const support = path.rect({
+    width: unit,
+    height: unit * 2,
+    x: unit * 3
+  });
+
   const _b = pipe(
     unite(_slip.clone()),
     flipH,
-    flipV
+    flipV,
+    unite(support.clone())
   )(
     path.rect({
       width: unit,
       height: unit * 3
     })
   );
-
-  const halfUnit = unit / 2;
 
   const hole = path.circle({
     radius: mm(3) / 2
@@ -84,6 +91,8 @@ const construct = unit => {
         x: unit * 4
       })
     ),
+    // space for support
+    subtract(support.clone().translate(unit * 4, 0)),
     // space for latch (part a)
     subtract(
       path.rect({

@@ -56,13 +56,13 @@ const a = () =>
     .subtract(jointBottom());
 
 const b = () => {
-  return a()
-//  const _ = part()
-//    .subtract(mask())
-//    .subtract(jointTop())
-//    .unite(jointBottom());
-//  _.bounds.topLeft = [0, 0];
-//  return _;
+  return a();
+  //  const _ = part()
+  //    .subtract(mask())
+  //    .subtract(jointTop())
+  //    .unite(jointBottom());
+  //  _.bounds.topLeft = [0, 0];
+  //  return _;
 };
 
 module.exports = {
