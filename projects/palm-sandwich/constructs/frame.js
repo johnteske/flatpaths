@@ -1,9 +1,10 @@
-const T = require("../material");
+const root = require("app-root-path");
+const { mm } = require(`${root}/units`);
 const { pinGeometry } = require("./pin");
 
 const a = {
-  label: "T * 2",
-  value: T * 2
+  label: "6 mm",
+  value: mm(6)
 };
 
 const b = {
