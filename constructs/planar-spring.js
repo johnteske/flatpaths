@@ -19,6 +19,10 @@ const construct = ({ T, w1, w2, h }) => {
     [0, hUnit * 2]
   ]);
 
+  const compressedSectionWidth = T * 2;
+  const nSections = w1 / compressedSectionWidth;
+  const expandedSectionWidth = w2 / nSections;
+
   // TODO this is only a single spring section
   return pipe(
     // left node
