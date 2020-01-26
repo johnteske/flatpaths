@@ -13,7 +13,7 @@ const qr = quickRelease(unit);
 
 const keyringAttachment = {
   x: unit * 5,
-  y: unit * 5
+  y: unit * 5.5
 };
 
 const withKeyringAttachment = o =>
