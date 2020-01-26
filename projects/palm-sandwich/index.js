@@ -4,6 +4,7 @@ const paper = require("paper-jsdom");
 const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
+const planarSpring = require(`${root}/constructs/planar-spring`);
 
 const { cardOuter, pins, supportHoles } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
@@ -24,6 +25,7 @@ const palmCover = require("./parts/palm-cover");
 const T = require("./material");
 
 const guides = [
+  planarSpring({ T: 10, w1: 50, w2: 100, h: 100 }),
   group(
     cardOuter(),
     cardCutout(),
