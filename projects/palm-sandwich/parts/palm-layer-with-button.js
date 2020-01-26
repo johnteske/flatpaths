@@ -12,7 +12,7 @@ const {
   supportHoles
 } = require("../constructs/card-outer");
 const frame = require("../constructs/frame");
-const T = require("../material");
+//const T = require("../material");
 const { buttonTranslated } = require("../constructs/button");
 const palmLayer = require("../constructs/palm-layer");
 //const snapReceiver = require("../constructs/snap-receiver");
@@ -35,12 +35,12 @@ const grip = path.rect({
 
 const _part = (withHook = false) => () =>
   pipe(
-    ...nItems(ridges)
-      .map((_, i) =>
-        i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null
-      )
-      .filter(r => r != null)
-      .map(unite),
+    //   ...nItems(ridges)
+    //     .map((_, i) =>
+    //       i % 2 === 0 ? grip.clone().translate(0, i * ridgeH) : null
+    //     )
+    //     .filter(r => r != null)
+    //     .map(unite),
 
     withHook
       ? unite(quickRelease.b().translate(0, cardOuterGeometry.height))
