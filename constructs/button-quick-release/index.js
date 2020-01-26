@@ -34,6 +34,15 @@ const construct = unit => {
         y: unit * 2,
         radius: mm(0.5)
       })
+    ),
+    // guide
+    unite(
+      path.rect({
+        width: unit,
+        height: halfUnit,
+        x: unit,
+        y: unit * 3
+      })
     )
   )(
     // vertical
@@ -109,6 +118,15 @@ const construct = unit => {
         height: unit,
         x: unit,
         y: unit * 3
+      })
+    ),
+    // space for guide
+    subtract(
+      path.rect({
+        width: unit * 2,
+        height: halfUnit,
+        x: unit * 3,
+        y: unit * 4
       })
     )
   )(_outer.clone());
