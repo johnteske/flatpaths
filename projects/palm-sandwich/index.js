@@ -13,6 +13,7 @@ const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
 const quickRelease = require("./constructs/quick-release");
+const beltQr = require("./constructs/belt-quick-release");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
@@ -64,12 +65,15 @@ const qrCuts = [
   quickRelease.outer()
 ];
 
+const beltQrCuts = [beltQr.outer(), beltQr.middle(), beltQr.outer()];
+
 layoutRowsWithOffset(
   [
     acrylicCuts.map(cut),
     cardboardCuts.map(cut),
     cuts.map(cut).concat(palmCover()),
     qrCuts.map(cut),
+    beltQrCuts.map(cut),
     guides.map(guide)
   ],
   T

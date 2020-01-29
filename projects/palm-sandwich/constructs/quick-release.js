@@ -18,7 +18,14 @@ const keyringAttachment = {
 
 const withAttachmentPoint = o =>
   o
-    .unite(path.rect({ width: unit * 2, height: unit, x: keyringAttachment.x - unit, y: keyringAttachment.y - unit }))
+    .unite(
+      path.rect({
+        width: unit * 2,
+        height: unit,
+        x: keyringAttachment.x - unit,
+        y: keyringAttachment.y - unit
+      })
+    )
     .unite(path.circle({ ...keyringAttachment, radius: unit }))
     .subtract(path.circle({ ...keyringAttachment, radius: pinGeometry.r }));
 
