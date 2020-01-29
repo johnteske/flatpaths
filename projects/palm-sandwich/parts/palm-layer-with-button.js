@@ -43,7 +43,14 @@ const _part = (withHook = false) => () =>
     //     .map(unite),
 
     withHook
-      ? unite(quickRelease.b().translate(0, cardOuterGeometry.height))
+      ? unite(
+          quickRelease
+            .b()
+            .translate(
+              cardOuterGeometry.width / 2 - mm(18),
+              cardOuterGeometry.height
+            )
+        )
       : o => o,
 
     // need to subtract again to get hole covered by keyring tab
