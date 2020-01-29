@@ -10,7 +10,7 @@ const { cardOuterGeometry } = require("../constructs/card-outer");
 const palmCutout = require("../constructs/palm-cutout");
 
 const geometry = {
-  width: mm(15),
+  width: mm(12),
   y: cardOuterGeometry.height - frame.width
 };
 geometry.x =
@@ -42,10 +42,9 @@ const _right = _corner
   .scale(-1, 1)
   .translate([geometry.x + geometry.width, geometry.y + frame.width / 2]);
 
-const construct = pipe(
-  unite(_left),
-  unite(_right)
-)(_cutout);
+const construct = pipe()(_cutout);
+//  unite(_left),
+//  unite(_right)
 
 module.exports = {
   geometry,

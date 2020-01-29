@@ -55,7 +55,7 @@ const construct = unit => {
   const support = path.rect({
     width: unit,
     height: unit * 2,
-    x: unit * 3
+    x: unit * 4
   });
 
   const _b = pipe(
