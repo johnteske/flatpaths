@@ -8,6 +8,8 @@ const frame = require("./frame");
 const support = require("./support-pin");
 const { pin, pinGeometry } = require("./pin");
 
+const { inches } = require(`${root}/units`);
+
 // this could also be thought of as padding
 // for pins with smaller heads
 const headRadius = pinGeometry.head.r;
@@ -24,12 +26,10 @@ const x1 = headRadius;
 const x2 = cardOuterGeometry.width - headRadius;
 const y1 = headRadius;
 const y2 = cardOuterGeometry.height - headRadius;
-const pins = withHead =>
-  [[x1, y1], [x2, y1], [x1, y2], [x2, y2]].map(point =>
-    pin(withHead).translate(point)
-  );
+const pinPoints = [[x1, y1], [x2, y1], [x1, y2], [x2, y2]];
+const pins = withHead => pinPoints.map(point => pin(withHead).translate(point));
 
-const topXOffset = pinGeometry.head.d;
+const topXOffset = pinGeometry.head.d + inches(3 / 32) / 2;
 const frameMidY = cardOuterGeometry.height / 2;
 
 const supportPoints = [
@@ -52,5 +52,6 @@ module.exports = {
   cardOuterGeometry,
   cardOuter: () => cardOuter.clone(),
   pins,
+  pinPoints,
   supportHoles
 };

@@ -53,8 +53,8 @@ const cuts = [
   ...palmLayerWithButtonPart.receiverComponents(),
   ...palmLayerWithButtonPart.components(),
   buttonPart(),
-  ...palmLayerPart.components(),
-  palmCover()
+  ...palmLayerPart.components()
+  //palmCover()
 ];
 
 const qrCuts = [
@@ -68,7 +68,7 @@ layoutRowsWithOffset(
   [
     acrylicCuts.map(cut),
     cardboardCuts.map(cut),
-    cuts.map(cut),
+    cuts.map(cut).concat(palmCover()),
     qrCuts.map(cut),
     guides.map(guide)
   ],
