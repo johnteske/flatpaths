@@ -3,6 +3,7 @@ const paper = require("paper-jsdom");
 
 const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
+const { nItems } = require(`${root}/fn`);
 const { mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 const planarSpring = require(`${root}/constructs/planar-spring`);
@@ -54,8 +55,8 @@ const cuts = [
   ...palmLayerWithButtonPart.receiverComponents(),
   ...palmLayerWithButtonPart.components(),
   buttonPart(),
-  ...palmLayerPart.components()
-  //palmCover()
+  ...palmLayerPart.components(),
+  ...nItems(4).map(palmCover)
 ];
 
 const qrCuts = [
