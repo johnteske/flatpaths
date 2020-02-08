@@ -7,8 +7,7 @@ const palm = require(`${root}/objects/palm`);
 const frame = require("./frame");
 const support = require("./support-pin");
 const { pin, pinGeometry } = require("./pin");
-
-const { inches } = require(`${root}/units`);
+const T = require("../material");
 
 // this could also be thought of as padding
 // for pins with smaller heads
@@ -31,7 +30,6 @@ const pins = withHead => pinPoints.map(point => pin(withHead).translate(point));
 
 const topXOffset = pinGeometry.head.d + support.geometry.radius;
 const frameMidY = cardOuterGeometry.height / 2;
-const frameYDivision = n => (cardOuterGeometry.height / 5) * n;
 
 const supportPoints = [
   // corners
@@ -43,13 +41,13 @@ const supportPoints = [
     cardOuterGeometry.height - frame.width / 2
   ],
   // left side
-  [frame.width / 2, frameYDivision(1)],
-  [frame.width / 2, frameYDivision(3)],
-  [frame.width / 2, frameYDivision(4)],
+  [frame.width / 2, frameMidY],
   // right side
-  [cardOuterGeometry.width - frame.width / 2, frameYDivision(1)],
-  [cardOuterGeometry.width - frame.width / 2, frameYDivision(2)],
-  [cardOuterGeometry.width - frame.width / 2, frameYDivision(4)]
+  [cardOuterGeometry.width - frame.width / 2, frame.width + palm.button.y - T],
+  [
+    cardOuterGeometry.width - frame.width / 2,
+    frame.width + palm.button.y + palm.button.h + T
+  ]
 ];
 
 const supportHoles = () => supportPoints.map(p => support.hole().translate(p));
