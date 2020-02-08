@@ -42,7 +42,9 @@ const guides = [
   cardLayerPart.part(),
   palmLayerWithButtonPart.partWithReceiver(),
   palmLayerWithButtonPart.part(),
-  palmLayerPart.part()
+  group(palmLayerPart.part(),
+  palmCover()
+)
 ];
 
 const acrylicCuts = [cardCoverPart()];
