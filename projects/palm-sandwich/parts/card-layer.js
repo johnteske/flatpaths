@@ -46,23 +46,21 @@ const jointBottom = () =>
     );
 
 const a = () =>
-  part()
-    .subtract(
-      mask()
-        .translate([cardOuterGeometry.width / 2, 0])
-        .scale(1, 9)
-    )
-    //.unite(jointTop())
-    //.subtract(jointBottom());
+  part().subtract(
+    mask()
+      .translate([cardOuterGeometry.width / 2, 0])
+      .scale(1, 9)
+  );
+//.unite(jointTop())
+//.subtract(jointBottom());
 
 const b = () => {
   //return a();
-    const _ = part()
-      .subtract(mask())
-      //.subtract(jointTop())
-      //.unite(jointBottom());
-    _.bounds.topLeft = [0, 0];
-    return _;
+  const _ = part().subtract(mask());
+  //.subtract(jointTop())
+  //.unite(jointBottom());
+  _.bounds.topLeft = [0, 0];
+  return _;
 };
 
 module.exports = {
