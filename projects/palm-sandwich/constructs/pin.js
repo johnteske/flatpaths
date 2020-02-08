@@ -2,10 +2,11 @@ const root = require("app-root-path");
 
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
-const { mm } = require(`${root}/units`);
+const { inches } = require(`${root}/units`);
 
-const d = mm(5);
-const headDiameter = mm(11);
+// Grainger 5MA89 binding post
+const d = inches(13 / 64); // barrell diameter
+const headDiameter = inches(13 / 32);
 
 const pinGeometry = {
   d,
