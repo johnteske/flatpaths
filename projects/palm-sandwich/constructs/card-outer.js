@@ -42,14 +42,13 @@ const supportPoints = [
     cardOuterGeometry.width - topXOffset,
     cardOuterGeometry.height - frame.width / 2
   ],
-  // sides
+  // left side
   [frame.width / 2, frameYDivision(1)],
-  [cardOuterGeometry.width - frame.width / 2, frameYDivision(1)],
-
-  [frame.width / 2, frameYDivision(2)],
-  [cardOuterGeometry.width - frame.width / 2, frameYDivision(2)],
-
+  [frame.width / 2, frameYDivision(3)],
   [frame.width / 2, frameYDivision(4)],
+  // right side
+  [cardOuterGeometry.width - frame.width / 2, frameYDivision(1)],
+  [cardOuterGeometry.width - frame.width / 2, frameYDivision(2)],
   [cardOuterGeometry.width - frame.width / 2, frameYDivision(4)]
 ];
 
