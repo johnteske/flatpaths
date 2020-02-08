@@ -29,21 +29,28 @@ const y2 = cardOuterGeometry.height - headRadius;
 const pinPoints = [[x1, y1], [x2, y1], [x1, y2], [x2, y2]];
 const pins = withHead => pinPoints.map(point => pin(withHead).translate(point));
 
-const topXOffset = pinGeometry.head.d + inches(3 / 32) / 2;
+const topXOffset = pinGeometry.head.d + support.geometry.radius;
 const frameMidY = cardOuterGeometry.height / 2;
+const frameYDivision = n => (cardOuterGeometry.height / 5) * n;
 
 const supportPoints = [
+  // corners
   [topXOffset, frame.width / 2],
   [cardOuterGeometry.width - topXOffset, frame.width / 2],
-
-  [frame.width / 2, frameMidY],
-  [cardOuterGeometry.width - frame.width / 2, frameMidY],
-
   [topXOffset, cardOuterGeometry.height - frame.width / 2],
   [
     cardOuterGeometry.width - topXOffset,
     cardOuterGeometry.height - frame.width / 2
-  ]
+  ],
+  // sides
+  [frame.width / 2, frameYDivision(1)],
+  [cardOuterGeometry.width - frame.width / 2, frameYDivision(1)],
+
+  [frame.width / 2, frameYDivision(2)],
+  [cardOuterGeometry.width - frame.width / 2, frameYDivision(2)],
+
+  [frame.width / 2, frameYDivision(4)],
+  [cardOuterGeometry.width - frame.width / 2, frameYDivision(4)]
 ];
 
 const supportHoles = () => supportPoints.map(p => support.hole().translate(p));
