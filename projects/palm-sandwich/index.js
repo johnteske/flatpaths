@@ -38,19 +38,17 @@ const guides = [
     buttonTranslated(),
     ...usbPortCutout.components()
   ),
-  cardLayerPart.joint(),
   cardLayerPart.part(),
   palmLayerWithButtonPart.partWithReceiver(),
   palmLayerWithButtonPart.part(),
   group(palmLayerPart.part(), palmCover())
 ];
 
-const acrylicCuts = [cardCoverPart()];
+const acrylicCuts = [cardCoverPart(), ...cardLayerPart.components()];
 
 const cardboardCuts = [palmCutoutPart.part()];
 
 const cuts = [
-  ...cardLayerPart.components(),
   // ...support(),
   ...palmLayerWithButtonPart.receiverComponents(),
   ...palmLayerWithButtonPart.components(),

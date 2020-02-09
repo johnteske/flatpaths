@@ -6,9 +6,7 @@ const { mm } = require(`${root}/units`);
 const { pipe } = require(`${root}/fn`);
 
 const frame = require("../constructs/frame");
-const {
-  pins
-} = require("../constructs/card-outer");
+const { pins } = require("../constructs/card-outer");
 
 const tabSize = (frame.width + mm(1)) * 2;
 
@@ -20,8 +18,6 @@ const faceTopLeft = path.rect({
 
 const face = faceTopLeft;
 
-const part = pipe(
-  ...pins().map(subtract)
-)(face);
+const part = pipe(...pins().map(subtract))(face);
 
 module.exports = () => part.clone();
