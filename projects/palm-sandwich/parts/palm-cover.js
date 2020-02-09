@@ -10,23 +10,23 @@ const { pipe } = require(`${root}/fn`);
 const frame = require("../constructs/frame");
 const {
   //cardOuterGeometry,
-  pins,
+  pins
   //supportHoles
 } = require("../constructs/card-outer");
 
 //const tabSize = frame.width + Math.min(palm.face.y, palm.face.y2);
-const tabSize = (frame.width + mm(1)) * 2
+const tabSize = (frame.width + mm(1)) * 2;
 
 const faceTopLeft = path.rect({
   width: tabSize,
   height: tabSize,
-  radius: tabSize//cardOuterGeometry.radius
+  radius: tabSize //cardOuterGeometry.radius
 });
 
 const face = faceTopLeft;
 
 const part = pipe(
-  ...pins().map(subtract),
+  ...pins().map(subtract)
   //...supportHoles().map(subtract)
 )(face);
 
