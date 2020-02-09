@@ -13,12 +13,12 @@ const T = require("../material");
 
 // this could also be thought of as padding
 // for pins with smaller heads
-const headRadius = pinGeometry.head.r;
+//const headRadius = pinGeometry.head.r;
 
 const cardOuterGeometry = {
   width: frame.width + cards.w + frame.width,
   height: frame.width + palm.h + frame.width,
-  radius: pinGeometry.head.r
+  radius: frame.width + mm(1) // TODO same as palm cover
 };
 
 const cardOuter = path.rect(cardOuterGeometry);
