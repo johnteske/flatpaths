@@ -11,6 +11,7 @@ const cardCutout = require("./constructs/card-cutout");
 const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
+const { withMarks } = require("./constructs/layer-mark");
 //const quickRelease = require("./constructs/quick-release");
 //const beltQr = require("./constructs/belt-quick-release");
 
@@ -41,18 +42,41 @@ const guides = [
   group(palmLayerPart.part(), palmCover())
 ];
 
+const markFirst = n => (v, i) => {
+  return i === 0 ? withMarks(v, n) : v;
+};
+
 // 1/16"
-const acrylicCuts = [cardCoverPart(), ...cardLayerPart.components()];
+const acrylicCuts = [
+  withMarks(cut(cardCoverPart()), 1),
+  ...cardLayerPart
+    .components()
+    .map(cut)
+    .map(markFirst(2))
+];
 
 const cardboardCuts = [palmCutoutPart.part()];
 
-const delrinCuts = [...palmLayerWithButtonPart.receiverComponents()];
+const delrinCuts = [
+  ...palmLayerWithButtonPart
+    .receiverComponents()
+    .map(cut)
+    .map(markFirst(4))
+];
 
 const woodCuts = [
-  ...palmLayerWithButtonPart.components(),
-  buttonPart(),
-  ...palmLayerPart.components(),
-  ...nItems(4).map(palmCover)
+  ...palmLayerWithButtonPart
+    .components()
+    .map(cut)
+    .map(markFirst(3)),
+  cut(buttonPart()),
+  ...palmLayerPart
+    .components()
+    .map(cut)
+    .map(markFirst(5)),
+  ...nItems(4)
+    .map(palmCover)
+    .map(cut)
 ];
 
 //const qrCuts = [
@@ -66,10 +90,10 @@ const woodCuts = [
 
 layoutRowsWithOffset(
   [
-    acrylicCuts.map(cut),
+    acrylicCuts,
     cardboardCuts.map(cut),
-    delrinCuts.map(cut),
-    woodCuts.map(cut).concat(palmCover()),
+    delrinCuts,
+    woodCuts,
     //qrCuts.map(cut),
     //beltQrCuts.map(cut),
     guides.map(guide)
@@ -77,4 +101,4 @@ layoutRowsWithOffset(
   T
 );
 
-paper.view.viewSize = [2000, 2000];
+paper.view.viewSize = [2000, 3000];
