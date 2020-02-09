@@ -41,12 +41,14 @@ const guides = [
   group(palmLayerPart.part(), palmCover())
 ];
 
+// 1/16"
 const acrylicCuts = [cardCoverPart(), ...cardLayerPart.components()];
 
 const cardboardCuts = [palmCutoutPart.part()];
 
-const cuts = [
-  ...palmLayerWithButtonPart.receiverComponents(),
+const delrinCuts = [...palmLayerWithButtonPart.receiverComponents()];
+
+const woodCuts = [
   ...palmLayerWithButtonPart.components(),
   buttonPart(),
   ...palmLayerPart.components(),
@@ -66,7 +68,8 @@ layoutRowsWithOffset(
   [
     acrylicCuts.map(cut),
     cardboardCuts.map(cut),
-    cuts.map(cut).concat(palmCover()),
+    delrinCuts.map(cut),
+    woodCuts.map(cut).concat(palmCover()),
     //qrCuts.map(cut),
     //beltQrCuts.map(cut),
     guides.map(guide)
