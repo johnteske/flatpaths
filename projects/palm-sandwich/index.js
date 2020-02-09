@@ -4,17 +4,15 @@ const paper = require("paper-jsdom");
 const group = require(`${root}/group`);
 const { cut, guide } = require(`${root}/stroke`);
 const { nItems } = require(`${root}/fn`);
-const { mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
-const planarSpring = require(`${root}/constructs/planar-spring`);
 
 const { cardOuter, pins, supportHoles } = require("./constructs/card-outer");
 const cardCutout = require("./constructs/card-cutout");
 const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
-const quickRelease = require("./constructs/quick-release");
-const beltQr = require("./constructs/belt-quick-release");
+//const quickRelease = require("./constructs/quick-release");
+//const beltQr = require("./constructs/belt-quick-release");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
@@ -27,7 +25,6 @@ const palmCover = require("./parts/palm-cover");
 const T = require("./material");
 
 const guides = [
-  planarSpring({ T: mm(1.5), w1: mm(6), w2: mm(6) * 2, h: mm(6) * 3 }),
   group(
     cardOuter(),
     cardCutout(),
@@ -56,14 +53,14 @@ const cuts = [
   ...nItems(4).map(palmCover)
 ];
 
-const qrCuts = [
-  quickRelease.outer(),
-  quickRelease.inner(),
-  quickRelease.a(),
-  quickRelease.outer()
-];
+//const qrCuts = [
+//  quickRelease.outer(),
+//  quickRelease.inner(),
+//  quickRelease.a(),
+//  quickRelease.outer()
+//];
 
-const beltQrCuts = [beltQr.outer(), beltQr.middle(), beltQr.outer()];
+//const beltQrCuts = [beltQr.outer(), beltQr.middle(), beltQr.outer()];
 
 layoutRowsWithOffset(
   [
