@@ -8,8 +8,7 @@ const { inches } = require(`${root}/units`);
 const { nItems } = require(`${root}/fn`);
 const palmCutout = require("./palm-cutout");
 
-const x1 =
-  palmCutout.geometry.width / 2 + palmCutout.geometry.x - inches(1 / 16);
+const x1 = palmCutout.geometry.width / 2 + palmCutout.geometry.x;
 const x2 = x1;
 const y1 = 0;
 const y2 = frame.width;

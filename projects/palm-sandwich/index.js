@@ -12,8 +12,8 @@ const { construct: palmCutout } = require("./constructs/palm-cutout");
 const { buttonTranslated } = require("./constructs/button");
 const usbPortCutout = require("./constructs/usb-port-cutout");
 const { withMarks } = require("./constructs/layer-mark");
-//const quickRelease = require("./constructs/quick-release");
-//const beltQr = require("./constructs/belt-quick-release");
+const quickRelease = require("./constructs/quick-release");
+const beltQr = require("./constructs/belt-quick-release");
 
 const buttonPart = require("./parts/button");
 const cardCoverPart = require("./parts/card-cover");
@@ -49,10 +49,14 @@ const markFirst = n => (v, i) => {
 // 1/16"
 const acrylicCuts = [
   withMarks(cut(cardCoverPart()), 1),
-  ...cardLayerPart
-    .components()
+  ...[cardLayerPart
+    .part()]
+    //.components()
     .map(cut)
-    .map(markFirst(2))
+    .map(markFirst(2)),
+  ...nItems(4)
+    .map(palmCover)
+    .map(cut)
 ];
 
 const cardboardCuts = [palmCutoutPart.part()];
@@ -74,19 +78,16 @@ const woodCuts = [
     .components()
     .map(cut)
     .map(markFirst(5)),
-  ...nItems(4)
-    .map(palmCover)
-    .map(cut)
 ];
 
-//const qrCuts = [
-//  quickRelease.outer(),
-//  quickRelease.inner(),
-//  quickRelease.a(),
-//  quickRelease.outer()
-//];
+const qrCuts = [
+  quickRelease.outer(),
+  quickRelease.inner(),
+  quickRelease.a(),
+  quickRelease.outer()
+];
 
-//const beltQrCuts = [beltQr.outer(), beltQr.middle(), beltQr.outer()];
+const beltQrCuts = [beltQr.outer(), beltQr.outer()];
 
 layoutRowsWithOffset(
   [
@@ -94,8 +95,8 @@ layoutRowsWithOffset(
     cardboardCuts.map(cut),
     delrinCuts,
     woodCuts,
-    //qrCuts.map(cut),
-    //beltQrCuts.map(cut),
+    qrCuts.map(cut),
+    beltQrCuts.map(cut),
     guides.map(guide)
   ],
   T
