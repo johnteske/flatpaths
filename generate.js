@@ -22,6 +22,7 @@ fs.writeFile(projectOutput, svg, function(err) {
   const endTime = process.hrtime(startTime);
   console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
   console.info("File size: %dkB", getFilesizeInKilobytes(projectOutput));
+  console.info("Output:, %s", projectOutput);
 });
 
 function getFilesizeInKilobytes(filename) {

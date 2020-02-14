@@ -9,24 +9,26 @@ const { hole } = require("./support-pin");
 // use a consistent size to keep connectors between iterations
 const unit = mm(6);
 
+const beltHeight = inches(1.125);
+
 const outerGeometry = {
-  height: unit + inches(1.125) + unit
+  height: unit + beltHeight
 };
 const outer = path
-  .rect({ width: unit * 2, height: outerGeometry.height, radius: mm(0.5) })
+  .rect({ width: unit * 2, height: outerGeometry.height, radius: mm(1) })
   .unite(path.circle({ radius: unit, x: unit }))
   .subtract(path.circle({ radius: pinGeometry.r, x: unit }))
-  .subtract(hole().translate(unit, outerGeometry.height - unit / 2));
-// TODO need a method to connect to outer layers
-const middle = path
-  .rect({
-    width: unit * 2,
-    height: unit,
-    radius: mm(0.5)
-  })
-  .subtract(hole().translate(unit, unit / 2));
+  .subtract(
+    path.circle({ radius: pinGeometry.r, x: unit, y: unit + beltHeight / 3 })
+  )
+  .subtract(
+    path.circle({
+      radius: pinGeometry.r,
+      x: unit,
+      y: unit + (beltHeight * 2) / 3
+    })
+  );
 
 module.exports = {
-  outer: () => outer.clone(),
-  middle: () => middle.clone()
+  outer: () => outer.clone()
 };
