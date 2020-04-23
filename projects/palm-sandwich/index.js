@@ -49,8 +49,7 @@ const markFirst = n => (v, i) => {
 // 1/16"
 const acrylicCuts = [
   withMarks(cut(cardCoverPart()), 1),
-  ...[cardLayerPart
-    .part()]
+  ...[cardLayerPart.part()]
     //.components()
     .map(cut)
     .map(markFirst(2)),
@@ -77,7 +76,7 @@ const woodCuts = [
   ...palmLayerPart
     .components()
     .map(cut)
-    .map(markFirst(5)),
+    .map(markFirst(5))
 ];
 
 const qrCuts = [

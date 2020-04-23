@@ -4,6 +4,11 @@ const path = require("path");
 const fs = require("fs");
 
 const startTime = process.hrtime();
+
+if (argv.p == null) {
+  throw new Error("project not specified");
+}
+
 const projectPath = `./projects/${argv.p}`;
 const projectOutput = path.resolve(`${projectPath}/out.svg`);
 
