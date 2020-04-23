@@ -19,7 +19,7 @@ layoutRowsWithOffset(
       qr
         .b()
         .translate(0, qrUnit)
-        .unite(path.rect({ width: 5 * qrUnit, height: qrUnit })),
+        .unite(path.rect({ width: 4 * qrUnit, height: qrUnit })),
       qr.outer()
     ].map(cut),
     [qr.guides(), qr.a(), qr.b(), qr.inner(), qr.outer()].map(guide)
