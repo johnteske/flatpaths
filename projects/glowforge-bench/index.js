@@ -24,15 +24,15 @@ layoutRowsWithOffset(
     //].map(guide)
     // parts
     [
-      // shelf sides and inner (5 each shelf unit)
+      // shelf inner (1 each self unit)
       path.rect({
         width: inches(12),
         height: inches(12)
       }),
-      // shelf back (1 each shelf unit)
+      // shelf sides (6 each shelf unit)
       path.rect({
         width: inches(12),
-        height: inches(24) // TODO this will be too short, given the height added by the playwood connector gaps on the sides
+        height: inches(18)
       }),
       // bench top
       path.rect({
