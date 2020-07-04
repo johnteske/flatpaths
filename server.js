@@ -20,8 +20,9 @@ app.get(
     req.project = project;
     req.hasProject = project !== "";
 
-    const { generate } = req.query;
+    const { generate, scale = 1 } = req.query;
     req.shouldGenerate = req.hasProject && generate === "true";
+    req.scale = scale;
 
     next();
   },
@@ -68,8 +69,10 @@ app.get(
     req.shouldGenerate ? "checked" : ""
   } />
 
-  <label>Scale</label>
-  ${req.scale}
+  <label for="scale">Scale</label>
+  <input name="scale" id="scale" type="number" step="any" value="${
+    req.scale
+  }" readonly />
   <button onclick="scaleHandler(0.5)">-</button>
   <button onclick="scaleHandler(2)">+</button>
 </header>
@@ -94,6 +97,7 @@ app.get(
     document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
     // scale stroke-width
     document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
+    document.querySelector("#scale").value = scale
   }
 </script>
 `);
