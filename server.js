@@ -5,23 +5,35 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-function getProjects() {
-  return fs.readdirSync(path.join(__dirname, "projects"));
-}
-
 // ignore favicon
 app.get("/favicon.ico", (req, res) => res.status(204));
 
 app.get(
   "/:project?",
+  // get projects
+  (req, res, next) => {
+    req.projects = [];
+    fs.readdir(path.join(__dirname, "projects"), (err, projects) => {
+      if (err != null) {
+        next(err);
+      }
+      req.projects = projects;
+      next();
+    });
+  },
   // parse request
   (req, res, next) => {
+    req.__errors = [];
+
     const { project } = req.params;
     req.project = project;
-    req.hasProject = project !== "";
+    const hasProject = req.projects.includes(project);
+    if (!hasProject) {
+      req.__errors.push(`project '${project}' not found`);
+    }
 
     const { generate, scale = 1 } = req.query;
-    req.shouldGenerate = req.hasProject && generate === "true";
+    req.shouldGenerate = hasProject && generate === "true";
     req.scale = scale;
 
     next();
@@ -57,7 +69,7 @@ app.get(
 <header>
   <label for="project">Project</label>
   <select name="project" id="project" onchange="projectChangeHandler()">
-    ${getProjects().map(
+    ${req.projects.map(
       p =>
         `<option value="${p}" ${
           p === req.project ? "selected" : ""
@@ -78,7 +90,7 @@ app.get(
   <button onclick="scaleHandler(2)">+</button>
 </header>
 <main>
-  ${req.hasSvg ? req.svg : "svg not found"}
+  ${req.__errors.length === 0 ? req.svg : req.__errors.join("\n")}
 </main>
 <script>
   let scale = ${req.scale}
@@ -118,6 +130,4 @@ setParam("scale", scale)
   }
 );
 
-app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
+app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
