@@ -27,6 +27,7 @@ app.get(
     next();
   },
   // generate if requested
+  // TODO the generate script could be modified to be called from node, not a child process
   (req, res, next) => {
     if (req.shouldGenerate) {
       require("child_process").execSync(`node generate.js -p ${req.project}`);
@@ -80,7 +81,7 @@ app.get(
   ${req.hasSvg ? req.svg : "svg not found"}
 </main>
 <script>
-  let scale = 1
+  let scale = ${req.scale}
 
   function projectChangeHandler() {
     // indicate transition
@@ -96,9 +97,22 @@ app.get(
     // scale svg
     document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
     // scale stroke-width TODO this doesn't seem to be universal
-    document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
+    //document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
+    // update ui
     document.querySelector("#scale").value = scale
+    // update query string
+setParam("scale", scale)
+    //const url = new URL('https://regexr.com')
   }
+  // set scale on load
+  scaleHandler(1)
+  function setParam(key, value) {
+    // TODO don't pass query param if scale is default (1)
+    var searchParams = new URLSearchParams(window.location.search)
+    searchParams.set("scale", scale);
+    var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+    history.pushState(null, '', newRelativePathQuery);
+        }
 </script>
 `);
   }
