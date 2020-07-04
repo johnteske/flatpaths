@@ -95,7 +95,7 @@ app.get(
     scale *= factor
     // scale svg
     document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
-    // scale stroke-width
+    // scale stroke-width TODO this doesn't seem to be universal
     document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
     document.querySelector("#scale").value = scale
   }

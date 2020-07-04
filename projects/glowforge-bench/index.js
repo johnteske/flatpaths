@@ -45,4 +45,3 @@ layoutRowsWithOffset(
 );
 
 paper.view.viewSize = [inches(72), inches(72)];
-paper.view.scale(1 / 16, [0, 0]);
