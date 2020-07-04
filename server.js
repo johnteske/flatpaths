@@ -9,19 +9,42 @@ function getProjects() {
   return fs.readdirSync(path.join(__dirname, "projects"));
 }
 
-app.get("/:project?", (req, res) => {
-  const { project } = req.params;
+app.get(
+  "/:project?",
+  // parse request
+  (req, res, next) => {
+    const { project } = req.params;
+    req.project = project;
+    req.hasProject = project !== "";
 
-  // TODO (optionally) generate project before checking
+    const { generate } = req.query;
+    req.shouldGenerate = req.hasProject && generate === "true";
 
-  let svg;
-  try {
-    svg = fs.readFileSync(path.join(__dirname, `projects/${project}/out.svg`));
-  } catch (err) {
-    console.log(err);
-  }
-
-  res.send(`
+    next();
+  },
+  // generate if requested
+  (req, res, next) => {
+    if (req.shouldGenerate) {
+      require("child_process").execSync(`node generate.js -p ${req.project}`);
+    }
+    next();
+  },
+  // get svg
+  (req, res, next) => {
+    try {
+      req.svg = fs.readFileSync(
+        path.join(__dirname, `projects/${req.project}/out.svg`)
+      );
+      req.hasSvg = true;
+    } catch (err) {
+      console.log(err);
+      req.hasSvg = false;
+    }
+    next();
+  },
+  // response
+  (req, res) => {
+    res.send(`
 <style>
   body { margin: 0; }
   header, main { padding: 1em; }
@@ -31,21 +54,31 @@ app.get("/:project?", (req, res) => {
   <select name="project" id="project" onchange="changeHandler()">
     ${getProjects().map(
       p =>
-        `<option value="${p}" ${p === project ? "selected" : ""}>${p}</option>`
+        `<option value="${p}" ${
+          p === req.project ? "selected" : ""
+        }>${p}</option>`
     )}
   </select>
+
+  <label for="generate-on-load" >Generate on load</label>
+  <input name="generate-on-load" id="generate-on-load" type="checkbox" ${
+    req.shouldGenerate ? "checked" : ""
+  } />
 </header>
 <main>
-  ${svg !== undefined ? svg : "svg not found"}
+  ${req.hasSvg ? req.svg : "svg not found"}
 </main>
 <script>
   function changeHandler() {
-    var select = document.getElementById("project")
-    window.location.href = select.value
+    const { value: _path } = document.getElementById("project")
+    const { checked: _generate } = document.getElementById("generate-on-load")
+    console.log(_generate)
+    window.location.href = _path + "?generate=" + _generate
   }
 </script>
 `);
-});
+  }
+);
 
 app.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`)
