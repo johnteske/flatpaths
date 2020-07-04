@@ -70,10 +70,12 @@ app.get(
 </main>
 <script>
   function changeHandler() {
+    // indicate transition
+    document.getElementsByTagName("main")[0].style.opacity = 0.1
+
     const { value: _path } = document.getElementById("project")
     const { checked: _generate } = document.getElementById("generate-on-load")
-    console.log(_generate)
-    window.location.href = _path + "?generate=" + _generate
+    window.location.href = _path + (_generate ? "?generate=" + _generate : "")
   }
 </script>
 `);
