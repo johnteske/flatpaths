@@ -5,6 +5,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+const projectsDir = path.join(__dirname, "../projects")
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
   res.status(204);
 });
@@ -13,7 +14,7 @@ app.get(
   "/:project?",
   function getProjects(req, res, next) {
     req.projects = [];
-    fs.readdir(path.join(__dirname, "projects"), (err, projects) => {
+    fs.readdir(projectsDir, (err, projects) => {
       if (err != null) {
         return next(err);
       }
@@ -50,7 +51,7 @@ app.get(
     }
     try {
       req.svg = fs.readFileSync(
-        path.join(__dirname, `projects/${req.project}/out.svg`)
+        path.join(projectsDir, `${req.project}/out.svg`)
       );
       req.hasSvg = true;
     } catch (err) {
