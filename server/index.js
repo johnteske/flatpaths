@@ -93,7 +93,7 @@ app.get(
   <label for="generate-on-load">Generate on load</label>
   <input name="generate-on-load" id="generate-on-load" type="checkbox" ${
     req.shouldGenerate ? "checked" : ""
-  } />
+  } onclick="generateHandler()" />
 
   <label for="scale">Scale</label>
   <input name="scale" id="scale" type="number" step="any" value="${
@@ -125,6 +125,11 @@ app.get(
     window.location.href = _path + (_generate ? "?generate=" + _generate : "")
   }
 
+  function generateHandler() {
+    const { checked: _generate } = document.getElementById("generate-on-load")
+    setParam("generate", _generate)
+  }
+
   function scaleHandler(factor) {
     scale *= factor
     // scale svg
@@ -134,15 +139,14 @@ app.get(
     // update ui
     document.querySelector("#scale").value = scale
     // update query string
-setParam("scale", scale)
-    //const url = new URL('https://regexr.com')
+    setParam("scale", scale)
   }
   // set scale on load
   scaleHandler(1)
   function setParam(key, value) {
     // TODO don't pass query param if scale is default (1)
     var searchParams = new URLSearchParams(window.location.search)
-    searchParams.set("scale", scale);
+    searchParams.set(key, value);
     var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
     history.pushState(null, '', newRelativePathQuery);
         }
