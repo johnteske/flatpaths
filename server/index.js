@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-const projectsDir = path.join(__dirname, "../projects")
+const projectsDir = path.join(__dirname, "../projects");
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
   res.status(204);
 });
@@ -40,10 +40,18 @@ app.get(
   },
   // TODO the generate script could be modified to be called from node, not a child process
   function maybeGenerateSvg(req, res, next) {
-    if (req.shouldGenerate) {
-      require("child_process").execSync(`node generate.js -p ${req.project}`);
+    if (!req.shouldGenerate) {
+      return next();
     }
-    next();
+    require("child_process").exec(
+      `node generate.js -p ${req.project}`,
+      (err, stdout, stderr) => {
+        if (err != null) {
+          req.errors.push("error generating svg" + "<pre>" + stderr + "</pre>");
+        }
+        next();
+      }
+    );
   },
   function maybeGetSvg(req, res, next) {
     if (!req.projectExists) {
