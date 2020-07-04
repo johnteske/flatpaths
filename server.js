@@ -5,62 +5,61 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-// ignore favicon
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/favicon.ico", function ignoreFavicon(req, res) {
+  res.status(204);
+});
 
 app.get(
   "/:project?",
-  // get projects
-  (req, res, next) => {
+  function getProjects(req, res, next) {
     req.projects = [];
     fs.readdir(path.join(__dirname, "projects"), (err, projects) => {
       if (err != null) {
-        next(err);
+        return next(err);
       }
       req.projects = projects;
       next();
     });
   },
-  // parse request
-  (req, res, next) => {
-    req.__errors = [];
+  function parseRequest(req, res, next) {
+    req.errors = [];
 
     const { project } = req.params;
     req.project = project;
-    const hasProject = req.projects.includes(project);
-    if (!hasProject) {
-      req.__errors.push(`project '${project}' not found`);
+    req.projectExists = req.projects.includes(project);
+    if (!req.projectExists) {
+      req.errors.push(`project '${project}' not found`);
     }
 
     const { generate, scale = 1 } = req.query;
-    req.shouldGenerate = hasProject && generate === "true";
+    req.shouldGenerate = req.projectExists && generate === "true";
     req.scale = scale;
 
     next();
   },
-  // generate if requested
   // TODO the generate script could be modified to be called from node, not a child process
-  (req, res, next) => {
+  function maybeGenerateSvg(req, res, next) {
     if (req.shouldGenerate) {
       require("child_process").execSync(`node generate.js -p ${req.project}`);
     }
     next();
   },
-  // get svg
-  (req, res, next) => {
+  function maybeGetSvg(req, res, next) {
+    if (!req.projectExists) {
+      return next();
+    }
     try {
       req.svg = fs.readFileSync(
         path.join(__dirname, `projects/${req.project}/out.svg`)
       );
       req.hasSvg = true;
     } catch (err) {
-      console.log(err);
+      req.errors.push(`error loading svg`);
       req.hasSvg = false;
     }
     next();
   },
-  // response
-  (req, res) => {
+  function sendHtmlResponse(req, res) {
     res.send(`
 <style>
   body { margin: 0; }
@@ -77,7 +76,7 @@ app.get(
       .map(
         p =>
           `<option value="${p}" ${
-            p == req.project ? "selected" : ""
+            p === req.project ? "selected disabled" : ""
           }>${p}</option>`
       )}
   </select>
@@ -95,7 +94,7 @@ app.get(
   <button onclick="scaleHandler(2)">+</button>
 </header>
 <main>
-  ${req.__errors.length === 0 ? req.svg : req.__errors.join("\n")}
+  ${req.errors.length === 0 ? req.svg : req.errors.join("\n")}
 </main>
 <script>
   let scale = ${req.scale}
