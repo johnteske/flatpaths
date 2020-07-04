@@ -29,7 +29,7 @@ app.get(
     req.project = project;
     req.projectExists = req.projects.includes(project);
     if (!req.projectExists) {
-      req.errors.push(`project '${project}' not found`);
+      req.errors.push({ message: `project '${project}' not found` });
     }
 
     const { generate, scale = 1 } = req.query;
@@ -47,7 +47,7 @@ app.get(
       `node generate.js -p ${req.project}`,
       (err, stdout, stderr) => {
         if (err != null) {
-          req.errors.push("error generating svg" + "<pre>" + stderr + "</pre>");
+          req.errors.push({ message: "error generating svg", body: stderr });
         }
         next();
       }
@@ -63,7 +63,7 @@ app.get(
       );
       req.hasSvg = true;
     } catch (err) {
-      req.errors.push(`error loading svg`);
+      req.errors.push({ message: "error loading svg" });
       req.hasSvg = false;
     }
     next();
@@ -103,7 +103,15 @@ app.get(
   <button onclick="scaleHandler(2)">+</button>
 </header>
 <main>
-  ${req.errors.length === 0 ? req.svg : req.errors.join("\n")}
+  ${
+    req.errors.length === 0
+      ? req.svg
+      : req.errors.map(
+          err =>
+            `<p>${err.message}</p>
+    ${err.body != null ? `<pre>${err.body}</pre>` : ""}`
+        )
+  }
 </main>
 <script>
   let scale = ${req.scale}
