@@ -22,6 +22,10 @@ app.get("/:project?", (req, res) => {
   }
 
   res.send(`
+<style>
+  body { margin: 0; }
+  header, main { padding: 1em; }
+</style>
 <header>
   <label for="project">Project</label>
   <select name="project" id="project" onchange="changeHandler()">
