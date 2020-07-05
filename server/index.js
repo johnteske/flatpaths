@@ -5,6 +5,8 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+const htmlResponse = require("./html-response");
+
 const projectsDir = path.join(__dirname, "../projects");
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
   res.status(204);
@@ -38,7 +40,6 @@ app.get(
 
     next();
   },
-  // TODO the generate script could be modified to be called from node, not a child process
   function maybeGenerateSvg(req, res, next) {
     if (!req.shouldGenerate) {
       return next();
@@ -68,91 +69,7 @@ app.get(
     }
     next();
   },
-  function sendHtmlResponse(req, res) {
-    res.send(`
-<style>
-  body { margin: 0; }
-  header, main { padding: 1em; }
-</style>
-<header>
-  <label for="project">Project</label>
-  <select name="project" id="project" onchange="projectChangeHandler()">
-    ${[req.project]
-      // ^ start with current project so it is first in list (also adds in case it is not defined)
-      .concat(req.projects)
-      // deduplicate
-      .filter((current, i, all) => all.indexOf(current) === i)
-      .map(
-        p =>
-          `<option value="${p}" ${
-            p === req.project ? "selected disabled" : ""
-          }>${p}</option>`
-      )}
-  </select>
-
-  <label for="generate-on-load">Generate on load</label>
-  <input name="generate-on-load" id="generate-on-load" type="checkbox" ${
-    req.shouldGenerate ? "checked" : ""
-  } onclick="generateHandler()" />
-
-  <label for="scale">Scale</label>
-  <input name="scale" id="scale" type="number" step="any" value="${
-    req.scale
-  }" readonly />
-  <button onclick="scaleHandler(0.5)">-</button>
-  <button onclick="scaleHandler(2)">+</button>
-</header>
-<main>
-  ${
-    req.errors.length === 0
-      ? req.svg
-      : req.errors.map(
-          err =>
-            `<p>${err.message}</p>
-    ${err.body != null ? `<pre>${err.body}</pre>` : ""}`
-        )
-  }
-</main>
-<script>
-  let scale = ${req.scale}
-
-  function projectChangeHandler() {
-    // indicate transition
-    document.getElementsByTagName("main")[0].style.opacity = 0.1
-
-    const { value: _path } = document.getElementById("project")
-    const { checked: _generate } = document.getElementById("generate-on-load")
-    window.location.href = _path + (_generate ? "?generate=" + _generate : "")
-  }
-
-  function generateHandler() {
-    const { checked: _generate } = document.getElementById("generate-on-load")
-    setParam("generate", _generate)
-  }
-
-  function scaleHandler(factor) {
-    scale *= factor
-    // scale svg
-    document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
-    // scale stroke-width TODO this doesn't seem to be universal
-    //document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
-    // update ui
-    document.querySelector("#scale").value = scale
-    // update query string
-    setParam("scale", scale)
-  }
-  // set scale on load
-  scaleHandler(1)
-  function setParam(key, value) {
-    // TODO don't pass query param if scale is default (1)
-    var searchParams = new URLSearchParams(window.location.search)
-    searchParams.set(key, value);
-    var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-    history.pushState(null, '', newRelativePathQuery);
-        }
-</script>
-`);
-  }
+  htmlResponse
 );
 
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
