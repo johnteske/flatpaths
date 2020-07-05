@@ -64,8 +64,8 @@ module.exports = (req, res) => {
     scale *= factor
     // scale svg
     document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
-    // scale stroke-width TODO this doesn't seem to be universal
-    //document.querySelector("svg g g").setAttribute("stroke-width", 1 / scale)
+    // scale stroke-width
+    document.querySelector("svg g").setAttribute("stroke-width", 1 / scale)
     // update ui
     document.querySelector("#scale").value = scale
     // update query string

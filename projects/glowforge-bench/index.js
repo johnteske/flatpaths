@@ -20,8 +20,7 @@ layoutRowsWithOffset(
         width: inches(24),
         height: inches(24)
       })
-    ].map(cut),
-    //].map(guide)
+    ].map(guide),
     // parts
     [
       // shelf inner (1 each self unit)
