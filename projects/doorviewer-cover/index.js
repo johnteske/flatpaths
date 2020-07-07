@@ -40,6 +40,9 @@ const _outer = path
   .subtract(pinCutout.clone().translate(pins.x2, pins.y2));
 
 const base = _outer.clone().subtract(cutout.clone());
+const layer2 = _outer
+  .clone()
+  .subtract(path.circle({ radius: mm(15 / 2), x: 2 * T + r, y: 2 * T + r }));
 const inner = _outer
   .clone()
   .subtract(path.rect({ width: d, height: 2 * T + d }).translate(2 * T, 0));
@@ -51,11 +54,19 @@ const outer = _outer.clone().subtract(path.rect({ size: d }).translate(2 * T));
 layoutRowsWithOffset(
   [
     // guide
-    [group(cutout.clone(), outer.clone(), inner.clone())].map(guide),
+    [
+      group(
+        cutout.clone(),
+        base.clone(),
+        layer2.clone(),
+        inner.clone(),
+        outer.clone()
+      )
+    ].map(guide),
     // parts
     [
       base.clone(),
-      outer.clone(), // TODO this have a 15 mm round cutout
+      layer2.clone(),
       inner.clone(),
       cover.clone(),
       outer.clone()
