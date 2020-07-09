@@ -19,7 +19,7 @@ module.exports = function generate(
 
   const generateProject = require(path.join(
     __dirname,
-    "projects/lightswitch-cover"
+    "projects/outlet-cover"
   ));
   generateProject(dom.window.d3, svg);
 

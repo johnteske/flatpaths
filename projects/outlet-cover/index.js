@@ -14,14 +14,14 @@ const cover = {
   height: inches(4 + 11 / 16)
 };
 const toggle = {
-  width: inches(3 / 8),
-  height: inches(15 / 16)
+  width: inches(1 + 5 / 16),
+  height: inches(2 + 5 / 8)
 };
 const hole = {
   r: inches(3 / 16) / 2,
   x: cover.width / 2,
   y: cover.height / 2,
-  dy: inches(1 + 1 / 16)
+  dy: inches(3 + 13 / 16) / 2
 };
 const holes = [[hole.x, hole.y - hole.dy], [hole.x, hole.y + hole.dy]];
 
