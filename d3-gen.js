@@ -1,10 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const d3 = require("d3");
-const jsdom = require("jsdom");
-const JSDOM = jsdom.JSDOM;
+const { JSDOM } = require("jsdom");
 
-function go(outputLocation = path.join(__dirname, "./test.svg")) {
+module.exports = function generate(
+  outputLocation = path.join(__dirname, "./test.svg")
+) {
   const dom = new JSDOM("");
 
   // get d3 into the dom
@@ -16,15 +17,15 @@ function go(outputLocation = path.join(__dirname, "./test.svg")) {
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .append("g");
 
-  svg
-    .append("rect")
-    .attr("width", 99)
-    .attr("height", 99)
-    .attr("fill", "none")
-    .attr("stroke", "#000000");
+  const generateProject = require(path.join(
+    __dirname,
+    "projects/lightswitch-cover"
+  ));
+  generateProject(dom.window.d3, svg);
 
-  //using sync to keep the code simple
   fs.writeFileSync(outputLocation, dom.window.d3.select("body").html());
-}
+};
 
-go();
+if (require.main === module) {
+  module.exports();
+}
