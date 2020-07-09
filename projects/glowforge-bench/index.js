@@ -33,21 +33,30 @@ benchTop.part = path.rect({
   height: benchTop.height
 });
 
-// need 6 per shelf
+// need 4 per shelf
 const shelfSide = {
   width: dimensions.depth,
-  height: dimensions.height
+  height: dimensions.height / 2
 };
 shelfSide.part = path.rect({
-  width: shelfSide.width,
-  height: shelfSide.height / 2
+  // dimensions are flipped to help understand visually
+  width: shelfSide.height,
+  height: shelfSide.width
 });
 
-// TODO need shelf back, which isn't square
-// and inner shelf uses that width
+// 2 per shelf
+const shelfBack = {
+  width: inches(12),
+  height: dimensions.height / 2
+};
+shelfBack.part = path.rect({
+  width: shelfBack.width,
+  height: shelfBack.height
+});
+
 // one per shelf
 const shelfInner = {
-  width: dimensions.depth,
+  width: shelfBack.width,
   height: dimensions.depth
 };
 shelfInner.part = path.rect({
@@ -62,6 +71,16 @@ const ply2x4 = {
     width: inches(23.8125),
     height: inches(47.8125)
   })
+};
+
+const label = label => {
+  const fontSize = 96;
+  const text = new paper.PointText();
+  text.fontFamily = "monospace";
+  text.fontSize = fontSize;
+  text.content = label.toUpperCase();
+  //text.justification = "center";
+  return text;
 };
 
 layoutRowsWithOffset(
@@ -81,11 +100,9 @@ layoutRowsWithOffset(
       )
     ].map(guide),
     // parts
-    [
-      shelfInner.part,
-      shelfSide.part, // .rotate(90, [0,0]),
-      benchTop.part
-    ].map(cut)
+    [shelfInner.part, shelfBack.part, shelfSide.part, benchTop.part].map(cut),
+    // labels
+    [label("inner")].map(guide)
   ],
   inches(3 / 4)
 );
