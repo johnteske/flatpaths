@@ -17,6 +17,13 @@ const toggle = {
   width: inches(3 / 8),
   height: inches(15 / 16)
 };
+const hole = {
+  r: inches(3 / 16) / 2,
+  x: cover.width / 2,
+  y: cover.height / 2,
+  dy: inches(1 + 1 / 16)
+};
+const holes = [[hole.x, hole.y - hole.dy], [hole.x, hole.y + hole.dy]];
 
 module.exports = function generate(d3, svg) {
   svg
@@ -27,7 +34,17 @@ module.exports = function generate(d3, svg) {
   svg
     .append("rect")
     .call(attrs(toggle))
-    .attr("x", (cover.width - toggle.width) / 2)
-    .attr("y", (cover.height - toggle.height) / 2)
+    .attr("x", cover.width / 2)
+    .attr("y", cover.height / 2)
+    .attr("transform", `translate(${toggle.width / -2},${toggle.height / -2})`)
+    .call(cut);
+
+  svg
+    .selectAll("circle")
+    .data(holes)
+    .enter()
+    .append("circle")
+    .attr("r", hole.r)
+    .attr("transform", d => `translate(${d[0]}, ${d[1]})`)
     .call(cut);
 };
