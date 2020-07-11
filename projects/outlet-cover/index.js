@@ -8,7 +8,7 @@ const attrs = attrs => selection => {
 
 const cut = attrs({ fill: "none", stroke: "#000000" });
 
-// https://www.mcmaster.com/7533K42/
+// https://www.mcmaster.com/7533K82/
 const cover = {
   width: inches(2 + 15 / 16),
   height: inches(4 + 11 / 16)

@@ -1,3 +1,5 @@
+// https://stackoverflow.com/questions/109364/bezier-clipping/3005394#3005394
+// http://complexdan.com/svg-circleellipse-to-path-converter/
 const fs = require("fs");
 const path = require("path");
 const d3 = require("d3");
