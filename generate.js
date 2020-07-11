@@ -11,10 +11,10 @@ module.exports = function(project, cb) {
 
   paper.setup(new paper.Size(999, 999));
 
-  // rather than requiring the file, we need to call it
   delete require.cache[require.resolve(projectPath)];
   const generate = require(projectPath);
-  generate();
+  // TODO this still relies on side-effects and globals
+  if (typeof generate === "function") generate();
 
   console.info(
     "Paths: %d",
