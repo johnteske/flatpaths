@@ -3,35 +3,47 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-const startTime = process.hrtime();
+module.exports = function(project, cb) {
+  const projectPath = `./projects/${project}`;
+  const projectOutput = path.resolve(`${projectPath}/out.svg`);
 
-if (argv.p == null) {
-  throw new Error("project not specified");
-}
+  console.info("%s", projectPath);
 
-const projectPath = `./projects/${argv.p}`;
-const projectOutput = path.resolve(`${projectPath}/out.svg`);
+  paper.setup(new paper.Size(999, 999));
 
-console.info("%s", projectPath);
+  // rather than requiring the file, we need to call it
+  delete require.cache[require.resolve(projectPath)];
+  const generate = require(projectPath);
+  generate();
 
-paper.setup(new paper.Size(999, 999));
+  console.info(
+    "Paths: %d",
+    paper.project.getItems({ class: paper.Path }).length
+  );
+  const svg = paper.project.exportSVG({ asString: true });
 
-require(projectPath);
+  fs.writeFile(projectOutput, svg, function(err) {
+    if (err) throw err;
 
-console.info("Paths: %d", paper.project.getItems({ class: paper.Path }).length);
-const svg = paper.project.exportSVG({ asString: true });
-
-fs.writeFile(projectOutput, svg, function(err) {
-  if (err) throw err;
-
-  const endTime = process.hrtime(startTime);
-  console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
-  console.info("File size: %dkB", getFilesizeInKilobytes(projectOutput));
-  console.info("Output:, %s", projectOutput);
-});
+    cb(projectOutput);
+  });
+};
 
 function getFilesizeInKilobytes(filename) {
-  var stats = fs.statSync(filename);
-  var fileSizeInBytes = stats["size"];
-  return fileSizeInBytes / 1000;
+  const { size } = fs.statSync(filename);
+  return size / 1000;
+}
+
+if (require.main === module) {
+  const startTime = process.hrtime();
+
+  if (argv.p == null) {
+    throw new Error("project not specified");
+  }
+  module.exports(argv.p, projectOutput => {
+    const endTime = process.hrtime(startTime);
+    console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
+    console.info("File size: %dkB", getFilesizeInKilobytes(projectOutput));
+    console.info("Output:, %s", projectOutput);
+  });
 }

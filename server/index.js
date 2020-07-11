@@ -7,7 +7,9 @@ const port = 3000;
 
 const htmlResponse = require("./html-response");
 
+const generate = require("../generate");
 const projectsDir = path.join(__dirname, "../projects");
+
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
   res.status(204);
 });
@@ -44,15 +46,9 @@ app.get(
     if (!req.shouldGenerate) {
       return next();
     }
-    require("child_process").exec(
-      `node generate.js -p ${req.project}`,
-      (err, stdout, stderr) => {
-        if (err != null) {
-          req.errors.push({ message: "error generating svg", body: stderr });
-        }
-        next();
-      }
-    );
+    generate(req.project, () => {
+      next();
+    });
   },
   function maybeGetSvg(req, res, next) {
     if (!req.projectExists) {
