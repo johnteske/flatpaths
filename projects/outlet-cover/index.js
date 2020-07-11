@@ -1,7 +1,7 @@
 const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { inches } = require(`${root}/units`);
-const { cut, guide } = require(`${root}/stroke`);
+const { cut } = require(`${root}/stroke`);
 
 // https://www.mcmaster.com/7533K82/
 const cover = {
@@ -14,7 +14,6 @@ const toggle = {
 };
 toggle.x = toggle.width / -2;
 toggle.y = toggle.height / -2;
-
 const hole = {
   radius: inches(3 / 16) / 2,
   x: cover.width / 2,
@@ -22,8 +21,57 @@ const hole = {
   dy: inches(3 + 13 / 16) / 2
 };
 
+const cableBack = {
+  width: toggle.width,
+  height: inches(1),
+  radius: inches(1 / 16)
+};
+cableBack._x = (cover.width - cableBack.width) / 2;
+cableBack._y = cover.height;
+const pinRadius = inches(1 / 16) / 2;
+const pinOffset = 10;
+
+const cableWall = {
+  width: pinOffset * 2,
+  height: cableBack.height,
+  radius: inches(1 / 16)
+};
+
+const cableHook = path
+  .rect(cableBack)
+  // fill in connecting corners
+  .unite(path.rect({ ...cableBack, radius: 0, height: cableBack.height / 2 }))
+  // left
+  .subtract(path.circle({ radius: pinRadius }).translate(pinOffset, pinOffset))
+  .subtract(
+    path
+      .circle({ radius: pinRadius })
+      .translate(pinOffset, cableBack.height - pinOffset)
+  )
+  // center
+  .subtract(
+    path.circle({ radius: pinRadius }).translate(cableBack.width / 2, pinOffset)
+  )
+  .subtract(
+    path
+      .circle({ radius: pinRadius })
+      .translate(cableBack.width / 2, cableBack.height - pinOffset)
+  )
+  // right
+  .subtract(
+    path
+      .circle({ radius: pinRadius })
+      .translate(cableBack.width - pinOffset, pinOffset)
+  )
+  .subtract(
+    path
+      .circle({ radius: pinRadius })
+      .translate(cableBack.width - pinOffset, cableBack.height - pinOffset)
+  );
+
 module.exports = function generate() {
   cut(
+    // outlet cover
     path
       .rect({ ...cover, radius: inches(1 / 16) })
       .subtract(
@@ -31,5 +79,9 @@ module.exports = function generate() {
       )
       .subtract(path.circle(hole).translate(0, hole.dy))
       .subtract(path.circle(hole).translate(0, -hole.dy))
+      // ethernet cable hooks
+      .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
   );
+  // TODO needs pin holes
+  cut(path.rect(cableWall));
 };
