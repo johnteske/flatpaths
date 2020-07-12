@@ -46,7 +46,8 @@ app.get(
     if (!req.shouldGenerate) {
       return next();
     }
-    generate(req.project, () => {
+    generate(req.project, (metadata) => {
+      req.metadata = metadata
       next();
     });
   },

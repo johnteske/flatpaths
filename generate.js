@@ -4,10 +4,18 @@ const path = require("path");
 const fs = require("fs");
 
 module.exports = function(project, cb) {
-  const projectPath = `./projects/${project}`;
-  const projectOutput = path.resolve(`${projectPath}/out.svg`);
+  if (project == null) {
+    throw new Error("project not specified");
+  }
 
-  console.info("%s", projectPath);
+  const projectPath = `./projects/${project}`;
+  const file = path.resolve(`${projectPath}/out.svg`);
+  const metadata = {
+    project,
+    file
+  };
+
+  const startTime = process.hrtime();
 
   paper.setup(new paper.Size(999, 999));
 
@@ -16,16 +24,19 @@ module.exports = function(project, cb) {
   // TODO this still relies on side-effects and globals
   if (typeof generate === "function") generate();
 
-  console.info(
-    "Paths: %d",
-    paper.project.getItems({ class: paper.Path }).length
-  );
+  metadata.paths = paper.project.getItems({ class: paper.Path }).length;
+
   const svg = paper.project.exportSVG({ asString: true });
 
-  fs.writeFile(projectOutput, svg, function(err) {
+  const endTime = process.hrtime(startTime);
+  metadata.time = Math.round(endTime[1] / 100000);
+
+  metadata.size = getFilesizeInKilobytes(file);
+
+  fs.writeFile(file, svg, function(err) {
     if (err) throw err;
 
-    cb(projectOutput);
+    cb(metadata);
   });
 };
 
@@ -35,15 +46,11 @@ function getFilesizeInKilobytes(filename) {
 }
 
 if (require.main === module) {
-  const startTime = process.hrtime();
-
-  if (argv.p == null) {
-    throw new Error("project not specified");
-  }
-  module.exports(argv.p, projectOutput => {
-    const endTime = process.hrtime(startTime);
-    console.info("Execution time: %dms", Math.round(endTime[1] / 100000));
-    console.info("File size: %dkB", getFilesizeInKilobytes(projectOutput));
-    console.info("Output:, %s", projectOutput);
+  module.exports(argv.p, metadata => {
+    console.info("Project: %s", metadata.project);
+    console.info("Paths: %s", metadata.paths);
+    console.info("Output: %s", metadata.file);
+    console.info("File size: %dkB", metadata.size);
+    console.info("Execution time: %dms", metadata.time);
   });
 }
