@@ -2,6 +2,8 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { inches } = require(`${root}/units`);
 const { cut } = require(`${root}/stroke`);
+const group = require(`${root}/group`);
+const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
 const radius = inches(1 / 16);
 
@@ -90,15 +92,24 @@ const cableHook = path
   );
 
 module.exports = function generate() {
-  cut(
-    // outlet cover
-    path
-      .rect(cover)
-      .subtract(path.rect(toggle).translate(cover.width / 2, cover.height / 2))
-      .subtract(path.circle(hole).translate(0, hole.dy))
-      .subtract(path.circle(hole).translate(0, -hole.dy))
-      // ethernet cable hooks
-      .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
+  layoutRowsWithOffset(
+    [
+      [
+        cut(
+          // outlet cover
+          path
+            .rect(cover)
+            .subtract(
+              path.rect(toggle).translate(cover.width / 2, cover.height / 2)
+            )
+            .subtract(path.circle(hole).translate(0, hole.dy))
+            .subtract(path.circle(hole).translate(0, -hole.dy))
+            // ethernet cable hooks
+            .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
+        )
+      ],
+      [wall.clone(), wall.clone(), wall.clone()].map(cut)
+    ],
+    10
   );
-  cut(wall.clone());
 };
