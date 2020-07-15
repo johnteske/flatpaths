@@ -31,10 +31,10 @@ module.exports = function(project, cb) {
   const endTime = process.hrtime(startTime);
   metadata.time = Math.round(endTime[1] / 100000);
 
-  metadata.size = getFilesizeInKilobytes(file);
-
   fs.writeFile(file, svg, function(err) {
     if (err) throw err;
+
+    metadata.size = getFilesizeInKilobytes(file);
 
     cb(metadata);
   });
