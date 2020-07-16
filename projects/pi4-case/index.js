@@ -25,14 +25,14 @@ const outer = path.rect({
 const heatSink = {
   width: mm(15), // + pi4.overhang,
   height: mm(15), // + pi4.overhang
-  _center: { x: mm(3.5) + mm(25.75), y: mm(32.5) },
+  _center: { x: mm(3.5) + mm(25.75), y: pi4._length - mm(32.5) },
   _clearance: pi4._overhang
   // TODO how tall is heatSink, and how does it relate to case/standoff height?
 };
 
 // center
-heatSink.x = heatSink._center.x - heatSink.width + pi4._overhang;
-heatSink.y = heatSink._center.y - heatSink.height + pi4._overhang;
+heatSink.x = heatSink._center.x - heatSink.width / 2 + pi4._overhang;
+heatSink.y = heatSink._center.y - heatSink.height / 2 + pi4._overhang;
 
 const _heatSinkCutout = path
   .rect({
@@ -86,7 +86,25 @@ const caseBottom = caseOuter.clone();
 
 layoutRowsWithOffset(
   [
-    [group(cut(caseTop.clone()), guide(path.rect(heatSink)))],
+    [
+      group(
+        cut(caseTop.clone()),
+        guide(path.rect(heatSink)),
+        guide(
+          path.rect({ ...pi4, height: pi4._length }).translate(pi4._overhang)
+        ),
+
+        guide(
+          path.line(
+            [mm(3.5) + pi4._overhang + mm(25.75), outer.bounds.height],
+            [
+              mm(3.5) + pi4._overhang + mm(25.75),
+              outer.bounds.height - pi4._overhang - mm(32.5)
+            ]
+          )
+        )
+      )
+    ],
     [cut(caseBottom.clone())]
   ],
   10
