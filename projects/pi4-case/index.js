@@ -75,11 +75,19 @@ const mountingHoles = [
   .map(point => point.map(c => c + pi4._overhang + boltPattern.offset))
   .map(point => mountingHole.clone().translate(point));
 
-const caseTop = mountingHoles
-  .reduce((acc, hole) => acc.subtract(hole), outer.clone())
-  .subtract(heatSinkCutoutWithRelief);
+const caseOuter = mountingHoles.reduce(
+  (acc, hole) => acc.subtract(hole),
+  outer.clone()
+);
+
+const caseTop = caseOuter.clone().subtract(heatSinkCutoutWithRelief);
+
+const caseBottom = caseOuter.clone();
 
 layoutRowsWithOffset(
-  [[group(cut(caseTop.clone()), guide(path.rect(heatSink)))]],
+  [
+    [group(cut(caseTop.clone()), guide(path.rect(heatSink)))],
+    [cut(caseBottom.clone())]
+  ],
   10
 );
