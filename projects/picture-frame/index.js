@@ -5,11 +5,13 @@ const { cut } = require(`${root}/stroke`);
 const { inches } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
-const frameT = inches(1);
+// 1/4" cast acrylic
+// https://www.mcmaster.com/8560K354/
+const frameT = inches(0.5);
 
 // pin
-// https://www.mcmaster.com/98296A903/
-const d = inches(3 / 16);
+// https://www.mcmaster.com/92373A181/
+const d = inches(1 / 8);
 const pinOffset = frameT / 2;
 const part_hole = path.circle({
   radius: d / 2
