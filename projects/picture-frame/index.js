@@ -1,8 +1,10 @@
 const root = require("app-root-path");
+const paper = require("paper-jsdom");
 
+const group = require(`${root}/group`);
 const path = require(`${root}/path`);
-const { cut } = require(`${root}/stroke`);
-const { inches } = require(`${root}/units`);
+const { cut, guide } = require(`${root}/stroke`);
+const { inches, mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
 // 1/4" cast acrylic
@@ -16,10 +18,25 @@ const pinOffset = frameT / 2;
 const part_hole = path.circle({
   radius: d / 2
 });
+const pinKerfTest = adj => {
+  const hole = path.circle({
+    radius: d / 2 - mm(adj)
+  });
+  const label = new paper.PointText(0, d * 3);
+  label.content = `-${adj}`;
+  return group(
+    cut(
+      path
+        .rect({ width: d * 3, height: d * 3 })
+        .subtract(hole.translate(d * 1.5))
+    ),
+    guide(label)
+  );
+};
 
 const inner = {
-  width: inches(6),
-  height: inches(4),
+  width: inches(6 + 1 / 4),
+  height: inches(4 + 1 / 4),
   x: frameT,
   y: frameT
 };
@@ -47,6 +64,9 @@ const part_inner = part_outer
   .subtract(path.rect(inner).translate(0, -frameT)); // allow space to insert frame
 
 layoutRowsWithOffset(
-  [[part_outer.clone(), part_inner.clone(), part_outer.clone()].map(cut)],
+  [
+    [part_outer.clone(), part_inner.clone(), part_outer.clone()].map(cut),
+    [pinKerfTest(0), pinKerfTest(0.1), pinKerfTest(0.2)]
+  ],
   10
 );
