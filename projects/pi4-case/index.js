@@ -1,5 +1,10 @@
 // https://www.raspberrypi.org/documentation/hardware/raspberrypi/mechanical/rpi_MECH_4b_4p0.pdf
 
+// standoffs
+// top, M2.5 x 20mm female https://www.mcmaster.com/94868A175/
+// bottom, M2.5 x 5mm male-female https://www.mcmaster.com/93655A090/
+// screws, M2.5 x 5mm https://www.mcmaster.com/catalog/126/3181
+
 const root = require("app-root-path");
 
 const group = require(`${root}/group`);

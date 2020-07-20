@@ -108,6 +108,8 @@ module.exports = function generate() {
             .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
         )
       ],
+      [wall.clone(), wall.clone(), wall.clone()].map(cut),
+      [wall.clone(), wall.clone(), wall.clone()].map(cut),
       [wall.clone(), wall.clone(), wall.clone()].map(cut)
     ],
     10
