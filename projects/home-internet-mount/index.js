@@ -1,3 +1,6 @@
+// TODO should ths bottom left edge
+// extend below the modem so this board
+// can be used for cable management?
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
@@ -14,7 +17,8 @@ const boardMargin = inches(1);
 
 const board = path.rect({
   width: inches(12),
-  height: inches(12) // up to 18
+  height: router.bounds.height + powerStrip.bounds.height + boardMargin * 3
+  //height: inches(12) // up to 18
 });
 
 const label = (fontSize, fillColor) => (content, center) => {
@@ -109,22 +113,30 @@ group(
       "ethernet",
       pi4Outer.data.connections.ethernet
     )),
+    connectionPoint("usb", pi4Outer.data.connections.usb1),
+    connectionPoint("usb", pi4Outer.data.connections.usb2),
     (pi4Power = connectionPoint("power", pi4Outer.data.connections.power)),
     componentLabel("pi4", pi4Outer.bounds.center)
   )
-    .rotate(-90)
     .translate(
       board.bounds.width - boardMargin - pi4Outer.bounds.width,
+      // (board.bounds.height - pi4Outer.bounds.height) / 2 // centered
       boardMargin
-    ),
+    )
+    .rotate(-90, pi4Outer.bounds.center),
   // ethernet
-  connection(routerEthernetIn.bounds.center, board.bounds.topLeft), // to modem
+  connection(routerEthernetIn.bounds.center, board.bounds.bottomLeft), // to modem
   connection(routerEthernet1.bounds.center, pi4Ethernet.bounds.center),
   connection(routerEthernet2.bounds.center, board.bounds.topCenter), // for laptop
   connection(routerEthernet3.bounds.center, board.bounds.topCenter), // for laptop
-  // power TODO check the fit of the adapters, if they can all fit
-  connection(routerPower.bounds.center, p2.bounds.center),
+  // power
   connection(board.bounds.bottomLeft, p1.bounds.center), // to modem
-  connection(pi4Power.bounds.center, p4.bounds.center),
-  connection(ac.bounds.center, board.bounds.bottomRight) // to outlet
+  // skip p2, space needed between
+  connection(routerPower.bounds.center, p3.bounds.center),
+  connection(pi4Power.bounds.center, p4.bounds.center), // must be opposite of cord due to shape of adapter
+  connection(ac.bounds.center, board.bounds.bottomRight), // to outlet
+  componentLabel("coils", [
+    board.bounds.width - boardMargin,
+    board.bounds.height - boardMargin - powerStrip.bounds.height - boardMargin
+  ]) // TODO placeholder for space to bundle excess cable
 );
