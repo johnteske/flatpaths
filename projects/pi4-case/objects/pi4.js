@@ -11,6 +11,8 @@ const pi4 = {
 
 pi4._connections = {
   ethernet: [pi4.width, pi4._length - mm(45.75)],
+  usb1: [pi4.width, pi4._length - mm(9)],
+  usb2: [pi4.width, pi4._length - mm(27)],
   power: [mm(3.5 + 7.7), pi4._length]
 };
 
