@@ -3,12 +3,13 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = function(project, cb) {
+module.exports = function(projectType, project, cb) {
   if (project == null) {
     throw new Error("project not specified");
   }
 
-  const projectPath = `./projects/${project}`;
+  // TODO this should accept projectType
+  const projectPath = `./${projectType}s/${project}`;
   const file = path.resolve(`${projectPath}/out.svg`);
   const metadata = {
     project,
@@ -46,7 +47,7 @@ function getFilesizeInKilobytes(filename) {
 }
 
 if (require.main === module) {
-  module.exports(argv.p, metadata => {
+  module.exports("project", argv.p, metadata => {
     console.info("Project: %s", metadata.project);
     console.info("Paths: %s", metadata.paths);
     console.info("Output: %s", metadata.file);
