@@ -8,24 +8,34 @@ const port = 3000;
 const htmlResponse = require("./html-response");
 
 const generate = require("../generate");
-const projectsDir = path.join(__dirname, "../projects");
 
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
-  res.status(204);
+  return res.status(204);
 });
 
+function getProjects(req, res, next) {
+  req.projects = [];
+  fs.readdir(req.projectDir, (err, projects) => {
+    if (err != null) {
+      return next(err);
+    }
+    req.projects = projects;
+    next();
+  });
+}
+
 app.get(
-  "/:project?",
-  function getProjects(req, res, next) {
-    req.projects = [];
-    fs.readdir(projectsDir, (err, projects) => {
-      if (err != null) {
-        return next(err);
-      }
-      req.projects = projects;
-      next();
-    });
+  "/:projectType/:project?",
+  function setProjectType(req, res, next) {
+    const { projectType } = req.params;
+    // TODO check projectType is project|construct
+    if (projectType !== "project" && projectType !== "construct") {
+      return next("nope " + projectType + typeof projectType);
+    }
+    req.projectDir = path.join(__dirname, `../${projectType}s`); // TODO plural
+    next();
   },
+  getProjects,
   function parseRequest(req, res, next) {
     req.errors = [];
 
@@ -33,7 +43,9 @@ app.get(
     req.project = project;
     req.projectExists = req.projects.includes(project);
     if (!req.projectExists) {
-      req.errors.push({ message: `project '${project}' not found` });
+      req.errors.push({
+        message: `${req.params.projectType} '${project}' not found`
+      });
     }
 
     const { generate, scale = 1 } = req.query;
@@ -46,7 +58,7 @@ app.get(
     if (!req.shouldGenerate) {
       return next();
     }
-    generate(req.project, metadata => {
+    generate(req.params.projectType, req.project, metadata => {
       req.metadata = metadata;
       next();
     });
@@ -57,7 +69,7 @@ app.get(
     }
     try {
       req.svg = fs.readFileSync(
-        path.join(projectsDir, `${req.project}/out.svg`)
+        path.join(req.projectDir, `${req.project}/out.svg`)
       );
       req.hasSvg = true;
     } catch (err) {

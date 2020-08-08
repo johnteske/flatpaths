@@ -13,19 +13,8 @@ const { cut, guide } = require(`${root}/stroke`);
 const { mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
-const pi4 = {
-  width: mm(85),
-  _length: mm(56),
-  height: mm(16),
-  radius: mm(3),
-  _overhang: mm(3) // amount some ports hang over PCB
-};
-
-const outer = path.rect({
-  width: pi4.width + pi4._overhang * 2,
-  height: pi4._length + pi4._overhang * 2,
-  radius: pi4.radius
-});
+const pi4 = require("./objects/pi4")
+const outer = require("./constructs/outer")
 
 const heatSink = {
   width: mm(15), // + pi4.overhang,

@@ -52,7 +52,9 @@ module.exports = (req, res) => {
 
     const { value: _path } = document.getElementById("project")
     const { checked: _generate } = document.getElementById("generate-on-load")
-    window.location.href = _path + (_generate ? "?generate=" + _generate : "")
+    window.location.href = "/${
+      req.params.projectType
+    }/" + _path + (_generate ? "?generate=" + _generate : "")
   }
 
   function generateHandler() {
