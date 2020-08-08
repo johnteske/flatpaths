@@ -13,8 +13,8 @@ const { cut, guide } = require(`${root}/stroke`);
 const { mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
-const pi4 = require("./objects/pi4")
-const outer = require("./constructs/outer")
+const pi4 = require("./objects/pi4");
+const outer = require("./constructs/outer");
 
 const heatSink = {
   width: mm(15), // + pi4.overhang,

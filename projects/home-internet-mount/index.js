@@ -4,10 +4,9 @@ const paper = require("paper-jsdom");
 const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
-const { inches } = require(`${root}/units`);
+const { inches, mm } = require(`${root}/units`);
 
 const pi4Outer = require("../pi4-case/constructs/outer").clone();
-
 const router = require("./router")();
 const powerStrip = require("./power-strip")();
 
@@ -42,7 +41,17 @@ group(
     board.bounds.height - boardMargin - powerStrip.bounds.height
   ),
   // pi4 NAS
-  group(guide(pi4Outer), label("pi4", pi4Outer.bounds.center)).translate(
+  group(
+    guide(pi4Outer),
+    // connections
+    group(guide(path.circle({ radius: mm(3) })), label("ethernet")).translate(
+      pi4Outer.data.connections.ethernet
+    ),
+    group(guide(path.circle({ radius: mm(3) })), label("power")).translate(
+      pi4Outer.data.connections.power
+    ),
+    label("pi4", pi4Outer.bounds.center)
+  ).translate(
     board.bounds.width - boardMargin - pi4Outer.bounds.width,
     boardMargin
   ),
