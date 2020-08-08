@@ -111,18 +111,20 @@ group(
     )),
     (pi4Power = connectionPoint("power", pi4Outer.data.connections.power)),
     componentLabel("pi4", pi4Outer.bounds.center)
-  ).translate(
-    board.bounds.width - boardMargin - pi4Outer.bounds.width,
-    boardMargin
-  ),
+  )
+    .rotate(-90)
+    .translate(
+      board.bounds.width - boardMargin - pi4Outer.bounds.width,
+      boardMargin
+    ),
   // ethernet
   connection(routerEthernetIn.bounds.center, board.bounds.topLeft), // to modem
   connection(routerEthernet1.bounds.center, pi4Ethernet.bounds.center),
   connection(routerEthernet2.bounds.center, board.bounds.topCenter), // for laptop
   connection(routerEthernet3.bounds.center, board.bounds.topCenter), // for laptop
-  // power
-  connection(routerPower.bounds.center, p1.bounds.center),
-  connection(board.bounds.bottomLeft, p3.bounds.center), // to modem
-  connection(pi4Power.bounds.center, p2.bounds.center),
+  // power TODO check the fit of the adapters, if they can all fit
+  connection(routerPower.bounds.center, p2.bounds.center),
+  connection(board.bounds.bottomLeft, p1.bounds.center), // to modem
+  connection(pi4Power.bounds.center, p4.bounds.center),
   connection(ac.bounds.center, board.bounds.bottomRight) // to outlet
 );
