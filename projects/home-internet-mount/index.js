@@ -1,6 +1,3 @@
-// TODO should ths bottom left edge
-// extend below the modem so this board
-// can be used for cable management?
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
 
@@ -13,7 +10,10 @@ const pi4Outer = require("../pi4-case/constructs/outer").clone();
 const router = require("./router")();
 const powerStrip = require("./power-strip")();
 
-const boardMargin = inches(1);
+const boardMargin = inches(1); // inches(1 / 2);
+
+const cat5Diameter = inches(5 / 16); // TODO approx
+const cat5BendFactor = 4; // 6
 
 const board = path.rect({
   width: inches(12),
@@ -118,17 +118,19 @@ group(
     (pi4Power = connectionPoint("power", pi4Outer.data.connections.power)),
     componentLabel("pi4", pi4Outer.bounds.center)
   )
+    .rotate(-90, [0, 0])
+    .translate(0, pi4Outer.bounds.height) // after rotation, width is now height
+    .translate(boardMargin)
+    .translate(router.bounds.width, 0)
     .translate(
-      board.bounds.width - boardMargin - pi4Outer.bounds.width,
-      // (board.bounds.height - pi4Outer.bounds.height) / 2 // centered
-      boardMargin
-    )
-    .rotate(-90, pi4Outer.bounds.center),
+      cat5Diameter * cat5BendFactor * 2,
+      cat5Diameter * cat5BendFactor
+    ), // two bends
   // ethernet
   connection(routerEthernetIn.bounds.center, board.bounds.bottomLeft), // to modem
-  connection(routerEthernet1.bounds.center, pi4Ethernet.bounds.center),
+  connection(routerEthernet1.bounds.center, board.bounds.topCenter), // for laptop
   connection(routerEthernet2.bounds.center, board.bounds.topCenter), // for laptop
-  connection(routerEthernet3.bounds.center, board.bounds.topCenter), // for laptop
+  connection(routerEthernet3.bounds.center, pi4Ethernet.bounds.center),
   // power
   connection(board.bounds.bottomLeft, p1.bounds.center), // to modem
   // skip p2, space needed between
@@ -139,4 +141,27 @@ group(
     board.bounds.width - boardMargin,
     board.bounds.height - boardMargin - powerStrip.bounds.height - boardMargin
   ]) // TODO placeholder for space to bundle excess cable
+);
+
+const cable = new paper.Path();
+cable.strokeColor = "#ff0000";
+cable.add(routerEthernet3.bounds.center);
+cable.curveTo(
+  [
+    routerEthernet3.bounds.center.x + cat5Diameter * cat5BendFactor,
+    routerEthernet3.bounds.center.y - cat5Diameter * cat5BendFactor
+  ],
+  [
+    (pi4Ethernet.bounds.center.x - routerEthernet3.bounds.center.x) / 2 +
+      routerEthernet3.bounds.center.x,
+    (routerEthernet3.bounds.center.y - pi4Ethernet.bounds.center.y) / 2 +
+      pi4Ethernet.bounds.center.y
+  ]
+);
+cable.curveTo(
+  [
+    pi4Ethernet.bounds.center.x - cat5Diameter * cat5BendFactor,
+    pi4Ethernet.bounds.center.y - cat5Diameter * cat5BendFactor
+  ],
+  pi4Ethernet.bounds.center
 );
