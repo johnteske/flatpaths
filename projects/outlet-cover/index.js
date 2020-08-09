@@ -1,11 +1,20 @@
+// v2
+// - add a framing layer cover sits flush with wall
+// - replace layer/pin walls with a single piece, bent at 90 degrees
+// TODO mark bend position
+// TODO align cable channels
+// TODO make current layer bottom layer
+// TODO make top/vanity layer
 const root = require("app-root-path");
+const paper = require("paper-jsdom");
 const path = require(`${root}/path`);
 const { inches } = require(`${root}/units`);
 const { cut } = require(`${root}/stroke`);
-const group = require(`${root}/group`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
+const T = inches(1 / 8);
 const radius = inches(1 / 16);
+const frameW = T * 3;
 
 // https://www.mcmaster.com/7533K82/
 const cover = {
@@ -29,27 +38,19 @@ const hole = {
 
 const cableBack = {
   width: toggle.width,
-  height: inches(1 / 2),
+  height: inches(1),
   radius: inches(1 / 16)
 };
 cableBack._x = (cover.width - cableBack.width) / 2;
-cableBack._y = cover.height + inches(1);
+cableBack._y = cover.height;
 const pinRadius = inches(1 / 16) / 2;
-const pinOffset = inches(1 / 8);
+const pinHole = path.circle({ radius: pinRadius });
+const framePinOffset = frameW / 2;
 
-const cableWall = {
-  width: pinOffset * 2,
-  height: cableBack.height,
-  radius
-};
-const wall = path
-  .rect(cableWall)
-  .subtract(path.circle({ radius: pinRadius }).translate(pinOffset))
-  .subtract(
-    path
-      .circle({ radius: pinRadius })
-      .translate(pinOffset, cableWall.height - pinOffset)
-  );
+const cableChannel = path.rect({
+  width: inches(5 / 16), // TODO approx cat5 diameter?
+  height: inches(5 / 16) * 3
+});
 
 const cableHook = path
   .rect(cableBack)
@@ -59,59 +60,51 @@ const cableHook = path
       .rect({
         ...cableBack,
         radius: 0,
-        height: inches(1) + cableBack.height / 2
+        height: radius + cableBack.height / 2
       })
-      .translate(0, inches(-1))
+      .translate(0, -radius)
   )
-  // left
-  .subtract(path.circle({ radius: pinRadius }).translate(pinOffset, pinOffset))
+  // TODO cable cutouts
   .subtract(
-    path
-      .circle({ radius: pinRadius })
-      .translate(pinOffset, cableBack.height - pinOffset)
-  )
-  // center
-  .subtract(
-    path.circle({ radius: pinRadius }).translate(cableBack.width / 2, pinOffset)
+    cableChannel
+      .clone()
+      .translate(inches(0.123), cableBack.height - cableChannel.bounds.height)
   )
   .subtract(
-    path
-      .circle({ radius: pinRadius })
-      .translate(cableBack.width / 2, cableBack.height - pinOffset)
-  )
-  // right
-  .subtract(
-    path
-      .circle({ radius: pinRadius })
-      .translate(cableBack.width - pinOffset, pinOffset)
-  )
-  .subtract(
-    path
-      .circle({ radius: pinRadius })
-      .translate(cableBack.width - pinOffset, cableBack.height - pinOffset)
+    cableChannel
+      .clone()
+      .translate(inches(0.666), cableBack.height - cableChannel.bounds.height)
   );
 
+const outletCover = path
+  .rect(cover)
+  .subtract(path.rect(toggle).translate(cover.width / 2, cover.height / 2))
+  // screw holes
+  .subtract(path.circle(hole).translate(0, hole.dy))
+  .subtract(path.circle(hole).translate(0, -hole.dy))
+  // pin holes
+  .subtract(pinHole.clone().translate(framePinOffset))
+  .subtract(
+    pinHole.clone().translate(cover.width - framePinOffset, framePinOffset)
+  )
+  .subtract(
+    pinHole.clone().translate(framePinOffset, cover.height - framePinOffset)
+  )
+  .subtract(
+    pinHole
+      .clone()
+      .translate(cover.width, cover.height)
+      .translate(-framePinOffset)
+  )
+  // ethernet cable hooks
+  .unite(cableHook.clone().translate(cableBack._x, cableBack._y));
+
+const version = new paper.PointText();
+version.fontSize = inches(1 / 2);
+version.content = "v2";
+version.fillColor = "#00ffff";
+version.translate(0, inches(1 / 2)); // "top align"
+
 module.exports = function generate() {
-  layoutRowsWithOffset(
-    [
-      [
-        cut(
-          // outlet cover
-          path
-            .rect(cover)
-            .subtract(
-              path.rect(toggle).translate(cover.width / 2, cover.height / 2)
-            )
-            .subtract(path.circle(hole).translate(0, hole.dy))
-            .subtract(path.circle(hole).translate(0, -hole.dy))
-            // ethernet cable hooks
-            .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
-        )
-      ],
-      [wall.clone(), wall.clone(), wall.clone()].map(cut),
-      [wall.clone(), wall.clone(), wall.clone()].map(cut),
-      [wall.clone(), wall.clone(), wall.clone()].map(cut)
-    ],
-    10
-  );
+  layoutRowsWithOffset([[cut(outletCover)], [version]], 10);
 };
