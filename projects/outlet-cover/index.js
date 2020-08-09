@@ -1,15 +1,14 @@
 // v2
 // - add a framing layer cover sits flush with wall
 // - replace layer/pin walls with a single piece, bent at 90 degrees
-// TODO mark bend position
-// TODO align cable channels
-// TODO make current layer bottom layer
-// TODO make top/vanity layer
 const root = require("app-root-path");
 const paper = require("paper-jsdom");
+const { subtract } = require(`${root}/boolean`);
+const { pipe } = require(`${root}/fn`);
+const group = require(`${root}/group`);
 const path = require(`${root}/path`);
 const { inches } = require(`${root}/units`);
-const { cut } = require(`${root}/stroke`);
+const { cut, guide, score } = require(`${root}/stroke`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
 const T = inches(1 / 8);
@@ -29,6 +28,8 @@ const toggle = {
 };
 toggle.x = toggle.width / -2;
 toggle.y = toggle.height / -2;
+
+// #6-32, 5/16" length minimum
 const hole = {
   radius: inches(3 / 16) / 2,
   x: cover.width / 2,
@@ -37,8 +38,8 @@ const hole = {
 };
 
 const cableBack = {
-  width: toggle.width,
-  height: inches(1),
+  width: inches(5 / 16) * 5, // toggle.width,
+  height: inches(5 / 16) * 6, // inches(1 + 1/2),
   radius: inches(1 / 16)
 };
 cableBack._x = (cover.width - cableBack.width) / 2;
@@ -68,36 +69,53 @@ const cableHook = path
   .subtract(
     cableChannel
       .clone()
-      .translate(inches(0.123), cableBack.height - cableChannel.bounds.height)
+      .translate(inches(5 / 16), cableBack.height - cableChannel.bounds.height)
   )
   .subtract(
     cableChannel
       .clone()
-      .translate(inches(0.666), cableBack.height - cableChannel.bounds.height)
+      .translate(
+        inches(5 / 16) * 3,
+        cableBack.height - cableChannel.bounds.height
+      )
   );
 
-const outletCover = path
-  .rect(cover)
-  .subtract(path.rect(toggle).translate(cover.width / 2, cover.height / 2))
-  // screw holes
-  .subtract(path.circle(hole).translate(0, hole.dy))
-  .subtract(path.circle(hole).translate(0, -hole.dy))
-  // pin holes
-  .subtract(pinHole.clone().translate(framePinOffset))
-  .subtract(
-    pinHole.clone().translate(cover.width - framePinOffset, framePinOffset)
+const makeMapTranslate = item => point => item.clone().translate(point);
+
+const screwHoles = () =>
+  [[0, hole.dy], [0, -hole.dy]].map(makeMapTranslate(path.circle(hole)));
+
+const pinHoles = () =>
+  [
+    [framePinOffset, framePinOffset],
+    [cover.width - framePinOffset, framePinOffset],
+    [framePinOffset, cover.height - framePinOffset],
+    [cover.width - framePinOffset, cover.height - framePinOffset]
+  ].map(p => pinHole.clone().translate(p));
+
+const outletCover = pipe(
+  ...screwHoles().map(subtract),
+  ...pinHoles().map(subtract)
+)(
+  path
+    .rect(cover)
+    .subtract(path.rect(toggle).translate(cover.width / 2, cover.height / 2))
+    .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
+);
+
+const skirt = pipe(
+  ...screwHoles().map(subtract),
+  ...pinHoles().map(subtract)
+)(
+  path.rect(cover).subtract(
+    path
+      .rect({
+        width: cover.width - frameW * 2,
+        height: cover.height - frameW * 2
+      })
+      .translate(frameW)
   )
-  .subtract(
-    pinHole.clone().translate(framePinOffset, cover.height - framePinOffset)
-  )
-  .subtract(
-    pinHole
-      .clone()
-      .translate(cover.width, cover.height)
-      .translate(-framePinOffset)
-  )
-  // ethernet cable hooks
-  .unite(cableHook.clone().translate(cableBack._x, cableBack._y));
+);
 
 const version = new paper.PointText();
 version.fontSize = inches(1 / 2);
@@ -106,5 +124,23 @@ version.fillColor = "#00ffff";
 version.translate(0, inches(1 / 2)); // "top align"
 
 module.exports = function generate() {
-  layoutRowsWithOffset([[cut(outletCover)], [version]], 10);
+  layoutRowsWithOffset(
+    [
+      [
+        group(
+          cut(outletCover),
+          score(
+            new paper.Path([
+              [cableBack._x, cableBack._y],
+              [cableBack._x + cableBack.width, cableBack._y]
+            ])
+          )
+        ),
+        group(cut(skirt), ...screwHoles().map(guide))
+      ],
+      [cableHook.clone()].map(guide),
+      [version]
+    ],
+    inches(1 / 2)
+  );
 };
