@@ -61,21 +61,37 @@ group(
       path.circle({ radius: inches(12) }).translate(inches(27 / 2), inches(12))
     ),
 
+    // short bench
+    path
+      .rect({
+        width: inches(27),
+        height: inches(13 + 1 / 2)
+      })
+      .translate(inches(27), heater.height + inches(6)),
+
     // glowforge/bench
     path
       .rect({
         width: inches(36),
-        height: inches(20.75) // inches(24)
+        height: inches(20.75)
+        //height: inches(24)
       })
       .translate(room.width - inches(36), heater.height + inches(6)),
 
     // bass case
-    //TODO measure
     path
       .rect({
-        width: inches(24),
-        height: inches(13)
+        width: inches(13),
+        height: inches(30)
       })
-      .translate(room.width / 2)
+      .translate(0, room.height - door.width - inches(30)),
+
+    // shelf // TODO
+    path
+      .rect({
+        width: inches(12),
+        height: inches(48)
+      })
+      .translate(room.width - inches(12), -inches(24) + room.height / 2)
   ].map(movable)
 ).translate(0, win.height);
