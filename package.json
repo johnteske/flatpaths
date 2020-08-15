@@ -1,8 +1,4 @@
 {
-  "name": "parametric-svg",
-  "version": "0.0.1",
-  "description": "- generate shapes programmatically - less manual work in prepping files for cutting - parametric (i.e. for material thickness)",
-  "main": "index.js",
   "scripts": {
     "format": "npm run lint -- --fix; prettier \"**/*.js\" --write",
     "lint": "eslint \"**/*.js\"",
