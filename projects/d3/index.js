@@ -13,16 +13,38 @@ const g = d3
 
 const root = require("app-root-path");
 const { inches } = require(`${root}/units`);
+const { nItems } = require(`${root}/fn`);
 
 // function generate(g, d3)
 
+const T = inches(1 / 8);
+
 const WIDTH = inches(10);
-const DEPTH = inches(5);
+const DEPTH = inches(8);
 const HEIGHT = inches(3);
 
+const SLOT_SPACING = inches(2.5);
+
 const cut = selection => {
-  // TODO return/type?
+  // TODO return/type for `call`ed functions?
   selection.attr("fill", "none").attr("stroke", "black");
+};
+
+const notchPositions = width =>
+  nItems(Math.floor((width - T * 2) / SLOT_SPACING) + 1).map(
+    (_, i) => T + i * SLOT_SPACING
+  );
+
+const makeNotches = data => selection => {
+  selection
+    .selectAll("noop")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("width", T)
+    .attr("height", HEIGHT / 2)
+    .attr("x", d => d)
+    .call(cut);
 };
 
 // horizontal
@@ -34,17 +56,7 @@ horizontal
   .attr("height", HEIGHT)
   .call(cut);
 
-const notches = [99, 123, 500];
-
-horizontal
-  .selectAll("rect.notch")
-  .data(notches)
-  .enter()
-  .append("rect")
-  .attr("width", 9)
-  .attr("height", HEIGHT / 2)
-  .attr("x", d => d)
-  .call(cut);
+horizontal.call(makeNotches(notchPositions(WIDTH)));
 
 // vertical
 const vertical = g.append("g");
@@ -54,6 +66,8 @@ vertical
   .attr("width", DEPTH)
   .attr("height", HEIGHT)
   .call(cut);
+
+vertical.call(makeNotches(notchPositions(DEPTH)));
 
 vertical.attr("transform", `translate(0,${HEIGHT})`);
 
