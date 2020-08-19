@@ -33,7 +33,7 @@ benchTop.part = path.rect({
   height: benchTop.height
 });
 
-// need 4 per shelf
+// need 4 per shelf (each side has top and bottom)
 const shelfSide = {
   width: dimensions.depth,
   height: dimensions.height / 2
@@ -44,7 +44,7 @@ shelfSide.part = path.rect({
   height: shelfSide.width
 });
 
-// 2 per shelf
+// 2 per shelf (each back has top and bottom)
 const shelfBack = {
   width: inches(12),
   height: dimensions.height / 2
@@ -73,15 +73,19 @@ const ply2x4 = {
   })
 };
 
+const fontSize = 96 * 2;
+
 const label = label => {
-  const fontSize = 96;
-  const text = new paper.PointText();
+  const text = new paper.PointText(0, -fontSize / 2);
   text.fontFamily = "monospace";
   text.fontSize = fontSize;
   text.content = label.toUpperCase();
-  //text.justification = "center";
+  text.fillColor = "#0000ff";
   return text;
 };
+
+const partGroup = (part, text) =>
+  group(cut(part.clone()), label(text)).translate(0, fontSize);
 
 layoutRowsWithOffset(
   [
@@ -100,11 +104,14 @@ layoutRowsWithOffset(
       )
     ].map(guide),
     // parts
-    [shelfInner.part, shelfBack.part, shelfSide.part, benchTop.part].map(cut),
-    // labels
-    [label("inner")].map(guide)
+    [
+      partGroup(shelfInner.part, "inner"),
+      partGroup(shelfBack.part, "back"),
+      partGroup(shelfSide.part, "side"),
+      partGroup(benchTop.part, "top")
+    ]
   ],
-  inches(3 / 4)
+  inches(1)
 );
 
 paper.view.viewSize = [inches(72), inches(72)];
