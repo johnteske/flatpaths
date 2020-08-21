@@ -6,35 +6,57 @@
 
 // TODO a reminder that nominal size !== actual size and that with kerf, parts will need to be smaller than the actual stock size
 
+// connectors
+// 1 2/3 in wide
 const paper = require("paper-jsdom");
 const root = require("app-root-path");
 
+const { nItems } = require(`${root}/fn`);
 const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
 const group = require(`${root}/group`);
 const { inches } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
-// ignoring connector gaps
 const dimensions = {
-  width: inches(36),
+  width: inches(36), // TODO is this enough room for the cutter base and connectors? // laser cutter full width is 38 in
   depth: inches(24), // inches(20.75), // 20.75-24 in
-  height: inches(36)
+  height: inches(28)
 };
+
+const T = inches(3 / 4);
 
 const kerf = inches(1 / 2); // TODO need to calculate
 
-const largePanel = {
-  width: dimensions.width,
+const CONNECTOR_GAP = inches(0.33); // from website
+
+const benchTop = {
+  width: dimensions.width + CONNECTOR_GAP + T + CONNECTOR_GAP,
   height: dimensions.depth
 };
-largePanel.part = path.rect(largePanel);
+benchTop.part = path.rect(benchTop);
 
-const smallPanel = {
+const topBack = {
+  width: dimensions.width + CONNECTOR_GAP + T + CONNECTOR_GAP,
+  height: dimensions.height / 2
+};
+topBack.part = path.rect(topBack);
+
+const sidePanel = {
   width: dimensions.depth,
   height: dimensions.height / 2
 };
-smallPanel.part = path.rect(smallPanel);
+sidePanel.part = path.rect(sidePanel);
+
+const halfWidthPanel = {
+  width: dimensions.width / 2,
+  height: dimensions.height / 2
+};
+halfWidthPanel.part = path.rect(halfWidthPanel);
+
+// TODO all this needs is enough room for the connectors, both for the shelf and for this support
+const topSupport = { width: inches(12), height: dimensions.height / 2 };
+topSupport.part = path.rect(topSupport);
 
 // TODO get exact dimensions
 const plywood = {
@@ -66,24 +88,39 @@ layoutRowsWithOffset(
         // parts to cut
         // TODO this is a manual approach, not optimized
         ...layoutRowsWithOffset(
-          [[largePanel.part.clone(), largePanel.part.clone()]],
+          [
+            [
+              benchTop.part.clone(),
+              ...nItems(5).map(() =>
+                sidePanel.part
+                  .clone()
+                  .rotate(90, [0, 0])
+                  .translate(sidePanel.height, 0)
+              )
+            ],
+            [
+              topBack.part.clone(),
+              ...nItems(4).map(() =>
+                halfWidthPanel.part
+                  .clone()
+                  .rotate(90, [0, 0])
+                  .translate(halfWidthPanel.height, 0)
+              ),
+              topSupport.part.clone()
+            ]
+          ],
           kerf
         ).flat(),
-        largePanel.part.clone()
+        benchTop.part.clone()
       )
     ].map(guide),
     // parts
     [
-      partGroup(smallPanel.part, "(4) side"),
-      partGroup(smallPanel.part, "(2) top shelf"),
-      partGroup(smallPanel.part, "(1) top mid support"),
-      partGroup(smallPanel.part, "(1) btm mid support"),
-      partGroup(smallPanel.part, "(2) btm back")
+      partGroup(topSupport.part, "top mid"),
+      partGroup(sidePanel.part, "(5) side, btm mid"),
+      partGroup(halfWidthPanel.part, "(4) top shelf, btm back")
     ],
-    [
-      partGroup(largePanel.part, "(1) bench top"),
-      partGroup(largePanel.part, "(1) top back")
-    ]
+    [partGroup(benchTop.part, "bench top"), partGroup(topBack.part, "top back")]
   ],
   inches(2)
 );
