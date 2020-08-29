@@ -2,7 +2,7 @@ const root = require("app-root-path");
 const { dpi, inches } = require(`${root}/units`);
 const { nItems } = require(`${root}/fn`);
 
-module.exports = function generate(g) {
+module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
 
   const WIDTH = inches(8);
@@ -40,12 +40,28 @@ module.exports = function generate(g) {
   // horizontal
   const horizontal = g.append("g");
 
-  horizontal
-    .append("rect")
-    .attr("width", WIDTH)
-    .attr("height", HEIGHT);
+  const hNotches = notchPositions(WIDTH);
+  const notchPoints = x1 => {
+  const x2 = x1 + T
+  const y1 = 0
+  const y2 = HEIGHT / 2
+      return[
+    [x1, y1],
+    [x1, y2],
+    [x2, y2],
+    [x2, y1],
+  ]}
 
-  horizontal.call(makeNotches(notchPositions(WIDTH)));
+  const lineGenerator = d3.line();
+  const points = [
+    [0, 0],
+    ...hNotches.map(notchPoints).flat(),
+    [WIDTH, 0],
+    [WIDTH, HEIGHT],
+    [0, HEIGHT]
+  ];
+
+  horizontal.append("path").attr("d", lineGenerator(points));
 
   horizontal
     .append("text")

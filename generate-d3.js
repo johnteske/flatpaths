@@ -12,7 +12,7 @@ const g = d3
 // TODO select a particular project
 const project = require("./projects/d3");
 
-project(g);
+project(d3, g);
 
 const out = svg.outerHTML;
 
