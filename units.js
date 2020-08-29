@@ -4,6 +4,7 @@ const inches = n => n * dpi;
 const mm = n => (n * dpi) / 25.4;
 
 module.exports = {
+  dpi,
   inches,
   mm
 };

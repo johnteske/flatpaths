@@ -16,52 +16,35 @@ module.exports = function generate(d3, g) {
     selection.attr("fill", "none").attr("stroke", "black");
   };
 
-  //  const score = selection => {
-  //    selection.attr("fill", "none").attr("stroke", "magenta");
-  //  }
+  const lineGenerator = d3.line();
 
   const notchPositions = width =>
     nItems(Math.floor((width - T * 2) / SLOT_SPACING) + 1).map(
       (_, i) => T + i * SLOT_SPACING
     );
 
-  const makeNotches = data => selection => {
-    selection
-      .selectAll("noop")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("width", T)
-      .attr("height", HEIGHT / 2)
-      .attr("x", d => d)
-      .call(cut);
+  const notchPoints = x1 => {
+    const x2 = x1 + T,
+      y1 = 0,
+      y2 = HEIGHT / 2;
+    return [[x1, y1], [x1, y2], [x2, y2], [x2, y1]];
+  };
+
+  const partPoints = length => {
+    const notches = notchPositions(length);
+    return [
+      [0, 0],
+      ...notches.map(notchPoints).flat(),
+      [length, 0],
+      [length, HEIGHT],
+      [0, HEIGHT]
+    ];
   };
 
   // horizontal
   const horizontal = g.append("g");
 
-  const hNotches = notchPositions(WIDTH);
-  const notchPoints = x1 => {
-  const x2 = x1 + T
-  const y1 = 0
-  const y2 = HEIGHT / 2
-      return[
-    [x1, y1],
-    [x1, y2],
-    [x2, y2],
-    [x2, y1],
-  ]}
-
-  const lineGenerator = d3.line();
-  const points = [
-    [0, 0],
-    ...hNotches.map(notchPoints).flat(),
-    [WIDTH, 0],
-    [WIDTH, HEIGHT],
-    [0, HEIGHT]
-  ];
-
-  horizontal.append("path").attr("d", lineGenerator(points));
+  horizontal.append("path").attr("d", lineGenerator(partPoints(WIDTH)));
 
   horizontal
     .append("text")
@@ -79,12 +62,7 @@ module.exports = function generate(d3, g) {
   // vertical
   const vertical = g.append("g");
 
-  vertical
-    .append("rect")
-    .attr("width", DEPTH)
-    .attr("height", HEIGHT);
-
-  vertical.call(makeNotches(notchPositions(DEPTH)));
+  vertical.append("path").attr("d", lineGenerator(partPoints(DEPTH)));
 
   vertical.attr("transform", `translate(0,${HEIGHT + T})`).call(cut);
 };
