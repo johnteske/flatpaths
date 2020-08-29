@@ -13,8 +13,8 @@ const { layoutRowsWithOffset } = require(`${root}/distribution`);
 // ignoring connector gaps
 const dimensions = {
   width: inches(36),
-  depth: inches(20.75), // 20.75-24 in
-  height: inches(36)
+  depth: inches(20.75), // 20.75-24 in // TODO still need to think on this
+  height: inches(30)
 };
 
 const kerf = inches(1 / 2); // TODO need to calculate
