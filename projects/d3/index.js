@@ -1,3 +1,4 @@
+// TODO also add all possible combos for joins (from full width/depth, by notch, down to 1)
 const root = require("app-root-path");
 const { dpi, inches } = require(`${root}/units`);
 const { nItems } = require(`${root}/fn`);
@@ -26,7 +27,7 @@ module.exports = function generate(d3, g) {
   const notchPoints = x1 => {
     const x2 = x1 + T,
       y1 = 0,
-      y2 = HEIGHT / 2;
+      y2 = HEIGHT / 3;
     return [[x1, y1], [x1, y2], [x2, y2], [x2, y1]];
   };
 
