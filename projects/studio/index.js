@@ -104,6 +104,7 @@ group(
       .rect({ width: inches(1 / 4), height: inches(36) })
       .translate(0, inches(24) + inches(13 + 1 / 2)),
     // between door and sink
+    // TODO the light switch is here--can it be designed around?
     path
       .rect({ width: inches(36), height: inches(1 / 4) })
       .translate(door.x + door.width, room.height)
