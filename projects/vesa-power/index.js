@@ -4,7 +4,6 @@ const root = require("app-root-path");
 const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
 const group = require(`${root}/group`);
-//const { translate } = require(`${root}/transform`);
 const { subtract, unite } = require(`${root}/boolean`);
 const { pipe } = require(`${root}/fn`);
 const { inches, mm } = require(`${root}/units`);
@@ -81,43 +80,58 @@ const pbCutoutGeo = {
       unite(
         path
           .rect({
-            width: powerBrick.width, // TODO
+            width: vesaMount.width,
             height: inches(1 + 1 / 4) + inches(1.5) - mm(2) // TODO
           })
-          .translate(_mountPadding, powerBrickSupport.height)
+          .translate(
+            (powerBrickSupport.width - vesaMount.width) / 2,
+
+            powerBrickSupport.height
+          )
       ),
       // top
-      subtract(pbCutout().translate(_mountPadding * 2, -mm(2))),
       subtract(
         pbCutout().translate(
-          pbCutoutGeo.width / 2 - mm(4) + _mountPadding * 2,
+          pbCutoutGeo.width * (1 / 4) - mm(4) + _mountPadding * 2,
           -mm(2)
         )
       ),
       subtract(
         pbCutout().translate(
-          pbCutoutGeo.width - mm(8) + _mountPadding * 2,
+          pbCutoutGeo.width * (3 / 4) - mm(4) + _mountPadding * 2,
           -mm(2)
         )
       ),
       // bottom
       subtract(
         pbCutout().translate(
-          _mountPadding * 2,
+          pbCutoutGeo.width * (1 / 4) - mm(4) + _mountPadding * 2,
           powerBrickSupport.height - mm(2)
         )
       ),
       subtract(
         pbCutout().translate(
-          pbCutoutGeo.width / 2 - mm(4) + _mountPadding * 2,
+          pbCutoutGeo.width * (3 / 4) - mm(4) + _mountPadding * 2,
           powerBrickSupport.height - mm(2)
         )
       ),
+      // stress relief
       subtract(
-        pbCutout().translate(
-          pbCutoutGeo.width - mm(8) + _mountPadding * 2,
-          powerBrickSupport.height - mm(2)
-        )
+        vesaHole
+          .clone()
+          .translate(
+            (powerBrickSupport.width - vesaMount.width) / 2,
+            powerBrickSupport.height
+          )
+      ),
+      subtract(
+        vesaHole
+          .clone()
+          .translate(
+            powerBrickSupport.width -
+              (powerBrickSupport.width - vesaMount.width) / 2,
+            powerBrickSupport.height
+          )
       )
     )(path.rect(powerBrickSupport)));
 
