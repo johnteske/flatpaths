@@ -21,6 +21,16 @@ const connections = {
   plug4: [width - inches(1), y]
 };
 
-strip.data = { connections };
+const _mounts = {
+  spread: inches(2 + 1 / 4),
+  x: width - inches(1 + 3 / 8),
+  y
+};
+const mounts = [
+  [_mounts.x, _mounts.y],
+  [_mounts.x - _mounts.spread, _mounts.y]
+];
+
+strip.data = { connections, mounts };
 
 module.exports = () => strip.clone();
