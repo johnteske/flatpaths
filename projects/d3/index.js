@@ -6,9 +6,9 @@ const { nItems } = require(`${root}/fn`);
 module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
 
-  const WIDTH = inches(8);
-  const DEPTH = inches(12);
-  const HEIGHT = inches(3.5);
+  const WIDTH = inches(12 + 1/2);
+  const DEPTH = inches(15 + 3/8);
+  const HEIGHT = inches(2);
 
   const SLOT_SPACING = inches(2.5);
 
