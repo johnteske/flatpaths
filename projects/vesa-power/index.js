@@ -10,7 +10,7 @@ const { inches, mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
 const T = mm(3);
-const _mountPadding = inches(5 / 16);
+const _mountPadding = mm(6); // inches(5 / 16);
 const vesaHole = path.circle({
   radius: mm(4) / 2 // M4
 });
@@ -130,6 +130,15 @@ powerBrickSupport.part = () =>
     )
   )(path.rect(powerBrickSupport));
 
+const washer = {
+  id: mm(4),
+  od: inches(5 / 16)
+};
+washer.part = () =>
+  path
+    .circle({ radius: washer.od / 2 })
+    .subtract(path.circle({ radius: washer.id / 2 }));
+
 layoutRowsWithOffset(
   [
     [
@@ -147,10 +156,17 @@ layoutRowsWithOffset(
             (powerBrickSupport.width - vesaMount.width) / 2,
             powerBrickSupport.height + arm.height
           )
-        )
+        ),
+      leftMount(),
+      leftMount(),
+      topMount()
+        .unite(leftMount())
+        .unite(rightMount())
+      //washer.part(),
+      //washer.part()
     ].map(cut)
   ],
-  T
+  T * 3
 );
 
 paper.view.viewSize = [inches(72), inches(72)];
