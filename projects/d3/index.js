@@ -27,7 +27,7 @@ module.exports = function generate(d3, g) {
   const notchPoints = x1 => {
     const x2 = x1 + T,
       y1 = 0,
-      y2 = HEIGHT / 3;
+      y2 = HEIGHT / 2;
     return [[x1, y1], [x1, y2], [x2, y2], [x2, y1]];
   };
 
@@ -38,7 +38,8 @@ module.exports = function generate(d3, g) {
       ...notches.map(notchPoints).flat(),
       [length, 0],
       [length, HEIGHT],
-      [0, HEIGHT]
+      [0, HEIGHT],
+      [0, 0], // close path
     ];
   };
 
