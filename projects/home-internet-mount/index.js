@@ -12,6 +12,7 @@ const powerStrip = require("./power-strip")();
 
 const boardMargin = inches(1); // inches(1 / 2);
 
+const pi4Rotation = 30;
 const cat5Diameter = inches(5 / 16); // TODO approx
 const cat5BendFactor = 4; // 6
 
@@ -95,6 +96,22 @@ group(
   // power strip
   group(
     guide(powerStrip),
+    // TODO this is really just a score to mark the screw,
+    //maybe it should be an x?
+    cut(
+      path
+        .circle({
+          radius: inches(1 / 4)
+        })
+        .translate(powerStrip.data.mounts[0])
+    ),
+    cut(
+      path
+        .circle({
+          radius: inches(1 / 4)
+        })
+        .translate(powerStrip.data.mounts[1])
+    ),
     componentLabel("power", powerStrip.bounds.center),
     (ac = connectionPoint("ac", powerStrip.data.connections.ac)),
     (p1 = connectionPoint("1", powerStrip.data.connections.plug1)),
@@ -122,10 +139,8 @@ group(
     .translate(0, pi4Outer.bounds.height) // after rotation, width is now height
     .translate(boardMargin)
     .translate(router.bounds.width, 0)
-    .translate(
-      cat5Diameter * cat5BendFactor * 2,
-      cat5Diameter * cat5BendFactor
-    ), // two bends
+    .translate(cat5Diameter * cat5BendFactor * 2, cat5Diameter * cat5BendFactor) // two bends
+    .rotate(pi4Rotation),
   // ethernet
   connection(routerEthernetIn.bounds.center, board.bounds.bottomLeft), // to modem
   connection(routerEthernet1.bounds.center, board.bounds.topCenter), // for laptop
@@ -165,3 +180,10 @@ cable.curveTo(
   ],
   pi4Ethernet.bounds.center
 );
+
+// power needs at least 2 inches as to not kink cable head
+const cable2 = new paper.Path();
+cable2.strokeColor = "#ff0000";
+cable2.add(pi4Power.bounds.center);
+cable2.lineTo([pi4Power.bounds.center.x + inches(2), pi4Power.bounds.center.y]);
+cable2.rotate(pi4Rotation, pi4Power.bounds.center);
