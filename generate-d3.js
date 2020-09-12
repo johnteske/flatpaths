@@ -12,6 +12,7 @@ module.exports = function(projectType, project, cb) {
     .append("g");
 
   const projectPath = `./${projectType}s/${project}`;
+  delete require.cache[require.resolve(projectPath)]; // flush, if needed
   require(projectPath)(d3, g);
 
   const out = svg.outerHTML;
