@@ -7,7 +7,8 @@ const port = 3000;
 
 const htmlResponse = require("./html-response");
 
-const generate = require("../generate");
+const generatePaperJS = require("../generate");
+const generateD3 = require("../generate-d3");
 
 app.get("/favicon.ico", function ignoreFavicon(req, res) {
   return res.status(204);
@@ -54,14 +55,43 @@ app.get(
 
     next();
   },
+  function maybeGetConfig(req, res, next) {
+    if (!req.shouldGenerate) {
+      return next();
+    }
+
+    const configPath = path.join(req.projectDir, `${req.project}/config.json`);
+    const defaultConfig = {
+      lib: "paperjs"
+    };
+    let config = {};
+
+    try {
+      config = require(configPath);
+    } catch {
+      console.log(`${configPath} does not exist or is invalid, using defaults`);
+    } finally {
+      req.config = { ...defaultConfig, ...config };
+      next();
+    }
+  },
   function maybeGenerateSvg(req, res, next) {
     if (!req.shouldGenerate) {
       return next();
     }
-    generate(req.params.projectType, req.project, metadata => {
-      req.metadata = metadata;
-      next();
-    });
+
+    switch (req.config.lib) {
+      case "d3":
+        generateD3(req.params.projectType, req.project, next);
+        break;
+      case "paperjs":
+      default:
+        generatePaperJS(req.params.projectType, req.project, metadata => {
+          req.metadata = metadata;
+          next();
+        });
+        break;
+    }
   },
   function maybeGetSvg(req, res, next) {
     if (!req.projectExists) {
