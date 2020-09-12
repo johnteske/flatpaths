@@ -2,6 +2,7 @@
 const root = require("app-root-path");
 const { dpi, inches } = require(`${root}/units`);
 const { nItems } = require(`${root}/fn`);
+const { cut } = require(`${root}/d3/stroke`);
 
 module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
@@ -11,11 +12,6 @@ module.exports = function generate(d3, g) {
   const HEIGHT = inches(2);
 
   const SLOT_SPACING = inches(2.5);
-
-  const cut = selection => {
-    // TODO return/type for `call`ed functions?
-    selection.attr("fill", "none").attr("stroke", "black");
-  };
 
   const lineGenerator = d3.line();
 

@@ -63,6 +63,8 @@ module.exports = (req, res) => {
   }
 
   function scaleHandler(factor) {
+    document.querySelector("svg").setAttribute("width", "100%")
+    document.querySelector("svg").setAttribute("height", "100%")
     scale *= factor
     // scale svg
     document.querySelector("svg g").setAttribute("transform", "scale(" + scale + ")")
