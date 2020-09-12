@@ -8,6 +8,7 @@ const { inches } = require(`${root}/units`);
 
 const fixed = strokeColor("#000000");
 const movable = strokeColor("#ff00ff");
+const soundproofing = strokeColor("#0000ff");
 
 const room = {
   width: inches(96 + 9), // 8'9"
@@ -93,5 +94,19 @@ group(
         height: inches(48)
       })
       .translate(room.width - inches(12), -inches(24) + room.height / 2)
-  ].map(movable)
+  ].map(movable),
+  // moving blankets for soundproofing
+  // https://www.mcmaster.com/moving-blankets/
+  // TODO if I account for height of objects, I could add more blankets hanging from the "moulding"
+  ...[
+    // near desk/bass
+    path
+      .rect({ width: inches(1 / 4), height: inches(36) })
+      .translate(0, inches(24) + inches(13 + 1 / 2)),
+    // between door and sink
+    // TODO the light switch is here--can it be designed around?
+    path
+      .rect({ width: inches(36), height: inches(1 / 4) })
+      .translate(door.x + door.width, room.height)
+  ].map(soundproofing)
 ).translate(0, win.height);

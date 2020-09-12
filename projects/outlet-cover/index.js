@@ -44,8 +44,12 @@ const cableBack = {
 };
 cableBack._x = (cover.width - cableBack.width) / 2;
 cableBack._y = cover.height;
+
+// https://www.mcmaster.com/98296A019/
+// 1/16"D x  1/4"L
 const pinRadius = inches(1 / 16) / 2;
 const pinHole = path.circle({ radius: pinRadius });
+
 const framePinOffset = frameW / 2;
 
 const cableChannel = path.rect({
@@ -89,6 +93,8 @@ const pinHoles = () =>
   [
     [framePinOffset, framePinOffset],
     [cover.width - framePinOffset, framePinOffset],
+    [framePinOffset, cover.height / 2],
+    [cover.width - framePinOffset, cover.height / 2],
     [framePinOffset, cover.height - framePinOffset],
     [cover.width - framePinOffset, cover.height - framePinOffset]
   ].map(p => pinHole.clone().translate(p));
@@ -103,19 +109,35 @@ const outletCover = pipe(
     .unite(cableHook.clone().translate(cableBack._x, cableBack._y))
 );
 
+const skirtCutout = path
+  .rect({ ...toggle, radius: 0 })
+  .translate(cover.width / 2, 0);
+
 const skirt = pipe(
-  ...screwHoles().map(subtract),
-  ...pinHoles().map(subtract)
-)(
-  path.rect(cover).subtract(
+  subtract(
     path
       .rect({
         width: cover.width - frameW * 2,
         height: cover.height - frameW * 2
       })
       .translate(frameW)
-  )
-);
+  ),
+  subtract(
+    skirtCutout
+      .clone()
+      .translate(0, toggle.height / 2 + hole.y - hole.dy - inches(1 / 4))
+  ),
+  subtract(
+    skirtCutout
+      .clone()
+      .translate(
+        0,
+        cover.height - toggle.height / 2 - (hole.y - hole.dy) + inches(1 / 4)
+      )
+  ),
+  ...screwHoles().map(subtract),
+  ...pinHoles().map(subtract)
+)(path.rect(cover));
 
 const version = new paper.PointText();
 version.fontSize = inches(1 / 2);
@@ -136,7 +158,21 @@ module.exports = function generate() {
             ])
           )
         ),
-        group(cut(skirt), ...screwHoles().map(guide))
+        group(
+          cut(skirt),
+          ...screwHoles().map(guide),
+          guide(
+            skirtCutout
+              .clone()
+              .translate(
+                0,
+                cover.height -
+                  toggle.height / 2 -
+                  (hole.y - hole.dy) +
+                  inches(1 / 4)
+              )
+          )
+        )
       ],
       [cableHook.clone()].map(guide),
       [version]
