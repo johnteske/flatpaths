@@ -23,29 +23,31 @@ module.exports = function generate(d3, g) {
     ).x;
 
     selection.each(function(d, i) {
-      d3.select(this).attr("transform", `translate(${x[i]}, 0)`);
+      const s = d3.select(this);
+      const transform = s.attr("transform") || "";
+      s.attr("transform", `${transform} translate(${x[i]}, 0)`);
     });
   };
 
   const lineGenerator = d3.line();
 
-  // side-end
+  // side-end fingers
   const sideEndFingerX = [2 * T, WIDTH / 2 - T, WIDTH - finger.width - 2 * T];
+
+  // side fingers
+  const sideFingerY = [T, DEPTH / 2 - T];
 
   // side
   const sidePoints = [[0, 0], [WIDTH, 0], [WIDTH, HEIGHT], [0, HEIGHT], [0, 0]];
   // TODO integrate finger joints into path
-  // TODO add side finger joints and slots
   const side = g
     .append("g")
     .attr("class", "part")
     .datum({ width: WIDTH });
 
-  side
-    .append("path")
-    .attr("d", lineGenerator(sidePoints))
-    .attr("transform", `translate(0, ${finger.height})`);
+  side.append("path").attr("d", lineGenerator(sidePoints));
 
+  // top fingers
   side
     .selectAll(".fingers")
     .data(sideEndFingerX)
@@ -53,7 +55,32 @@ module.exports = function generate(d3, g) {
     .append("rect")
     .attr("width", finger.width)
     .attr("height", finger.height)
-    .attr("x", d => d);
+    .attr("x", d => d)
+    .attr("y", -finger.height);
+
+  // fingers
+  side
+    .selectAll(".fingers")
+    .data(sideFingerY)
+    .enter()
+    .append("rect")
+    .attr("width", finger.height)
+    .attr("height", finger.width)
+    .attr("x", -finger.height)
+    .attr("y", d => d);
+
+  // slots
+  side
+    .selectAll(".fingers")
+    .data(sideFingerY)
+    .enter()
+    .append("rect")
+    .attr("width", finger.height)
+    .attr("height", finger.width)
+    .attr("y", d => d)
+    .attr("transform", `translate(${WIDTH - T}, 0)`);
+
+  side.attr("transform", `translate(${finger.height}, ${finger.height})`);
 
   side.call(cut);
 
@@ -122,5 +149,5 @@ module.exports = function generate(d3, g) {
 
   end.call(cut);
 
-  g.selectAll(".part").call(distributeX(T));
+  g.selectAll(".part").call(distributeX(T * 2));
 };
