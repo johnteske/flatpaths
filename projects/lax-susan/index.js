@@ -5,8 +5,6 @@ const { layoutRowsWithOffset } = require(`${root}/distribution`);
 const { cut, guide } = require(`${root}/stroke`);
 const { nItems } = require(`${root}/fn`);
 const group = require(`${root}/group`);
-//const { inches } = require(`${root}/units`);
-//const path = require(`${root}/path`);
 
 const topBase = require("./parts/top-base");
 const ring = require("./parts/top-ring");
@@ -45,5 +43,3 @@ layoutRowsWithOffset(
   ],
   T
 );
-
-paper.view.viewSize = [9999, 9999];
