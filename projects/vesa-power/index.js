@@ -168,5 +168,3 @@ layoutRowsWithOffset(
   ],
   T * 3
 );
-
-paper.view.viewSize = [inches(72), inches(72)];

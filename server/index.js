@@ -49,20 +49,17 @@ app.get(
       });
     }
 
-    const { generate, scale = 1 } = req.query;
+    const { generate /*, scale */ } = req.query;
     req.shouldGenerate = req.projectExists && generate === "true";
-    req.scale = scale;
+    // req.scale = scale;
 
     next();
   },
-  function maybeGetConfig(req, res, next) {
-    if (!req.shouldGenerate) {
-      return next();
-    }
-
+  function getConfig(req, res, next) {
     const configPath = path.join(req.projectDir, `${req.project}/config.json`);
     const defaultConfig = {
-      lib: "paperjs"
+      lib: "paperjs",
+      scale: req.query.scale != null ? req.query.scale : 1
     };
     let config = {};
 

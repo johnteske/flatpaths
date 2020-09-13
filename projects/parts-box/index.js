@@ -38,5 +38,3 @@ layoutRowsWithOffset(
   ],
   T
 );
-
-paper.view.viewSize = [9999, 9999];

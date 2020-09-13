@@ -3,9 +3,7 @@ const root = require("app-root-path");
 
 const path = require(`${root}/path`);
 const { cut, guide } = require(`${root}/stroke`);
-const { fillColor } = require(`${root}/fill`);
 const group = require(`${root}/group`);
-const { translate } = require(`${root}/transform`);
 const { inches, mm } = require(`${root}/units`);
 const { layoutRowsWithOffset } = require(`${root}/distribution`);
 
@@ -74,5 +72,3 @@ layoutRowsWithOffset(
   ],
   d
 );
-
-paper.view.viewSize = [inches(72), inches(72)];

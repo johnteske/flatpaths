@@ -27,7 +27,7 @@ module.exports = (req, res) => {
 
   <label for="scale">Scale</label>
   <input name="scale" id="scale" type="number" step="any" value="${
-    req.scale
+    req.config.scale
   }" readonly />
   <button onclick="scaleHandler(0.5)">-</button>
   <button onclick="scaleHandler(2)">+</button>
@@ -44,7 +44,7 @@ module.exports = (req, res) => {
   }
 </main>
 <script>
-  let scale = ${req.scale}
+  let scale = ${req.config.scale}
 
   function projectChangeHandler() {
     // indicate transition
