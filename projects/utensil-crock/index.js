@@ -3,17 +3,32 @@ const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
 
 const T = inches(1 / 8);
-const WIDTH = inches(6);
+// TODO testing with smaller dimensions
+const WIDTH = inches(4); // inches(6);
 const DEPTH = WIDTH;
-const HEIGHT = inches(8);
+const HEIGHT = inches(3); // inches(8);
 
 const finger = {
   width: 2 * T,
   height: T
 };
 
+// TODO rename/type for array
 function rotateLeft(a, d) {
   return [...a.slice(d), ...a.slice(0, d)];
+}
+
+// TODO rename/type for point
+// TODO the angles here seem off, like they rotate CCW instead of CW
+function rotate(cx, cy, x, y, angle) {
+  var radians = (Math.PI / 180) * angle,
+    cos = Math.cos(radians),
+    sin = Math.sin(radians),
+    nx = cos * (x - cx) + sin * (y - cy) + cx,
+    ny = cos * (y - cy) - sin * (x - cx) + cy;
+
+  return [Math.round(nx), Math.round(ny)]; // TODO this seems very fragile, improve and write tests before making a shared function
+  //return [nx, ny];
 }
 
 const fingerPath = [
@@ -49,17 +64,39 @@ module.exports = function generate(d3, g) {
   const sideEndFinger = rotateLeft(fingerPath, 3);
 
   // side fingers
-  const sideFingerY = [T, DEPTH / 2 - T];
+  const sideFingerY = [
+    T,
+    (HEIGHT - finger.width) / 2,
+    HEIGHT - finger.width - T
+  ];
+  const sideFinger = rotateLeft(
+    fingerPath.map(p => rotate(0, 0, p[0], p[1], -90)),
+    1
+  ).reverse();
+
+  const rightSlot = sideFinger.map(([x, y]) => [x + WIDTH, y]);
 
   // side
   const sidePoints = [
+    // top left
     [0, 0],
+    // top fingers
     ...sideEndFingerPoints.flatMap(([x, y]) =>
       sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
     ),
+    // top right
     [WIDTH, 0],
+    // right slots
+    ...sideFingerY.flatMap(y => rightSlot.map(p => [p[0], p[1] + y])),
+    // bottom right
     [WIDTH, HEIGHT],
+    // bottom left
     [0, HEIGHT],
+    // left fingers
+    ...sideFingerY
+      .flatMap(y => sideFinger.map(p => [p[0], p[1] + y]))
+      .reverse(),
+    // close path
     [0, 0]
   ];
 
@@ -71,41 +108,45 @@ module.exports = function generate(d3, g) {
 
   side.append("path").attr("d", lineGenerator(sidePoints));
 
-  // top fingers
-  side
-    .selectAll(".fingers")
-    .data(sideEndFingerX)
-    .enter()
-    .append("rect")
-    .attr("width", finger.width)
-    .attr("height", finger.height)
-    .attr("x", d => d)
-    .attr("y", -finger.height)
-    .call(guide);
+  //  // top fingers
+  //  side
+  //    .selectAll(".fingers")
+  //    .data(sideEndFingerX)
+  //    .enter()
+  //    .append("rect")
+  //    .attr("width", finger.width)
+  //    .attr("height", finger.height)
+  //    .attr("x", d => d)
+  //    .attr("y", -finger.height)
+  //    .call(guide);
+  //
+  //  // fingers
+  //  side
+  //    .selectAll(".fingers")
+  //    .data(sideFingerY)
+  //    .enter()
+  //    .append("rect")
+  //    .attr("width", finger.height)
+  //    .attr("height", finger.width)
+  //    .attr("x", -finger.height)
+  //    .attr("y", d => d)
+  //    .call(guide);
 
-  // fingers
-  side
-    .selectAll(".fingers")
-    .data(sideFingerY)
-    .enter()
-    .append("rect")
-    .attr("width", finger.height)
-    .attr("height", finger.width)
-    .attr("x", -finger.height)
-    .attr("y", d => d)
-    .call(guide);
-
-  // slots
-  side
-    .selectAll(".fingers")
-    .data(sideFingerY)
-    .enter()
-    .append("rect")
-    .attr("width", finger.height)
-    .attr("height", finger.width)
-    .attr("y", d => d)
-    .attr("transform", `translate(${WIDTH - T}, 0)`)
-    .call(guide);
+  //  // slots
+  //  console.log(
+  //    rotateLeft(fingerPath.map(p => rotate(0, 0, p[0], p[1], -90)), 1).reverse()
+  //  );
+  //
+  //  side
+  //    .selectAll(".fingers")
+  //    .data(sideFingerY)
+  //    .enter()
+  //    .append("rect")
+  //    .attr("width", finger.height)
+  //    .attr("height", finger.width)
+  //    .attr("y", d => d)
+  //    .attr("transform", `translate(${WIDTH - T}, 0)`)
+  //    .call(guide);
 
   side.attr("transform", `translate(${finger.height}, ${finger.height})`);
 
