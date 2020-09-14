@@ -12,6 +12,18 @@ const finger = {
   height: T
 };
 
+function rotateLeft(a, d) {
+  return [...a.slice(d), ...a.slice(0, d)];
+}
+
+const fingerPath = [
+  [0, 0],
+  [finger.width, 0],
+  [finger.width, finger.height],
+  [0, finger.height]
+  // [0,0] // do not close path
+];
+
 module.exports = function generate(d3, g) {
   const distributeX = spacing => selection => {
     const x = selection.data().reduce(
@@ -33,13 +45,25 @@ module.exports = function generate(d3, g) {
 
   // side-end fingers
   const sideEndFingerX = [2 * T, WIDTH / 2 - T, WIDTH - finger.width - 2 * T];
+  const sideEndFingerPoints = sideEndFingerX.map(x => [x, -finger.height]);
+  const sideEndFinger = rotateLeft(fingerPath, 3);
 
   // side fingers
   const sideFingerY = [T, DEPTH / 2 - T];
 
   // side
-  const sidePoints = [[0, 0], [WIDTH, 0], [WIDTH, HEIGHT], [0, HEIGHT], [0, 0]];
-  // TODO integrate finger joints into path
+  const sidePoints = [
+    [0, 0],
+    ...sideEndFingerPoints.flatMap(([x, y]) =>
+      sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
+    ),
+    [WIDTH, 0],
+    [WIDTH, HEIGHT],
+    [0, HEIGHT],
+    [0, 0]
+  ];
+
+  // TODO integrate side finger joints into path
   const side = g
     .append("g")
     .attr("class", "part")
@@ -56,7 +80,8 @@ module.exports = function generate(d3, g) {
     .attr("width", finger.width)
     .attr("height", finger.height)
     .attr("x", d => d)
-    .attr("y", -finger.height);
+    .attr("y", -finger.height)
+    .call(guide);
 
   // fingers
   side
@@ -67,7 +92,8 @@ module.exports = function generate(d3, g) {
     .attr("width", finger.height)
     .attr("height", finger.width)
     .attr("x", -finger.height)
-    .attr("y", d => d);
+    .attr("y", d => d)
+    .call(guide);
 
   // slots
   side
@@ -78,7 +104,8 @@ module.exports = function generate(d3, g) {
     .attr("width", finger.height)
     .attr("height", finger.width)
     .attr("y", d => d)
-    .attr("transform", `translate(${WIDTH - T}, 0)`);
+    .attr("transform", `translate(${WIDTH - T}, 0)`)
+    .call(guide);
 
   side.attr("transform", `translate(${finger.height}, ${finger.height})`);
 
