@@ -7,17 +7,12 @@ module.exports = (req, res) => {
 <header>
   <label for="project">Project</label>
   <select name="project" id="project" onchange="projectChangeHandler()">
-    ${[req.project]
-      // ^ start with current project so it is first in list (also adds in case it is not defined)
-      .concat(req.projects)
-      // deduplicate
-      .filter((current, i, all) => all.indexOf(current) === i)
-      .map(
-        p =>
-          `<option value="${p}" ${
-            p === req.project ? "selected disabled" : ""
-          }>${p}</option>`
-      )}
+    ${[...req.projects, undefined].map(
+      p =>
+        `<option value="${p}" ${
+          p === req.project ? "selected disabled" : ""
+        }>${p}</option>`
+    )}
   </select>
 
   <label for="generate-on-load">Generate on load</label>
