@@ -1,23 +1,48 @@
 const root = require("app-root-path");
 
-const { axoProjMat, P3 } = require(`${root}/axonometric`);
+const { axoProjMat } = require(`${root}/axonometric`);
 
-const p = axoProjMat.project.bind(axoProjMat);
+const project = axoProjMat.project.bind(axoProjMat);
 
-const rect = [P3(0, 0, 0), P3(100, 0, 0), P3(100, 100, 0), P3(0, 100, 0)];
+const extrude = thickness => ({ x, y, z }) => ({ x, y, z: z - thickness });
+
+const T = 10;
+
+const rect = [
+  [0, 0],
+  [100, 0],
+  [100, 100],
+  [0, 100],
+  [0, 0] // close path
+];
 
 module.exports = function(d3, g) {
-  const points = rect.map(_ => p(_));
-  console.log(points);
+  // 2D
+  g.append("path")
+    .attr("d", d3.line()(rect))
+    .attr("stroke", "cyan")
+    .attr("fill", "none");
 
+  // 3D projection
   const lineGenerator = d3
     .line()
     .x(o => o.x)
     .y(o => o.y);
 
+  const _points = rect.map(([x, y]) => ({ x, y, z: 0 }));
+
   g.append("path")
-    .attr("d", lineGenerator(points))
+    .attr(
+      "d",
+      [
+        lineGenerator(_points.map(_ => project(_))),
+        lineGenerator(_points.map(extrude(T)).map(_ => project(_))),
+        ..._points.map(p =>
+          lineGenerator([p, extrude(T)(p)].map(_ => project(_)))
+        )
+      ].join(" ")
+    )
     .attr("stroke", "black")
     .attr("fill", "none")
-    .attr("transform", `translate(100, 0)`);
+    .attr("transform", `translate(100, 100)`);
 };
