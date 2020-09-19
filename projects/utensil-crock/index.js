@@ -109,7 +109,6 @@ module.exports = function generate(d3, g) {
     [0, 0]
   ];
 
-  // TODO integrate side finger joints into path
   const side = g
     .append("g")
     .attr("class", "part")
@@ -123,9 +122,62 @@ module.exports = function generate(d3, g) {
     .call(label)
     .call(centerLabel(WIDTH, HEIGHT));
 
-  side.attr("transform", `translate(${finger.height}, ${finger.height})`);
+  side
+    .call(cut)
+    .attr("transform", `translate(${finger.height}, ${finger.height})`);
 
-  side.call(cut);
+  // side2 has extra material by the slots to create a kind of "pinwheel" effect on the sides when looking top-down
+  // NB ideally both side would extend but for a box with sufficient height, interlocking tabs could be a problem
+  const side2Points = [
+    // top left
+    [0, 0],
+    // top fingers
+    ...sideEndFingerPoints.flatMap(([x, y]) =>
+      sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
+    ),
+    // top right
+    [WIDTH + T, 0],
+    // right slots
+    //    ...sideFingerY.flatMap(y => rightSlot.map(p => [p[0], p[1] + y])),
+    // bottom right
+    [WIDTH + T, HEIGHT],
+    // bottom left
+    [0, HEIGHT],
+    // left fingers
+    ...sideFingerY
+      .flatMap(y => sideFinger.map(p => [p[0], p[1] + y]))
+      .reverse(),
+    // close path
+    [0, 0]
+  ];
+
+  const side2 = g
+    .append("g")
+    .attr("class", "part")
+    .datum({ width: WIDTH + T });
+
+  side2.append("path").attr("d", lineGenerator(side2Points));
+
+  // slots
+  side2
+    .selectAll(".slot")
+    .data(sideFingerY)
+    .enter()
+    .append("rect")
+    .attr("width", finger.height)
+    .attr("height", finger.width)
+    .attr("x", WIDTH - T)
+    .attr("y", d => d);
+
+  side2
+    .append("text")
+    .text("side2 (x4)")
+    .call(label)
+    .call(centerLabel(WIDTH, HEIGHT));
+
+  side2
+    .call(cut)
+    .attr("transform", `translate(${finger.height}, ${finger.height})`);
 
   // end
   // TODO should this have an open top and a closed bottom?
