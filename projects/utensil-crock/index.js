@@ -4,14 +4,23 @@ const { cut, guide } = require(`${root}/d3/stroke`);
 
 const T = inches(1 / 8);
 // TODO testing with smaller dimensions
-const WIDTH = inches(4); // inches(6);
+const WIDTH = inches(3); // inches(6);
 const DEPTH = WIDTH;
-const HEIGHT = inches(3); // inches(8);
+const HEIGHT = inches(1.5); // inches(8);
 
 const finger = {
   width: 2 * T,
   height: T
 };
+
+const label = selection =>
+  selection.attr("fill", "magenta").attr("stroke", "none");
+
+const centerLabel = (x, y) => selection =>
+  selection
+    .attr("text-anchor", "middle")
+    .attr("x", x / 2)
+    .attr("y", y / 2);
 
 // TODO rename/type for array
 function rotateLeft(a, d) {
@@ -108,45 +117,11 @@ module.exports = function generate(d3, g) {
 
   side.append("path").attr("d", lineGenerator(sidePoints));
 
-  //  // top fingers
-  //  side
-  //    .selectAll(".fingers")
-  //    .data(sideEndFingerX)
-  //    .enter()
-  //    .append("rect")
-  //    .attr("width", finger.width)
-  //    .attr("height", finger.height)
-  //    .attr("x", d => d)
-  //    .attr("y", -finger.height)
-  //    .call(guide);
-  //
-  //  // fingers
-  //  side
-  //    .selectAll(".fingers")
-  //    .data(sideFingerY)
-  //    .enter()
-  //    .append("rect")
-  //    .attr("width", finger.height)
-  //    .attr("height", finger.width)
-  //    .attr("x", -finger.height)
-  //    .attr("y", d => d)
-  //    .call(guide);
-
-  //  // slots
-  //  console.log(
-  //    rotateLeft(fingerPath.map(p => rotate(0, 0, p[0], p[1], -90)), 1).reverse()
-  //  );
-  //
-  //  side
-  //    .selectAll(".fingers")
-  //    .data(sideFingerY)
-  //    .enter()
-  //    .append("rect")
-  //    .attr("width", finger.height)
-  //    .attr("height", finger.width)
-  //    .attr("y", d => d)
-  //    .attr("transform", `translate(${WIDTH - T}, 0)`)
-  //    .call(guide);
+  side
+    .append("text")
+    .text("side (x4)")
+    .call(label)
+    .call(centerLabel(WIDTH, HEIGHT));
 
   side.attr("transform", `translate(${finger.height}, ${finger.height})`);
 
@@ -214,6 +189,12 @@ module.exports = function generate(d3, g) {
     .append("g")
     .call(slots, 0)
     .attr("transform", `translate(0, ${DEPTH})`);
+
+  end
+    .append("text")
+    .text("top/bottom (x2)")
+    .call(label)
+    .call(centerLabel(WIDTH, DEPTH));
 
   end.call(cut);
 
