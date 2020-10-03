@@ -1,3 +1,5 @@
+// TODO add bottom fingers
+// TODO add side cutouts
 const root = require("app-root-path");
 const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
@@ -88,7 +90,7 @@ module.exports = function generate(d3, g) {
   // side
   const sidePoints = [
     // top left
-    [0, 0],
+    [T, 0],
     // top fingers
     ...sideEndFingerPoints.flatMap(([x, y]) =>
       sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
@@ -100,13 +102,13 @@ module.exports = function generate(d3, g) {
     // bottom right
     [WIDTH, HEIGHT],
     // bottom left
-    [0, HEIGHT],
+    [T, HEIGHT],
     // left fingers
     ...sideFingerY
-      .flatMap(y => sideFinger.map(p => [p[0], p[1] + y]))
+      .flatMap(y => sideFinger.map(p => [p[0] + T, p[1] + y]))
       .reverse(),
     // close path
-    [0, 0]
+    [T, 0]
   ];
 
   const side = g
@@ -130,7 +132,7 @@ module.exports = function generate(d3, g) {
   // NB ideally both side would extend but for a box with sufficient height, interlocking tabs could be a problem
   const side2Points = [
     // top left
-    [0, 0],
+    [T, 0],
     // top fingers
     ...sideEndFingerPoints.flatMap(([x, y]) =>
       sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
@@ -142,13 +144,13 @@ module.exports = function generate(d3, g) {
     // bottom right
     [WIDTH + T, HEIGHT],
     // bottom left
-    [0, HEIGHT],
+    [T, HEIGHT],
     // left fingers
     ...sideFingerY
-      .flatMap(y => sideFinger.map(p => [p[0], p[1] + y]))
+      .flatMap(y => sideFinger.map(p => [p[0] + T, p[1] + y]))
       .reverse(),
     // close path
-    [0, 0]
+    [T, 0]
   ];
 
   const side2 = g
