@@ -59,7 +59,12 @@ app.get(
     const configPath = path.join(req.projectDir, `${req.project}/config.json`);
     const defaultConfig = {
       lib: "paperjs",
-      scale: req.query.scale != null ? req.query.scale : 1
+      // viewer
+      scale: req.query.scale != null ? req.query.scale : 1,
+      params: [],
+      // project
+      name: req.project,
+      description: ""
     };
     let config = {};
 
@@ -79,14 +84,28 @@ app.get(
 
     switch (req.config.lib) {
       case "d3":
-        generateD3(req.params.projectType, req.project, next);
+        generateD3(
+          {
+            projectType: req.params.projectType,
+            project: req.project,
+            params: req.config.params
+          },
+          next
+        );
         break;
       case "paperjs":
       default:
-        generatePaperJS(req.params.projectType, req.project, metadata => {
-          req.metadata = metadata;
-          next();
-        });
+        generatePaperJS(
+          {
+            projectType: req.params.projectType,
+            project: req.project,
+            params: req.config.params
+          },
+          metadata => {
+            req.metadata = metadata;
+            next();
+          }
+        );
         break;
     }
   },
