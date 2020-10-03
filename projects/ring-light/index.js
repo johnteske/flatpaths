@@ -9,11 +9,8 @@ module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
   const WIDTH = inches(1) + mm(3.3);
 
-  const DIAMETER = inches(12);
-  //const DIAMETER = inches(18);
-  const RADIUS = DIAMETER / 2;
-
-  const lineGenerator = d3.line();
+  const OUTER_DIAMETER = inches(12);
+  const RADIUS = OUTER_DIAMETER / 2;
 
   // circumcircle
   g.append("circle")
@@ -40,21 +37,22 @@ module.exports = function generate(d3, g) {
 
   // outer
   g.append("path")
-    .attr("d", lineGenerator(polyPoints) + "Z")
+    .attr("d", polygon.path(polyPoints, 0))
     .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(guide);
-  const softPoly = points =>
-    //points.map((p, i) => `${i === 0 ? 'M' : "L"} ${p.join(" ")}`).join(" ")
-    points.map((p, i) => `${i === 0 ? 'M' : "q"} ${p.join(" ")} ${i === 0 ? '' : '5 5 '}`).join(" ")
-//  g.append("path")
-//    .attr("d", softPoly(polyPoints) + "Z")
-//    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
-//    .call(cut);
+  g.append("path")
+    .attr("d", polygon.path(polyPoints, mm(3.3)))
+    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
+    .call(cut);
   // inner
   g.append("path")
-    .attr("d", lineGenerator(polyPoints2) + "Z")
+    .attr("d", polygon.path(polyPoints2, 0))
     .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(guide);
+  g.append("path")
+    .attr("d", polygon.path(polyPoints2, mm(3.3)))
+    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
+    .call(cut);
 
   const aPoint = polyPoints1[polyPoints1.length - 2];
   // NOTE this is 3 sides of 7, not equal spacing across 6 sides
