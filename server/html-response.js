@@ -1,10 +1,41 @@
 module.exports = (req, res) => {
   res.send(`
+<head>
+<title>${req.config.name} | flatpaths</title>
 <style>
-  body { margin: 0; }
-  header, main { padding: 1em; }
+  * {
+    margin: 0;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+  }
+  header, main { padding: 0.5em; }
+  h1 {
+    font-size: 1em;
+  }
+  nav {
+    display: flex
+  }
+  nav #project {
+    flex-grow: 1;
+  }
+  #scale-fields button {
+    width: 2em;
+  }
+  #scale-fields input {
+    flex-grow: 1;
+  }
 </style>
+</head>
+<body>
 <header>
+  <div>
+    <h1>${req.config.name}</h1>
+    <p>${req.config.description}</p>
+  </div>
+  <div>
+  <nav>
   <label for="project">Project</label>
   <select name="project" id="project" onchange="projectChangeHandler()">
     ${[...req.projects, undefined].map(
@@ -13,19 +44,26 @@ module.exports = (req, res) => {
           p === req.project ? "selected disabled" : ""
         }>${p}</option>`
     )}
-  </select>
-
+  </select><br />
+  </nav>
+  <fieldset>
+  <legend><button>Generate</button></legend>
   <label for="generate-on-load">Generate on load</label>
   <input name="generate-on-load" id="generate-on-load" type="checkbox" ${
     req.shouldGenerate ? "checked" : ""
   } onclick="generateHandler()" />
+  </fieldset>
 
-  <label for="scale">Scale</label>
+  <fieldset id="scale-fields">
+  <legend>Scale</legend>
+  <!--label for="scale">Scale</label-->
   <input name="scale" id="scale" type="number" step="any" value="${
     req.config.scale
-  }" readonly />
+  }" disabled />
   <button onclick="scaleHandler(0.5)">-</button>
   <button onclick="scaleHandler(2)">+</button>
+  </fieldset>
+  </div>
 </header>
 <main>
   ${
@@ -81,5 +119,6 @@ module.exports = (req, res) => {
     history.pushState(null, '', newRelativePathQuery);
         }
 </script>
+</body>
 `);
 };
