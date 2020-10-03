@@ -1,7 +1,8 @@
 const root = require("app-root-path");
 const { inches, mm } = require(`${root}/units`);
 const { nItems } = require(`${root}/fn`);
-const polygon = require(`${root}/polygon`);
+const polygon = require(`${root}/lib/regular-polygon`);
+const point = require(`${root}/lib/point`);
 const { cut, guide } = require(`${root}/d3/stroke`);
 
 module.exports = function generate(d3, g) {
@@ -37,10 +38,19 @@ module.exports = function generate(d3, g) {
   const polyPoints1 = polygon.points(6, RADIUS - WIDTH / 2);
   const polyPoints2 = polygon.points(6, RADIUS - WIDTH);
 
+  // outer
   g.append("path")
     .attr("d", lineGenerator(polyPoints) + "Z")
     .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(guide);
+  const softPoly = points =>
+    //points.map((p, i) => `${i === 0 ? 'M' : "L"} ${p.join(" ")}`).join(" ")
+    points.map((p, i) => `${i === 0 ? 'M' : "q"} ${p.join(" ")} ${i === 0 ? '' : '5 5 '}`).join(" ")
+//  g.append("path")
+//    .attr("d", softPoly(polyPoints) + "Z")
+//    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
+//    .call(cut);
+  // inner
   g.append("path")
     .attr("d", lineGenerator(polyPoints2) + "Z")
     .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
@@ -53,13 +63,13 @@ module.exports = function generate(d3, g) {
     aPoint[0],
     aPoint[1] - (i * sideL) / arr.length
   ]);
-  const sidePoints2 = sidePoints1.map(p => polygon.rotatePoint(p, 60));
+  const sidePoints2 = sidePoints1.map(p => point.rotate(60)(p));
   const sidePoints = [...sidePoints1.slice(1), ...sidePoints2];
 
   const ledPoints = [
     ...sidePoints,
-    ...sidePoints.map(p => polygon.rotatePoint(p, 120)),
-    ...sidePoints.map(p => polygon.rotatePoint(p, 240))
+    ...sidePoints.map(p => point.rotate(120)(p)),
+    ...sidePoints.map(p => point.rotate(240)(p))
   ];
 
   g.selectAll(".led-holes")
