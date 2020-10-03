@@ -3,7 +3,7 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = function(projectType, project, cb) {
+module.exports = function({ projectType, project, params }, cb) {
   if (project == null) {
     throw new Error("project not specified");
   }
@@ -47,7 +47,7 @@ function getFilesizeInKilobytes(filename) {
 }
 
 if (require.main === module) {
-  module.exports("project", argv.p, metadata => {
+  module.exports({ projectType: "project", project: argv.p }, metadata => {
     console.info("Project: %s", metadata.project);
     console.info("Paths: %s", metadata.paths);
     console.info("Output: %s", metadata.file);
