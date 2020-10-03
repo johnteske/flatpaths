@@ -3,7 +3,7 @@ const d3 = require("d3");
 const { JSDOM } = require("jsdom");
 const path = require("path");
 
-module.exports = function(projectType, project, cb) {
+module.exports = function({ projectType, project, params }, cb) {
   const svg = JSDOM.fragment("<svg>").firstChild;
 
   const g = d3

@@ -3,7 +3,7 @@ const paper = require("paper-jsdom");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = function(projectType, project, cb) {
+module.exports = function({ projectType, project, params }, cb) {
   if (project == null) {
     throw new Error("project not specified");
   }
