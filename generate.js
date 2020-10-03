@@ -47,7 +47,7 @@ function getFilesizeInKilobytes(filename) {
 }
 
 if (require.main === module) {
-  module.exports("project", argv.p, metadata => {
+  module.exports({ projectType: "project", project: argv.p }, metadata => {
     console.info("Project: %s", metadata.project);
     console.info("Paths: %s", metadata.paths);
     console.info("Output: %s", metadata.file);
