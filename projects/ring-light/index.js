@@ -5,6 +5,9 @@ const polygon = require(`${root}/lib/regular-polygon`);
 const point = require(`${root}/lib/point`);
 const { cut, guide } = require(`${root}/d3/stroke`);
 
+//led spread = 2.2mm
+// min resistor spread ~10mm
+
 module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
   const WIDTH = inches(1) + mm(3.3);
@@ -79,4 +82,39 @@ module.exports = function generate(d3, g) {
     .attr("cy", d => d[1])
     .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(guide);
+
+  const th = nItems(6)
+    .map((_, i) => {
+      const [x, y] = point.rotate(60 * i)([0, RADIUS - WIDTH / 2]);
+      return {
+        x,
+        y,
+        rotation: 60 * i
+      };
+    })
+
+    .concat(sidePoints1.map(([x, y]) => ({ x, y, rotation: 90 })));
+
+  const holeGroup = g
+    .append("g")
+    .attr("transform", `translate(${RADIUS}, ${RADIUS})`);
+
+  holeGroup
+    .selectAll(".through-hole-group")
+    .data(th)
+    .enter()
+    .append("g")
+    .attr("transform", d => `rotate(${d.rotation} ${d.x} ${d.y})`)
+    .call(cut)
+    .each(function(d) {
+      const g = d3.select(this);
+      g.append("circle")
+        .attr("r", mm(0.5))
+        .attr("cx", d.x)
+        .attr("cy", d.y - mm(1.1));
+      g.append("circle")
+        .attr("r", mm(0.5))
+        .attr("cx", d.x)
+        .attr("cy", d.y + mm(1.1));
+    });
 };
