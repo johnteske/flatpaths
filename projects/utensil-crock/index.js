@@ -101,9 +101,14 @@ module.exports = function generate(d3, g) {
     // bottom right
     [WIDTH, HEIGHT],
     // bottom fingers
-    ...sideEndFingerPoints.flatMap(([x, y]) =>
-      sideEndFinger.map(([x2, y2]) => [x + x2, HEIGHT + (finger.height*2) + y- y2])
-    ).reverse(),
+    ...sideEndFingerPoints
+      .flatMap(([x, y]) =>
+        sideEndFinger.map(([x2, y2]) => [
+          x + x2,
+          HEIGHT + finger.height * 2 + y - y2
+        ])
+      )
+      .reverse(),
     // bottom left
     [T, HEIGHT],
     // left fingers
@@ -128,63 +133,6 @@ module.exports = function generate(d3, g) {
     .call(centerLabel(WIDTH, HEIGHT));
 
   side
-    .call(cut)
-    .attr("transform", `translate(${finger.height}, ${finger.height})`);
-
-  // side2 has extra material by the slots to create a kind of "pinwheel" effect on the sides when looking top-down
-  // NB ideally both sides would extend but for a box with sufficient height, interlocking tabs could be a problem
-  const side2Points = [
-    // top left
-    [T, 0],
-    // top fingers
-    ...sideEndFingerPoints.flatMap(([x, y]) =>
-      sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
-    ),
-    // top right
-    [WIDTH + T, 0],
-    // right slots
-    //    ...sideFingerY.flatMap(y => rightSlot.map(p => [p[0], p[1] + y])),
-    // bottom right
-    [WIDTH + T, HEIGHT],
-    // bottom fingers
-    ...sideEndFingerPoints.flatMap(([x, y]) =>
-      sideEndFinger.map(([x2, y2]) => [x + x2, HEIGHT + (finger.height*2) + y- y2])
-    ).reverse(),
-    // bottom left
-    [T, HEIGHT],
-    // left fingers
-    ...sideFingerY
-      .flatMap(y => sideFinger.map(p => [p[0] + T, p[1] + y]))
-      .reverse(),
-    // close path
-    [T, 0]
-  ];
-
-  const side2 = g
-    .append("g")
-    .attr("class", "part")
-    .datum({ width: WIDTH + T });
-
-  side2.append("path").attr("d", lineGenerator(side2Points));
-
-  // slots
-  side2
-    .selectAll(".slot")
-    .data(sideFingerY)
-    .enter()
-    .append("rect")
-    .attr("width", finger.height)
-    .attr("height", finger.width)
-    .attr("x", WIDTH - T)
-    .attr("y", d => d);
-
-  side2
-    .append("text")
-    .text("side2 (x4)")
-    .call(label)
-    .call(centerLabel(WIDTH, HEIGHT));
-
-  side2
     .call(cut)
     .attr("transform", `translate(${finger.height}, ${finger.height})`);
 
