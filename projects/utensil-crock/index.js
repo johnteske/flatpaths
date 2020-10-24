@@ -3,16 +3,13 @@ const root = require("app-root-path");
 const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
 
-const T = inches(1 / 8);
+const { T } = require("./material");
+const finger = require("./finger");
+
 // TODO testing with smaller dimensions
 const WIDTH = inches(3); // inches(6);
 const DEPTH = WIDTH;
 const HEIGHT = inches(1.5); // inches(8);
-
-const finger = {
-  width: 2 * T,
-  height: T
-};
 
 const label = selection =>
   selection.attr("fill", "magenta").attr("stroke", "none");
@@ -74,11 +71,7 @@ module.exports = function generate(d3, g) {
   const sideEndFinger = rotateLeft(fingerPath, 3);
 
   // side fingers
-  const sideFingerY = [
-    T,
-    (HEIGHT - finger.width) / 2,
-    HEIGHT - finger.width - T
-  ];
+  const sideFingerY = [finger.width, HEIGHT / 2, HEIGHT - finger.width];
   const sideFinger = rotateLeft(
     fingerPath.map(p => rotate(0, 0, p[0], p[1], -90)),
     1
@@ -97,9 +90,11 @@ module.exports = function generate(d3, g) {
     // top right
     [WIDTH, 0],
     // right slots
-    ...sideFingerY.flatMap(y => rightSlot.map(p => [p[0], p[1] + y])),
+    ...sideFingerY
+      .flatMap(y => rightSlot.map(p => [p[0], p[1] + y]))
+      .slice(0, -1), // remove last point
     // bottom right
-    [WIDTH, HEIGHT],
+    // [WIDTH, HEIGHT],
     // bottom fingers
     ...sideEndFingerPoints
       .flatMap(([x, y]) =>
