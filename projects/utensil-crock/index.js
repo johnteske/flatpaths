@@ -1,5 +1,6 @@
 // TODO add side cutouts
 const root = require("app-root-path");
+const { nItems } = require(`${root}/fn`);
 const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
 
@@ -8,7 +9,9 @@ const finger = require("./finger");
 
 // TODO testing with smaller dimensions
 const WIDTH = inches(3); // inches(6);
-const DEPTH = WIDTH;
+const WIDTH_FINGERS = 3;
+const DEPTH = inches(4 + Math.random() * 2);
+const DEPTH_FINGERS = 5;
 const HEIGHT = inches(1.5); // inches(8);
 
 const label = selection =>
@@ -66,8 +69,15 @@ module.exports = function generate(d3, g) {
   const lineGenerator = d3.line();
 
   // side-end fingers
-  const sideEndFingerX = [2 * T, WIDTH / 2 - T, WIDTH - finger.width - 2 * T];
-  const sideEndFingerPoints = sideEndFingerX.map(x => [x, -finger.height]);
+  const sideEndFingerX = (len, n) => {
+    const x1 = finger.height + T;
+    const x2 = len - finger.width - T - finger.height;
+    const interval = (x2 - x1) / (n - 1);
+    return nItems(n).map((_, i) => x1 + i * interval);
+  };
+
+  const sideEndFingerPoints = (len, n) =>
+    sideEndFingerX(len, n).map(x => [x, -finger.height]);
   const sideEndFinger = rotateLeft(fingerPath, 3);
 
   // side fingers
@@ -77,26 +87,26 @@ module.exports = function generate(d3, g) {
     1
   ).reverse();
 
-  const rightSlot = sideFinger.map(([x, y]) => [x + WIDTH, y]);
-
   // side
-  const sidePoints = [
+  const sidePoints = (width, n) => [
     // top left
     [T, 0],
     // top fingers
-    ...sideEndFingerPoints.flatMap(([x, y]) =>
+    ...sideEndFingerPoints(width, n).flatMap(([x, y]) =>
       sideEndFinger.map(([x2, y2]) => [x + x2, y + y2])
     ),
     // top right
-    [WIDTH, 0],
+    [width, 0],
     // right slots
     ...sideFingerY
-      .flatMap(y => rightSlot.map(p => [p[0], p[1] + y]))
+      .flatMap(y =>
+        sideFinger.map(([x, y]) => [x + width, y]).map(p => [p[0], p[1] + y])
+      )
       .slice(0, -1), // remove last point
     // bottom right
     // [WIDTH, HEIGHT],
     // bottom fingers
-    ...sideEndFingerPoints
+    ...sideEndFingerPoints(width, n)
       .flatMap(([x, y]) =>
         sideEndFinger.map(([x2, y2]) => [
           x + x2,
@@ -119,7 +129,9 @@ module.exports = function generate(d3, g) {
     .attr("class", "part")
     .datum({ width: WIDTH });
 
-  side.append("path").attr("d", lineGenerator(sidePoints));
+  side
+    .append("path")
+    .attr("d", lineGenerator(sidePoints(WIDTH, WIDTH_FINGERS)));
 
   side
     .append("text")
@@ -128,6 +140,19 @@ module.exports = function generate(d3, g) {
     .call(centerLabel(WIDTH, HEIGHT));
 
   side
+    .call(cut)
+    .attr("transform", `translate(${finger.height}, ${finger.height})`);
+
+  const side2 = g
+    .append("g")
+    .attr("class", "part")
+    .datum({ width: DEPTH });
+
+  side2
+    .append("path")
+    .attr("d", lineGenerator(sidePoints(DEPTH, DEPTH_FINGERS)));
+
+  side2
     .call(cut)
     .attr("transform", `translate(${finger.height}, ${finger.height})`);
 
@@ -168,10 +193,10 @@ module.exports = function generate(d3, g) {
     .attr("ry", T)
     .attr("transform", `translate(${endOffset}, ${endOffset})`);
 
-  const slots = (selection, angle) => {
+  const slots = (selection, angle, len, n) => {
     selection
       .selectAll(".fingers")
-      .data(sideEndFingerX)
+      .data(sideEndFingerX(len, n))
       .enter()
       .append("rect")
       .attr("width", finger.width)
@@ -180,18 +205,22 @@ module.exports = function generate(d3, g) {
       .attr("transform", `rotate(${angle},${T},${T})`);
   };
 
+  // top
   end
     .append("g")
-    .call(slots, 0)
+    .call(slots, 0, WIDTH, 3)
     .attr("transform", `translate(0, ${T})`);
-  end.call(slots, 90); // left
+  // left
+  end.call(slots, 90, DEPTH, DEPTH_FINGERS);
+  // right
   end
     .append("g")
-    .call(slots, 90) // right
+    .call(slots, 90, DEPTH, DEPTH_FINGERS)
     .attr("transform", `translate(${WIDTH - T}, 0)`);
+  // bottom
   end
     .append("g")
-    .call(slots, 0)
+    .call(slots, 0, WIDTH, 3)
     .attr("transform", `translate(0, ${DEPTH})`);
 
   end
