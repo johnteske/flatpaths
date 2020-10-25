@@ -160,76 +160,81 @@ module.exports = function generate(d3, g) {
   // TODO should this have an open top and a closed bottom?
   const endOffset = T * 3;
 
-  const end = g
-    .append("g")
-    .attr("class", "part")
-    .datum({ width: WIDTH });
+  const makeEnd = (isOpen = true) => {
+    const end = g
+      .append("g")
+      .attr("class", "part")
+      .datum({ width: WIDTH });
 
-  // side guide
-  end
-    .append("rect")
-    .attr("width", WIDTH)
-    .attr("height", DEPTH)
-    .attr("transform", `translate(${T}, ${T})`)
-    .call(guide);
-  end
-    .append("rect")
-    .attr("width", WIDTH - T * 2)
-    .attr("height", DEPTH - T * 2)
-    .attr("transform", `translate(${T * 2}, ${T * 2})`)
-    .call(guide);
-
-  end
-    .append("rect")
-    .attr("width", WIDTH + T * 2)
-    .attr("height", DEPTH + T * 2)
-    .attr("rx", T)
-    .attr("ry", T);
-  end
-    .append("rect")
-    .attr("width", WIDTH - T * 4)
-    .attr("height", DEPTH + -T * 4)
-    .attr("rx", T)
-    .attr("ry", T)
-    .attr("transform", `translate(${endOffset}, ${endOffset})`);
-
-  const slots = (selection, angle, len, n) => {
-    selection
-      .selectAll(".fingers")
-      .data(sideEndFingerX(len, n))
-      .enter()
+    // side guide
+    end
       .append("rect")
-      .attr("width", finger.width)
-      .attr("height", finger.height)
-      .attr("x", d => d + T) // end will overhang by T
-      .attr("transform", `rotate(${angle},${T},${T})`);
+      .attr("width", WIDTH)
+      .attr("height", DEPTH)
+      .attr("transform", `translate(${T}, ${T})`)
+      .call(guide);
+
+    end
+      .append("rect")
+      .attr("width", WIDTH - T * 2)
+      .attr("height", DEPTH - T * 2)
+      .attr("transform", `translate(${T * 2}, ${T * 2})`)
+      .call(guide);
+
+    end
+      .append("rect")
+      .attr("width", WIDTH + T * 2)
+      .attr("height", DEPTH + T * 2)
+      .attr("rx", T)
+      .attr("ry", T);
+    if (isOpen) {
+      end
+        .append("rect")
+        .attr("width", WIDTH - T * 4)
+        .attr("height", DEPTH + -T * 4)
+        .attr("rx", T)
+        .attr("ry", T)
+        .attr("transform", `translate(${endOffset}, ${endOffset})`);
+    }
+    const slots = (selection, angle, len, n) => {
+      selection
+        .selectAll(".fingers")
+        .data(sideEndFingerX(len, n))
+        .enter()
+        .append("rect")
+        .attr("width", finger.width)
+        .attr("height", finger.height)
+        .attr("x", d => d + T) // end will overhang by T
+        .attr("transform", `rotate(${angle},${T},${T})`);
+    };
+
+    // top
+    end
+      .append("g")
+      .call(slots, 0, WIDTH, 3)
+      .attr("transform", `translate(0, ${T})`);
+    // left
+    end.call(slots, 90, DEPTH, DEPTH_FINGERS);
+    // right
+    end
+      .append("g")
+      .call(slots, 90, DEPTH, DEPTH_FINGERS)
+      .attr("transform", `translate(${WIDTH - T}, 0)`);
+    // bottom
+    end
+      .append("g")
+      .call(slots, 0, WIDTH, 3)
+      .attr("transform", `translate(0, ${DEPTH})`);
+
+    end
+      .append("text")
+      .text("top/bottom (x2)")
+      .call(label)
+      .call(centerLabel(WIDTH, DEPTH));
+
+    end.call(cut);
   };
-
-  // top
-  end
-    .append("g")
-    .call(slots, 0, WIDTH, 3)
-    .attr("transform", `translate(0, ${T})`);
-  // left
-  end.call(slots, 90, DEPTH, DEPTH_FINGERS);
-  // right
-  end
-    .append("g")
-    .call(slots, 90, DEPTH, DEPTH_FINGERS)
-    .attr("transform", `translate(${WIDTH - T}, 0)`);
-  // bottom
-  end
-    .append("g")
-    .call(slots, 0, WIDTH, 3)
-    .attr("transform", `translate(0, ${DEPTH})`);
-
-  end
-    .append("text")
-    .text("top/bottom (x2)")
-    .call(label)
-    .call(centerLabel(WIDTH, DEPTH));
-
-  end.call(cut);
-
+  makeEnd(true);
+  makeEnd(false);
   g.selectAll(".part").call(distributeX(T * 2));
 };
