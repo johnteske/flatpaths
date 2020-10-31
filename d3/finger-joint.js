@@ -19,6 +19,7 @@ const slotPoints = (width, height) =>
 
 // fingers
 // TODO accept stroke-dasharray -like syntax for spacing/bias
+// but numbers only, not percentages or other unit values
 // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray
 const fingers = (fingerWidth, fingerHeight, n) =>
   nItems(n).flatMap((_, i) =>
@@ -27,6 +28,9 @@ const fingers = (fingerWidth, fingerHeight, n) =>
       y
     ])
   );
+
+// TODO add fingers within a given length, with min/max finger size
+// (length / finger.width) / 2 for even fingers--what about biased/dasharray?
 
 module.exports = {
   fingerPoints,
