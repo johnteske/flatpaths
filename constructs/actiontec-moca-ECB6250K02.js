@@ -18,26 +18,41 @@ function mount(selection, T) {
     .call(guide);
 
   // support holes, TODO to go in base
-  // TODO do not handle offsets internally,
-  // expose dimensions and use to make offset in each call
+  // TODO define as points for better control over rotation
   function hole(selection, x, y, rotation = 0) {
     return selection
       .append("rect")
       .attr("width", 2 * T)
       .attr("height", T)
-      .attr("transform", `translate(${x - T},${y}) rotate(${rotation})`)
+      .attr("transform", `translate(${x},${y}) rotate(${rotation})`)
       .call(cut);
   }
 
-  hole(g, geometry.length / 2, -T);
-  hole(g, geometry.length / 2, geometry.width);
-  hole(g, T, geometry.width / 2 - T, 90);
+  hole(g, T, -T);
+  hole(g, geometry.length - 3 * T, -T);
+
+  hole(g, T, geometry.width);
+  hole(g, geometry.length - 3 * T, geometry.width);
+
+  hole(g, 0, T, 90);
+  hole(g, 0, geometry.width - 3 * T, 90);
 
   // top support
-  g.append("rect")
-    .attr("width", 2 * T + geometry.length / 2 + 2 * T)
-    .attr("height", 2 * T + geometry.width + 2 * T)
-    .attr("transform", `translate(${-2 * T},${-2 * T})`)
+  const topPoints = [
+    [-2 * T, -2 * T],
+    [geometry.length, -2 * T],
+    [geometry.length, 2 * T],
+    [2 * T, 2 * T],
+    [2 * T, geometry.width - 2 * T],
+    [geometry.length, geometry.width - 2 * T],
+    [geometry.length, geometry.width + 2 * T],
+    [-2 * T, geometry.width + 2 * T]
+  ];
+  g.append("path")
+    .attr(
+      "d",
+      topPoints.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`) + "Z"
+    )
     .call(cut);
 
   return g;
