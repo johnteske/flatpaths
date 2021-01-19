@@ -1,6 +1,7 @@
 const root = require("app-root-path");
 const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
+// const { rotate } = require(`${root}/lib/point`);
 
 const geometry = {
   width: inches(2.5),
@@ -55,7 +56,43 @@ function mount(selection, T) {
     )
     .call(cut);
 
+  const pinPoints = [
+    [0, 0],
+
+    // top snap
+    [-0.5 * T, 0],
+    [0 * T, -T],
+    //
+    [0.5 * T, -T],
+    [0.5 * T, 3 * T],
+    [1.5 * T, 3 * T],
+    [1.5 * T, -T],
+    //
+    [2 * T, -T],
+    [2.5 * T, 0],
+
+    [2 * T, 0],
+    [2 * T, geometry.height],
+
+    // bottom tab
+    [3 * T, geometry.height],
+    [3 * T, geometry.height + T],
+    [-T, geometry.height + T],
+    [-T, geometry.height],
+
+    [0, geometry.height]
+  ];
+
+  g.append("path")
+    .attr("d", makePath(pinPoints))
+    .attr("transform", `translate(${0},${geometry.width + 4 * T})`)
+    .call(cut);
+
   return g;
+}
+
+function makePath(points) {
+  return points.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`) + "Z";
 }
 
 module.exports = {
