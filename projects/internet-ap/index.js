@@ -1,9 +1,7 @@
 const root = require("app-root-path");
 const polygon = require(`${root}/lib/regular-polygon`);
-const { mm, inches } = require(`${root}/units`);
+const { inches } = require(`${root}/units`);
 const { cut, guide } = require(`${root}/d3/stroke`);
-
-const moca = require(`${root}/constructs/actiontec-moca-ECB6250K02`);
 
 const router = {
   baseID: inches(4 + 3 / 4),
@@ -14,7 +12,7 @@ module.exports = function generate(d3, g) {
   const T = inches(1 / 8);
   // const WIDTH = inches(1) + mm(3.3);
 
-  const rimT = inches(1.5);
+  const rimT = inches(1.5); // TODO this is arbitrary
   const OUTER_DIAMETER = router.baseOD + rimT;
   const RADIUS = OUTER_DIAMETER / 2;
 
@@ -30,71 +28,85 @@ module.exports = function generate(d3, g) {
     .attr("r", RADIUS)
     .attr("cx", RADIUS)
     .attr("cy", RADIUS)
-    .call(cut);
-
-  //const polyPoints0 = polygon.points(6, RADIUS);
-  const polyPoints0 = polygon.points(6, RADIUS + inches(3 / 4));
-  g.append("path")
-    .attr("d", polygon.path(polyPoints0, T))
-    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(guide);
 
-  //  // TODO get side tangent to outer circle
-  //  const polyPoints = polygon.points(6, RADIUS + 4 * T);
-  //  g.append("path")
-  //    .attr("d", polygon.path(polyPoints, T))
-  //    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
-  //    .call(guide);
-
-  // ports
-  const ports = [0, 1, 2, 3, -1, -2, -3].map(y => y * mm(12));
-  const portX = OUTER_DIAMETER - 2 * T;
-  g.selectAll(".port")
-    .data(ports)
+  // circumradius from inradius of RADIUS
+  const apRadius = RADIUS / Math.cos(Math.PI / 6);
+  const polyPoints0 = polygon.points(6, apRadius);
+  const apCornerRadius = rimT / 2;
+  const cornerRadiusPoints = g.append("g");
+  cornerRadiusPoints
+    .selectAll("circle")
+    .data(polygon.points2(polyPoints0, apCornerRadius))
     .enter()
     .append("circle")
-    .attr("r", mm(3)) // TODO regular CAT 6 is about 6 mm in diameter?
-    .attr("cx", portX)
-    .attr("cy", d => RADIUS + d)
+    .attr("r", T)
+    .attr("cx", d => d[0])
+    .attr("cy", d => d[1])
+    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
+
+    .call(guide);
+  g.append("path")
+    .attr("d", polygon.path(polyPoints0, apCornerRadius))
+    .attr("transform", `translate(${RADIUS}, ${RADIUS})`)
     .call(cut);
 
-  moca.mount(g, T).attr("transform", `translate(${3 * T}, ${3 * T})`);
+  // ziptie holes
+  const ziptieHoles = g.append("g").call(cut);
+  function ziptieHole(selection, deg, offset) {
+    selection
+      .append("circle")
+      .attr("r", T)
+      .attr("cx", RADIUS + offset)
+      .attr("cy", RADIUS)
+      .attr("transform", `rotate(${deg}, ${RADIUS}, ${RADIUS})`);
+  }
+  ziptieHoles.call(ziptieHole, 0, 0);
+  for (let i = 0; i < 6; i++) {
+    ziptieHoles.call(ziptieHole, i * 60, RADIUS / 3);
+    ziptieHoles.call(ziptieHole, i * 60, (RADIUS * 2) / 3);
+    ziptieHoles.call(ziptieHole, 30 + i * 60, (RADIUS * 2) / 3);
+  }
 
-  //  // side
-  //  const sideL = polygon.sideLengthFromRadius(6, RADIUS);
-  //  const sidePoints = [
-  //    [0, 0],
-  //    [sideL, 0],
-  //    [sideL, sideL],
-  //    //
-  //    [sideL - T, sideL],
-  //    [2 * sideL / 3, sideL - 4*T],
-  //    [sideL / 3, sideL - 4*T],
-  //    [T, sideL],
-  //    //
-  //    [0, sideL]
-  //  ];
-  //  g.append("path")
-  //    .attr(
-  //      "d",
-  //      sidePoints.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`) + "Z"
-  //    )
-  //    .attr("transform", `translate(${OUTER_DIAMETER + 2 * T}, 0)`)
-  //    .call(cut);
-
-  //  // bottom wall
-  //  g.append("rect")
-  //    .attr("width", 2 * Math.PI * RADIUS)
-  //    .attr("height", OUTER_DIAMETER)
-  //    .call(cut);
-  //
-  //  // living hinge
-  //  // TODO alternate columns
-  //  for (let i = 0; i < 10; i++) {
-  //    g.append("rect")
-  //      .attr("width", T)
-  //      .attr("height", T * 2)
-  //      .attr("x", i * T * 2)
-  //      .call(cut);
-  //  }
+  const sideW = polygon.sideLengthFromRadius(6, RADIUS) - apCornerRadius * 2;
+  const sideH = inches(5 / 2);
+  const sideTabL = sideW / 2;
+  // side slots
+  const sideSlots = g.append("g");
+  function slot(selection, deg = 0) {
+    selection
+      .append("rect")
+      .attr("width", T)
+      .attr("height", sideTabL)
+      .attr("x", OUTER_DIAMETER - rimT / 4 - T / 2)
+      .attr("y", RADIUS - sideTabL / 2)
+      .attr("transform", `rotate(${deg}, ${RADIUS}, ${RADIUS})`)
+      .call(cut);
+  }
+  for (let i = 0; i < 6; i++) {
+    sideSlots.call(slot, i * 60);
+  }
+  // side
+  const sidePoints = [
+    [0, 0],
+    [sideW / 2 - sideTabL / 2, 0],
+    [sideW / 2 - sideTabL / 2, -T],
+    [sideW / 2 + sideTabL / 2, -T],
+    [sideW / 2 + sideTabL / 2, 0],
+    [sideW, 0],
+    [sideW, sideH],
+    [sideW / 2 + sideTabL / 2, sideH],
+    // add a little extra foot
+    [sideW / 2 + sideTabL / 2, sideH + T * 2],
+    [sideW / 2 - sideTabL / 2, sideH + T * 2],
+    [sideW / 2 - sideTabL / 2, sideH],
+    [0, sideH]
+  ];
+  g.append("path")
+    .attr(
+      "d",
+      sidePoints.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`) + "Z"
+    )
+    .attr("transform", `translate(${OUTER_DIAMETER + 2 * T}, ${T})`)
+    .call(cut);
 };
